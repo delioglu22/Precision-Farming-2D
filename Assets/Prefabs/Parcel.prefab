@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5324953114076167877}
   - component: {fileID: 1618663152565725531}
   - component: {fileID: 5938901701964354495}
+  - component: {fileID: 7539551342946920383}
   m_Layer: 0
   m_Name: Parcel
   m_TagString: Untagged
@@ -159,3 +160,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Parcel
   channel: {fileID: 11400000, guid: 2a9207ce20ace314095f1440b93e05bf, type: 2}
   displayName: 
+  highlight: {fileID: 7539551342946920383}
+  selectedSortingBoost: 1000
+--- !u!95 &7539551342946920383
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6380617574483147945}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a54a64da5de1e9d4fb7dcb56ed13ec65, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
