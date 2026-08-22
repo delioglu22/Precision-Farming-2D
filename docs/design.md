@@ -28,6 +28,11 @@ from the bottom of the screen — that panel is where the automation is set up a
 What automation and optimization concretely consist of — the inputs a parcel takes, the knobs the
 player turns, and how profit is calculated. These get written here as they are settled, not before.
 
+Whether a crop is more than a look. Six of them exist, and right now choosing one is decoration. For
+a crop to become state it has to decide something: what it costs to plant, what it yields, how long
+it takes, and whether the automation is tuned per crop or per parcel. Until one of those has an
+answer worth playing, it stays a look.
+
 ## The map
 
 Parcels are the click target for everything above, so the map exists to make them readable and
