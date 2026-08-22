@@ -29,6 +29,12 @@ cells by Unity's SpriteShape. So making parcel art never means drawing a parcel 
 colour for one of the four earth surfaces, or drawing the tile the field is filled with. A parcel's
 size is a number, so fields of any dimension cost nothing to add and none of them needs new art.
 
+**A picked parcel warms its crop, not its earth.** The field brightens and the slab grows a couple of
+percent; the outline, the border and the two sides hold their colour. Warming the whole slab reads as
+strongly but softens the boundary against the neighbours, and earth does not get warmer when you
+touch it. Keeping the earth fixed also keeps its colour in one place, since only the crop layer is
+untinted to begin with.
+
 ## Fields
 
 Six crops, one tile each. The furrows run along the **same isometric axis on every parcel**, never
