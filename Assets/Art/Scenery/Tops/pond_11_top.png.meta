@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 24ecd347964b78a45adb846b35ea522c
+guid: 784ea2a78634f23449997c1557deb13e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1203491546303668569
-    second: pond_13_0
+      213: -3827946857299225047
+    second: pond_11_top_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,9 +48,9 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 9
-  spritePivot: {x: 0.5, y: 0.537037}
+  spritePivot: {x: 0.4977778, y: 0.5367347}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pond_13_0
+      name: pond_11_top_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 500
-        height: 270
+        x: 35
+        y: 37
+        width: 381
+        height: 192
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 951ad9b5f29a3b010800000000000000
-      internalID: 1203491546303668569
+      spriteID: 9265b975d9660eac0800000000000000
+      internalID: -3827946857299225047
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      pond_13_0: 1203491546303668569
+      pond_11_top_0: -3827946857299225047
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

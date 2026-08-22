@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 485df6c199216554ea195759e387dbbf
+guid: 273a36b5cf7f84f4e89b0999caa0cc13
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2997223936677989254
-    second: forest_23_0
+      213: 5821212763711219229
+    second: forest_25_top_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,9 +48,9 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 9
-  spritePivot: {x: 0.5, y: 0.5408163}
+  spritePivot: {x: 0.49714285, y: 0.54615384}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: forest_23_0
+      name: forest_25_top_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 450
-        height: 245
+        x: 40
+        y: 36
+        width: 271
+        height: 145
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 68b4df95a47489920800000000000000
-      internalID: 2997223936677989254
+      spriteID: d162afe9a2a19c050800000000000000
+      internalID: 5821212763711219229
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      forest_23_0: 2997223936677989254
+      forest_25_top_0: 5821212763711219229
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
