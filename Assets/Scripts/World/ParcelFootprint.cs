@@ -26,6 +26,12 @@ public class ParcelFootprint : MonoBehaviour
     [Tooltip("World size of one cell. The 2:1 ratio is what reads as isometric.")]
     [SerializeField] Vector2 cell = new Vector2(1f, 0.5f);
 
+    [Tooltip("What the field is planted with. Only a look for now - see docs/design.md.")]
+    [SerializeField] SpriteShape crop;
+
+    [Tooltip("The layer the crop is painted onto. Wired once, in the prefab.")]
+    [SerializeField] SpriteShapeController cropLayer;
+
     public Vector2Int Footprint
     {
         get { return footprint; }
@@ -42,6 +48,11 @@ public class ParcelFootprint : MonoBehaviour
     /// </summary>
     public void Rebuild()
     {
+        // Kept on the parcel rather than on the layer it paints, so picking a crop
+        // is one field on the thing you clicked and not a hunt through children.
+        if (cropLayer != null && crop != null && cropLayer.spriteShape != crop)
+            cropLayer.spriteShape = crop;
+
         // The two isometric axes, half a cell across and a quarter of one down.
         Vector2 down = new Vector2(cell.x, -cell.y) * 0.5f * footprint.x;
         Vector2 up = new Vector2(cell.x, cell.y) * 0.5f * footprint.y;
