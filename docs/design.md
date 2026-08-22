@@ -23,6 +23,10 @@ optimization on existing land funds expansion faster than sprawling into new lan
 A phone game held upright. You drag the map to move around it, and tapping a parcel raises a panel
 from the bottom of the screen — that panel is where the automation is set up and tuned.
 
+Tuning automation needs more room than a sheet leaves, so the panel grows to fill the screen instead
+of handing you off to a separate page. It is the same surface throughout, and closing it walks back
+the way you came: full screen to sheet, sheet to map.
+
 ## Not decided yet
 
 What automation and optimization concretely consist of — the inputs a parcel takes, the knobs the
