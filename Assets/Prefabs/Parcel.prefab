@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1618663152565725531}
   - component: {fileID: 5938901701964354495}
   - component: {fileID: 7539551342946920383}
+  - component: {fileID: 1726750763004947922}
   m_Layer: 0
   m_Name: Parcel
   m_TagString: Untagged
@@ -184,3 +185,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!210 &1726750763004947922
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6380617574483147945}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0

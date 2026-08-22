@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// A field the player can own and, later, automate.
@@ -9,11 +10,16 @@ using UnityEngine.EventSystems;
 /// threshold so panning does not count as a tap, and swallows anything that
 /// landed on the UI. None of that needs code of ours.
 ///
+/// A parcel is drawn from several stacked layers rather than one sprite, so its
+/// place in the island lives on a SortingGroup instead of on a renderer. The
+/// group keeps the layers together and in their own order, which leaves the
+/// parcel with a single number to move.
+///
 /// A parcel also listens to the channel it raises on, because it cannot drop its
 /// own highlight without knowing that somebody else was picked.
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
-[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(SortingGroup))]
 [DisallowMultipleComponent]
 public class Parcel : MonoBehaviour, IPointerClickHandler
 {
@@ -28,7 +34,7 @@ public class Parcel : MonoBehaviour, IPointerClickHandler
 
     static readonly int Selected = Animator.StringToHash("Selected");
 
-    SpriteRenderer body;
+    SortingGroup depth;
     int baseSortingOrder;
 
     public string DisplayName
@@ -38,8 +44,8 @@ public class Parcel : MonoBehaviour, IPointerClickHandler
 
     void Awake()
     {
-        body = GetComponent<SpriteRenderer>();
-        baseSortingOrder = body.sortingOrder;
+        depth = GetComponent<SortingGroup>();
+        baseSortingOrder = depth.sortingOrder;
     }
 
     void OnEnable()
@@ -57,10 +63,10 @@ public class Parcel : MonoBehaviour, IPointerClickHandler
         bool mine = picked == this;
         if (highlight != null) highlight.SetBool(Selected, mine);
 
-        // sortingOrder is a baked topological depth order, so the parcel that
-        // grows would be clipped by whichever neighbour draws after it. The pick
-        // goes in front of the whole island for as long as it is held.
-        body.sortingOrder = mine ? baseSortingOrder + selectedSortingBoost : baseSortingOrder;
+        // The group's order is a baked topological depth, so the parcel that grows
+        // would be clipped by whichever neighbour draws after it. The pick goes in
+        // front of the whole island for as long as it is held.
+        depth.sortingOrder = mine ? baseSortingOrder + selectedSortingBoost : baseSortingOrder;
     }
 
     public void OnPointerClick(PointerEventData eventData)
