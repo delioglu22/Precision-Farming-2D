@@ -47,6 +47,22 @@ grass        567C3A -> 7CA955      straw       896D47 -> DCC17E
 grass dark   42632F -> 628C47      sage        886D47 -> AFA676
 ```
 
+## Woods and ponds
+
+They stand on the same slab as a parcel, with the same outline, border and sides, and only their
+surface differs. Neither is a picture of a particular pond or wood, so both grow with their plot for
+nothing.
+
+A **pond** is two flat steps of water: shallow at the bank, deep in the middle. A **wood** is a
+canopy tile, laid the same way a field lays its furrows — tree tops 32 px across on a staggered
+lattice, drawn at **96 x 96** so the pattern meets itself.
+
+```
+shallow water  548692        tree top     5A854B
+deep water     3F6C7E        tree bottom  486A3C
+                             shade below  1E2C1C
+```
+
 ## Earth
 
 The four surfaces of the slab, darkest to lightest:
@@ -66,6 +82,11 @@ something that almost matches, which reads worse than something openly different
 **Flat colour is a swatch, not a file.** A single colour belongs in the layer's colour field in the
 Inspector. Only a pattern earns a texture of its own.
 
-**Do not ask an image generator for exact geometry.** It cannot hit a grid to the pixel, and a tile
-that is three pixels off seams across the whole map. Ask it for surface texture and for scenery —
-trees, rocks, water — where nothing has to line up.
+**A surface that repeats is a fill, not a heap of objects.** Crops, water and woodland all cover a
+plot with the same thing over and over, and a tiling fill grows with the plot for free. Reach for
+real objects only when they are individually meaningful — something the player will click, count or
+move.
+
+**Do not ask an image generator for a tile or for anything on the grid.** It cannot hit a grid to
+the pixel, and a tile that is three pixels off seams across the whole map. Ask it for a one-off that
+stands alone and lines up with nothing — a building, a boat, a signpost.
