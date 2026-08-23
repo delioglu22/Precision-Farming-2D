@@ -32,7 +32,15 @@ public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     [Tooltip("How much of the screen height the open panel hides. Keep this in step with the panel's own height.")]
     [SerializeField, Range(0f, 0.8f)] float sheetCover = 0.396f;
 
+    [Header("How close the view sits")]
+    [Tooltip("Orthographic size with nothing picked. The whole island is this tall, so going further only adds water.")]
+    [SerializeField, Min(0.1f)] float restingSize = 6.4f;
+    [Tooltip("Orthographic size while a parcel is open, close enough to read one field.")]
+    [SerializeField, Min(0.1f)] float pickedSize = 4.8f;
+
     [Header("Feel")]
+    [Tooltip("How quickly the view closes on a pick and opens back out. Higher arrives sooner.")]
+    [SerializeField, Range(0.5f, 20f)] float zoomDamping = 8f;
     [Tooltip("How quickly the glide after a swipe runs out. Higher stops sooner.")]
     [SerializeField, Range(0.5f, 20f)] float glideDamping = 6f;
     [Tooltip("Below this speed the glide is dropped instead of crawling to a stop.")]
@@ -56,7 +64,11 @@ public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         focusing = false;
         sheetOpen = false;
         if (channel != null) channel.Selected += OnSelected;
-        if (view != null) view.transform.position = Clamped(view.transform.position);
+        if (view != null)
+        {
+            view.orthographicSize = restingSize;
+            view.transform.position = Clamped(view.transform.position);
+        }
     }
 
     void OnDisable()
@@ -77,8 +89,10 @@ public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         Vector3 here = view.transform.position;
         if (parcel != null)
         {
+            // Aim with the distance the view is heading for rather than the one it
+            // is leaving, or the pick sits off centre for as long as the zoom runs.
             Vector3 field = parcel.transform.position;
-            focusTarget = new Vector3(field.x, field.y - BandOffset(), here.z);
+            focusTarget = new Vector3(field.x, field.y - pickedSize * sheetCover, here.z);
         }
         else
         {
@@ -86,7 +100,8 @@ public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             // sitting off the bottom of the island. Ease it back over the land.
             focusTarget = here;
         }
-        focusTarget = Clamped(focusTarget);
+        // Left unclamped on purpose: how far the view may travel depends on how
+        // much of the map it can see, and that is still changing.
         focusing = true;
     }
 
@@ -117,13 +132,18 @@ public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
     void Update()
     {
-        if (dragging || view == null) return;
+        if (view == null) return;
+
+        // A hand on the map does not stop the view from finishing its approach.
+        Zoom();
+        if (dragging) return;
 
         if (focusing)
         {
+            Vector3 goal = Clamped(focusTarget);
             Vector3 from = view.transform.position;
-            Vector3 now = Vector3.Lerp(from, focusTarget, 1f - Mathf.Exp(-focusDamping * Time.unscaledDeltaTime));
-            if ((focusTarget - now).sqrMagnitude < 1e-6f) { now = focusTarget; focusing = false; }
+            Vector3 now = Vector3.Lerp(from, goal, 1f - Mathf.Exp(-focusDamping * Time.unscaledDeltaTime));
+            if ((goal - now).sqrMagnitude < 1e-6f) { now = goal; focusing = false; }
             view.transform.position = now;
             return;
         }
@@ -133,6 +153,22 @@ public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         view.transform.position = Clamped(was + new Vector3(glide.x, glide.y, 0f) * Time.unscaledDeltaTime);
         if ((view.transform.position - was).sqrMagnitude < 1e-8f) glide = Vector2.zero;
         else glide *= Mathf.Exp(-glideDamping * Time.unscaledDeltaTime);
+    }
+
+    /// <summary>
+    /// Eases between the resting distance and the closer one a pick asks for. The
+    /// clamp is redone as it goes, since how far the view may travel depends on how
+    /// much of the map fits on screen.
+    /// </summary>
+    void Zoom()
+    {
+        float wanted = sheetOpen ? pickedSize : restingSize;
+        if (view.orthographicSize == wanted) return;
+
+        float size = Mathf.Lerp(view.orthographicSize, wanted, 1f - Mathf.Exp(-zoomDamping * Time.unscaledDeltaTime));
+        if (Mathf.Abs(size - wanted) < 0.001f) size = wanted;
+        view.orthographicSize = size;
+        view.transform.position = Clamped(view.transform.position);
     }
 
     /// <summary>How much of the view the sheet is hiding right now.</summary>
