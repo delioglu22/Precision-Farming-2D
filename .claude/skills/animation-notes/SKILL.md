@@ -18,3 +18,7 @@ description: Bir Animator, AnimationClip, state ya da transition olusturan/degis
 - `ParcelIdle` / `ParcelSelected` bind by **path**: the scale onto the parcel root, the colour onto
   the child named `Crop`. Rename that child and the pick stops warming, silently and with no error.
   Only the crop is tinted on purpose — see `docs/art.md`.
+- The page's body is shown by **animating a `CanvasGroup`**, not by toggling the GameObject: path
+  `Content/Body`, with `m_Alpha`, `m_Interactable` and `m_BlocksRaycasts` keyed in all three clips.
+  Skip the raycast key and the invisible machine rows still swallow taps while the sheet is small,
+  which reads as a dead panel rather than as an animation bug.

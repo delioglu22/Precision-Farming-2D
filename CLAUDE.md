@@ -80,8 +80,9 @@ full and nothing was lost.
 Wiring a `Button` to that Animator is where the table gets sharp. A `UnityEvent` persistent call
 carries **at most one static argument**, so it cannot reach `Animator.SetBool(name, value)`.
 `SetTrigger(name)` fits the signature but an unconsumed trigger latches and fires on the next open —
-tap Automate twice and the next panel expands on its own. `ParcelPanel.SetExpanded(bool)` exists for
-exactly this: one public method taking one bool, which a Button can call straight from the Inspector.
+tap the sheet's action button twice and the next panel expands on its own.
+`ParcelPanel.SetExpanded(bool)` exists for exactly this: one public method taking one bool, which a
+Button can call straight from the Inspector.
 
 The rule is "name the alternative", **not** "never write scripts". `MapPan` exists because Unity has
 no built-in map panning, and that is a fine reason.
@@ -115,7 +116,8 @@ Normal loop after changing anything:
 3. `manage_gameobject` / `manage_components` to author, `manage_camera` action `screenshot` to look at
    the result, `manage_scene` action `save` when scene state changed.
 
-Scene edits are only persisted by an explicit `manage_scene` action `save`.
+Scene edits are only persisted by an explicit save, and with both scenes open that call does not
+always reach the one you mean — see `.claude/skills/unity-mcp-quirks/` before saving `UI.unity`.
 
 The editor's tool quirks — the ones that each cost a round trip — now live in
 `.claude/skills/unity-mcp-quirks/`, so they load only when the work touches the editor:
@@ -136,6 +138,10 @@ Both sets of hard-won traps now live in skills, so they load only when the work 
   texture**, not one texture per colour. Adding a colour means a swatch, not a file.
 - Editor-generated objects should carry `HideFlags.DontSaveInEditor | DontSaveInBuild` if they are
   transient, or they bloat the scene file. Authored content is the opposite: it belongs in the scene.
+- The view rests at orthographic size **6.4** and closes to **4.8** while a parcel is open, both
+  driven by `MapPan` and both tunable in the Inspector. 6.4 is a ceiling rather than a taste: the
+  water sprite is 26 x 14 world units, so a taller view runs off its edge and shows the camera's
+  clear colour. Pulling further back means enlarging `water_sheet` first.
 
 ## Hand part of the work back
 

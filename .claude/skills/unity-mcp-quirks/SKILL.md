@@ -20,6 +20,14 @@ description: Unity MCP araclariyla editorde is yaparken MUTLAKA bu skill'i kulla
 - **The editor is often left in play mode.** Scene edits made there are silently discarded on stop, so
   every scene-editing `execute_code` must open with
   `if (Application.isPlaying) return "still in play mode";`.
+- Leaving play mode **unloads the additively loaded `UI.unity`**. Reopen it with
+  `EditorSceneManager.OpenScene(path, OpenSceneMode.Additive)` before editing the panel, or the next
+  `transform.Find("Parcel Panel")` comes back null and reads as "the panel is gone".
+- `manage_scene` action `save` saves the **active** scene, whatever you pass as `path` — with both
+  scenes open that is `SampleScene`, and the UI edits stay unsaved while the call reports success.
+  Save the other one by name:
+  `EditorSceneManager.SaveScene(SceneManager.GetSceneByPath("Assets/Scenes/UI.unity"))`, then check
+  the returned bool and `scene.isDirty`.
 - `EditorBuildSettings.scenes` does not reach disk on its own. It reads back correctly in memory and
   still ships a broken build. Follow it with `AssetDatabase.SaveAssets()` and
   `ExecuteMenuItem("File/Save Project")`, then confirm in `ProjectSettings/EditorBuildSettings.asset`.
