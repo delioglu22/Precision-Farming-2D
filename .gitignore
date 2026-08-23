@@ -68,7 +68,11 @@ crashlytics-build.properties
 # IDE / OS
 .idea/
 .vscode/
-.claude/
-CLAUDE.md
 *.DS_Store
 Thumbs.db
+
+# Claude Code — CLAUDE.md, the hooks and the project skills are tracked so the
+# project moves between machines. Only per-machine state stays out.
+.claude/settings.local.json
+.claude/hooks/*.state.json
+.claude/*.lock

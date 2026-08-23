@@ -1,0 +1,19 @@
+{
+    "worktree": {
+        "bgIsolation": "none"
+    },
+    "hooks": {
+        "UserPromptSubmit": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "node",
+                        "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/your-turn.js"],
+                        "timeout": 10
+                    }
+                ]
+            }
+        ]
+    }
+}

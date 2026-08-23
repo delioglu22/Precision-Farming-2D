@@ -1,0 +1,220 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project
+
+**Precision Farming 2D** — a game about automating farmland and optimizing that automation.
+See `docs/design.md` for the core loop and what has actually been decided; keep that document short
+and about the game, not about implementation. `docs/art.md` is its sibling for how the game looks —
+the grid, the light, the palette, and what a new piece of art has to obey. Neither document carries
+implementation; that lives in this file and in the scripts' own comments.
+
+Two scenes. `Assets/Scenes/SampleScene.unity` is the one you play from; `Assets/Scenes/UI.unity`
+holds the canvas and the EventSystem and is pulled in additively by `SceneBootstrap`. Both are in the
+build settings. Edit the UI by opening `UI.unity` — alongside the map scene is fine, the bootstrap
+will not load it twice.
+
+**`World` has to stay a common ancestor of everything clickable.** The EventSystem finds a drag
+handler by walking *up the hierarchy* from whatever was pressed, and `MapPan` lives on `World`.
+Move `Parcels` or `Water` out from under it and dragging the map silently stops working.
+
+Three prefabs are built from the same slab: `Parcel.prefab` (clickable, has a crop),
+`PondSlab.prefab` (two steps of water) and `ForestSlab.prefab` (a canopy fill). They are siblings,
+not variants, so a change to the slab's layers has to be made in all three.
+
+**Adding a parcel**: instantiate the prefab, then set its name, position, `ParcelFootprint.footprint`
+and the `SortingGroup`'s order. Nothing else. There is no sprite to pick and no collider to fit — the
+five layers are traced from the footprint and `autoUpdateCollider` bakes the outline.
+
+The group's order is a baked topological depth, so a new parcel needs the whole order recomputed —
+the rule is that A draws before B when B sits further along an isometric axis and they overlap on the
+other one. It lives on the `SortingGroup`, not on a renderer: the renderers inside a parcel use 0–4
+for their own stacking and must stay that way.
+
+See `docs/art.md` for what a parcel looks like and `ParcelFootprint` / `ParcelLayer` for how it is
+put together.
+
+Note: this file, `.claude/skills/` and `.claude/hooks/` are tracked, so the instructions and the
+project skills travel with the repo to another machine. Only per-machine state is ignored:
+`.claude/settings.local.json`, the `your-turn` counter and the scheduler lock. `docs/` is tracked
+normally.
+
+## Build the scene, don't generate it
+
+The user wants this project built **the way a game developer builds one**: author the scene in Unity
+through the MCP tools — create GameObjects, add and configure components, wire references, save the
+scene — so the result is real, inspectable, editable content in `SampleScene.unity`.
+
+Do **not** reach for a procedural generator script that builds the world at edit time. An early
+component generated the whole parcel map from code and was deleted for exactly this reason: it put
+the game's content inside a script instead of in the scene, where the user cannot see or adjust it.
+
+Write scripts for **game behaviour** — automation, economy, parcel state, input. Not for producing
+scenery that should have been placed.
+
+## Use the engine before writing code
+
+Unity already does most of what a small game needs. Before writing a MonoBehaviour, **name the Unity
+component that would do this job**. If one exists, use it. If none does, say so in one sentence and
+then write the script. This is mandatory for any new script over ~50 lines.
+
+Not theoretical: a 138-line component was written to detect taps — pointer tracking, a drag
+threshold, `Physics2D.OverlapPointAll`, front-most sorting, and a "did this land on the UI" check.
+A `Physics2DRaycaster` on the camera plus `IPointerClickHandler` does all five. It was deleted in
+full and nothing was lost.
+
+| Job | Reach for |
+| --- | --- |
+| Clicks/taps on world objects | `Physics2DRaycaster` on the camera + `IPointerClickHandler` |
+| Dragging the world around | `IBeginDragHandler` / `IDragHandler` on a common ancestor — never poll the device |
+| A tap that must not fire mid-drag | Already handled — `EventSystem.pixelDragThreshold` |
+| A click or drag that must not pass through UI | Already handled — the EventSystem consumes it |
+| Many objects that share a setup | A prefab, so one edit reaches all of them |
+| Several renderers that must sort as one thing | A `SortingGroup` — one number for the object, 0..n inside it |
+| Showing, hiding or sliding UI | `Animator`: a bool and two poses, blended by a transition |
+| Values worth tuning | `[SerializeField]` and the Inspector, not constants in code |
+| State shared across scenes | A `ScriptableObject` asset both scenes reference |
+| Arranging UI | Anchors and layout groups, not code that sets positions |
+
+Wiring a `Button` to that Animator is where the table gets sharp. A `UnityEvent` persistent call
+carries **at most one static argument**, so it cannot reach `Animator.SetBool(name, value)`.
+`SetTrigger(name)` fits the signature but an unconsumed trigger latches and fires on the next open —
+tap Automate twice and the next panel expands on its own. `ParcelPanel.SetExpanded(bool)` exists for
+exactly this: one public method taking one bool, which a Button can call straight from the Inspector.
+
+The rule is "name the alternative", **not** "never write scripts". `MapPan` exists because Unity has
+no built-in map panning, and that is a fine reason.
+
+The failure mode to watch for is not ignorance of the API — it is preferring self-contained code
+because it is easier to verify programmatically. Resist that and verify the engine's behaviour instead.
+
+`.claude/skills/engine-first/SKILL.md` carries the same rule in Turkish and fires whenever new
+behaviour is being added.
+
+## Working with the editor
+
+There is no CLI build/lint/test loop. Everything runs through the Unity Editor over the
+**Unity MCP** server (`com.coplaydev.unity-mcp`, tools are `mcp__UnityMCP__*`). No test assemblies or
+`.asmdef` files exist, so there is nothing to run with the Test Framework — verification means
+*compile cleanly, then inspect the result in the editor*.
+
+**If Unity MCP is disconnected or failing, stop and tell the user. In every case, without exception.**
+Do not improvise a substitute route: not compiling with Unity's Roslyn from the shell, not guessing
+that it probably compiles, and **not driving the MCP server yourself over its HTTP endpoint**
+(`http://127.0.0.1:8080/mcp`) when the session's own `mcp__UnityMCP__*` tools are missing. "It is the
+same server, so the verification is identical" is not an exception — it was tried, it worked, and the
+user still ruled it out. Say the tools are missing and let the user reconnect with `/mcp` or restart
+the session. This is a standing instruction from the user.
+
+Normal loop after changing anything:
+
+1. `refresh_unity` with `compile: "request"`, `wait_for_ready: true`
+2. `read_console` with `types: ["error"]` — must return 0 entries before you claim it works.
+   A `MCP-FOR-UNITY: [WebSocket] Unexpected receive error` warning is domain-reload noise, not a code error.
+3. `manage_gameobject` / `manage_components` to author, `manage_camera` action `screenshot` to look at
+   the result, `manage_scene` action `save` when scene state changed.
+
+Scene edits are only persisted by an explicit `manage_scene` action `save`.
+
+### Tool quirks that will otherwise cost you a round trip
+
+- `execute_code` with `compiler: "codedom"` is **C# 6 only** — no local functions, no interpolated
+  strings, no `?.`. `Object` is an ambiguous reference there; write `UnityEngine.Object`.
+- `execute_code` runs as a method body with `return` for output. Reflection
+  (`BindingFlags.NonPublic | BindingFlags.Instance`) is the way to inspect private component state.
+- `manage_camera` action `screenshot` needs a **project-relative** `output_folder` (e.g. `Captures`);
+  absolute paths outside the project are rejected. That folder is not gitignored — delete it when done.
+- `AssetDatabase.DeleteAsset` is blocked by MCP safety checks. Delete files from the shell instead.
+- When deleting a script, remove the GameObject that uses it **first**, or the scene keeps a missing
+  script reference.
+- `create_script` refuses to overwrite an existing file. Use `Write`/`Edit`, or remove the file first.
+- `refresh_unity` with `scope: "scripts"` **does not import new files** — a brand new `.cs` will not
+  compile and you get `CS0246: type could not be found`. Use `scope: "all"` after adding a file.
+- **The editor is often left in play mode.** Scene edits made there are silently discarded on stop, so
+  every scene-editing `execute_code` must open with
+  `if (Application.isPlaying) return "still in play mode";`.
+- `EditorBuildSettings.scenes` does not reach disk on its own. It reads back correctly in memory and
+  still ships a broken build. Follow it with `AssetDatabase.SaveAssets()` and
+  `ExecuteMenuItem("File/Save Project")`, then confirm in `ProjectSettings/EditorBuildSettings.asset`.
+- Play mode barely ticks while the editor window is unfocused, so animations look frozen and timers
+  do not advance. Do not read that as a bug — drive it by hand, e.g. `animator.Update(0.1f)` in a loop.
+- A Screen Space - Overlay canvas is a **1080x1920 unit** rectangle in the Scene view, next to a 24x12
+  island. Select it and press F to find it. It only looks that way in the Scene view — Overlay is
+  composited over the camera's output and has no place in the world, so never "fix" it by moving or
+  scaling the canvas; Unity recomputes that transform every frame. Hide it instead: the canvas is on
+  the `UI` layer, so the Scene view's Layers dropdown switches it off. The screenshot tool cannot
+  capture Overlay canvases, so verify UI by assertion, not by picture. The reason, so nobody
+  re-tests it: the capture resolves to `Main Camera` even when `camera` is omitted, and
+  camera-rendered captures exclude Overlay by design. Checked by moving the panel on-screen with
+  its `Image`s confirmed visible — it still did not appear.
+- A persistent `UnityEvent` listener defaults to `m_CallState = 2` (`RuntimeOnly`), so
+  `button.onClick.Invoke()` in edit mode does **nothing**. That is not a broken wiring. To prove a
+  binding without play mode, set that field to `1` through `SerializedObject`, invoke, then put it back.
+- `AnimationMode.StartAnimationMode()` plus `SampleAnimationClip` lays a clip's pose onto the real
+  objects in edit mode, so poses can be measured (`RectTransform.GetWorldCorners`) without entering
+  play mode. Stop animation mode and restore the resting pose afterwards.
+- Bash heredocs (`cat > file << 'EOF'`) do work here, despite an earlier note to the contrary.
+- `execute_code`'s CodeDom compiler does **not** reference the SpriteShape assembly, so
+  `typeof(UnityEngine.U2D.SpriteShapeController)` will not compile. Find those types reflectively:
+  loop `AppDomain.CurrentDomain.GetAssemblies()` and `asm.GetType("UnityEngine.U2D.…")`.
+- `capture_source: "scene_view"` **cannot frame an object in an additively loaded scene**. Both
+  `UI` and `Parcel Panel` come back as "Target GameObject not found" while `UI.unity` is loaded and
+  they plainly exist. Capture the whole viewport instead, or select the object first. That viewport
+  shot is live and shows gizmos, selection outlines and the toolbar — the one way to *see* the editor.
+- `unity_reflect` answers "does this type really expose that member?" against the live editor —
+  `search` for a type, `get_type` for its members, `get_member` for one signature. It is cheaper
+  than a failed `execute_code` round trip and it is how you check the engine before writing against
+  it. `unity_docs` fetches the manual when reflection is not enough.
+- Instantiating a prefab is `manage_gameobject` action `create` with `prefab_path`. `manage_prefabs`
+  is a different job — opening and saving the prefab stage — and reaching for it here wastes a turn.
+- `batch_execute` takes 25 commands by default (hard cap 100), and `parallel` only ever parallelises
+  **read-only** commands: a batch that writes runs sequentially no matter what you pass.
+
+## SpriteShape and animation traps
+
+Both sets of hard-won traps now live in skills, so they load only when the work needs them:
+`.claude/skills/spriteshape-notes/` (fill textures, baking order, edge sprites, stale screenshots) and
+`.claude/skills/animation-notes/` (clip properties, growing the panel, path bindings).
+
+## Rendering notes
+
+- The project is **Linear** color space. `SpriteRenderer.color` and `SpriteShapeRenderer.color` both
+  convert automatically; `Mesh.SetColors` does not — write mesh vertex colors as `color.linear`.
+- A parcel's flat colours (outline, rim, both side faces) are **renderer tints over one white
+  texture**, not one texture per colour. Adding a colour means a swatch, not a file.
+- Editor-generated objects should carry `HideFlags.DontSaveInEditor | DontSaveInBuild` if they are
+  transient, or they bloat the scene file. Authored content is the opposite: it belongs in the scene.
+
+## Hand part of the work back
+
+The user is learning this engine, not outsourcing it, and said so: doing everything for them costs
+them the skill. Every couple of commits a `UserPromptSubmit` hook drops a `[SENİN SIRAN]` ticket into
+the conversation. When one arrives, pick one piece of the current task that the user can do by hand
+in Unity, hand it over, wait, then check the result.
+
+`.claude/hooks/your-turn.js` only keeps the count — a shell script cannot tell a good handover task
+from a terrible one. The judgement is in `.claude/skills/hand-it-over/SKILL.md` (Turkish): what makes
+a piece worth handing over, how to describe it without writing a click-by-click recipe, and how to
+verify it afterwards. An ignored ticket nags three times and then lapses, so an unanswered ticket is
+not a way out — either hand something over or say in one sentence why there is nothing suitable, then
+close it with `node .claude/hooks/your-turn.js --close`.
+
+The clock is commits rather than messages, because `incremental-commits` already splits work into
+pieces that each land as one commit. The user tunes it with `--every <n>`, `--off`/`--on`, and can
+force or skip a ticket by putting `#benim-sıram` or `#kendin-yap` in a prompt.
+
+## Commits
+
+`.claude/skills/incremental-commits/SKILL.md` governs this and is written in Turkish. The parts that
+bite most often:
+
+- **Never commit without the user's explicit approval.** Summarize the change in one line, show the
+  proposed message, then stop and wait.
+- **Never commit code whose compile state you could not verify** in the Unity console.
+- Split work into 2–6 pieces that each compile and run on their own; commit before a risky refactor.
+- Messages: English, imperative, one line, ≤72 chars, `<type>: <what>` with `feat` / `fix` /
+  `refactor` / `chore`. **No** `Co-Authored-By` line, no "Generated with Claude Code", no tool signature.
+- Commit `.meta` files alongside their assets, and the `.unity` scene when it changed.
+
+The user writes in Turkish; reply in Turkish. Code, comments and commit messages stay English.
