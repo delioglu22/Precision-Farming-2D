@@ -21,16 +21,44 @@ optimization on existing land funds expansion faster than sprawling into new lan
 ## Playing it
 
 A phone game held upright. You drag the map to move around it, and tapping a parcel raises a panel
-from the bottom of the screen — that panel is where the automation is set up and tuned.
+from the bottom of the screen — that panel is where a parcel is read and acted on. The view closes
+in on the parcel as the panel rises and opens back out when it is dismissed, so the map is read at
+arm's length and a parcel up close.
 
-Tuning automation needs more room than a sheet leaves, so the panel grows to fill the screen instead
-of handing you off to a separate page. It is the same surface throughout, and closing it walks back
-the way you came: full screen to sheet, sheet to map.
+The sheet reports, it does not edit. A parcel is one thing at a time: empty land asks a single
+question — **Build** or **Plant** — and answering it decides what that land is for, since ground
+given to a store is ground that grows nothing. The answer can be undone, but only from the bottom of
+the parcel's own page, and undoing it throws away everything tuned there. That is the price of
+changing your mind: not the coins, but the attention already spent.
+
+Once answered the sheet stops asking. Its header says what the parcel is, and its body reports the
+land itself — how fertile the soil is and how much water it holds. Those two readings are what makes
+one parcel different from the next, and they are what the player weighs before deciding what the land
+is for.
+
+The machines stay off the sheet. **Plant** opens the page that lists the seeder, the drone and the
+irrigation system with their properties; **Build** opens the page where a building is chosen and what
+it holds is shown. The sheet is for reading a parcel at a glance, the page for working on it.
+
+Acting on a parcel needs more room than a sheet leaves, so the sheet grows into a page that fills
+the screen. It is the same surface, and what makes it read that way is what does not move: the
+parcel's name and its two readings hold their place while the body opens in the space below them.
+The page is not somewhere else, it is the same parcel closer up. Closing walks back the way you
+came — page to sheet, sheet to map.
+
+Three machines work a farm: a seeder, a drone that fertilises and an irrigation system. Each is tuned
+in a mini game of its own, so optimizing is per machine rather than one dial for the whole parcel, and
+every machine gets to ask the player for something different.
 
 ## Not decided yet
 
 What automation and optimization concretely consist of — the inputs a parcel takes, the knobs the
 player turns, and how profit is calculated. These get written here as they are settled, not before.
+
+Whether a machine's percentage is worth the same on every parcel. If it is, every farm asks for the
+same three mini games in the same order and optimizing becomes a chore list. The intent is that the
+bottleneck differs from parcel to parcel, so that leaving a machine at 60% is often the right call —
+but what decides the bottleneck is not settled.
 
 Whether a crop is more than a look. Six of them exist, and right now choosing one is decoration. For
 a crop to become state it has to decide something: what it costs to plant, what it yields, how long
