@@ -217,4 +217,11 @@ bite most often:
   `refactor` / `chore`. **No** `Co-Authored-By` line, no "Generated with Claude Code", no tool signature.
 - Commit `.meta` files alongside their assets, and the `.unity` scene when it changed.
 
+## Turkish, and dictation
+
 The user writes in Turkish; reply in Turkish. Code, comments and commit messages stay English.
+
+Those prompts arrive through Turkish speech-to-text, so English technical terms come back spelled
+phonetically: "brençi" is *branch*, "kamit" is *commit*, "merc" is *merge*, "gitignor" is
+*.gitignore*. Read one of those from context and carry on — do not stop to point out the spelling.
+The exception is a **file name, a path or a literal command**: never guess at one of those, ask.
