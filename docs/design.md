@@ -50,15 +50,45 @@ Three machines work a farm: a seeder, a drone that fertilises and an irrigation 
 in a mini game of its own, so optimizing is per machine rather than one dial for the whole parcel, and
 every machine gets to ask the player for something different.
 
+Each of the three machines reports a percentage, and what a parcel earns is its full worth scaled by
+the **average** of those three rather than their product. Eighty percent on all three machines is a
+parcel running at eighty percent, because covering four fifths of a field is not a failure. That
+average is weighted, and the weights come from the two readings the parcel already shows: poor soil
+makes the drone matter more, dry land makes irrigation matter more, and the seeder always carries
+weight because nothing grows where no seed landed. This is what stops every farm from asking the same
+three questions in the same order — on good land a half-tuned drone costs almost nothing and walking
+away from it is correct, while on poor land it is the whole parcel.
+
+## The seeder
+
+The seeder is tuned by driving it. Its mini game hands you the parcel and one unbroken line: you put a
+finger down, the machine follows where you lead it, and you do not lift until the run is over. The
+line lays a band of seed around itself, and the job is to cover the parcel with that band before the
+battery runs out. The battery is the length of line you have left, so the budget is something you read
+against the ground still bare rather than a number draining in a corner. Ground seeded twice is
+battery spent for nothing, ground missed stays bare, and the run ends on a percentage — the share of
+the parcel that got seed. The run cannot be failed; an empty battery just stops the machine where it
+stands, and whatever was covered still pays. Seed laid outside the parcel is wasted, which makes the
+boundary the hard part and the middle of a field the easy part. A parcel's percentage stands until it
+is run again.
+
+Seeders come in sizes and a farm runs a fleet of them. A bigger seeder lays a wider band and carries
+more battery, and that is what lets it finish a large parcel at all — a smaller one runs dry with
+ground left over and cannot be made to reach. Every seeder also has a limit on how many parcels it can
+be responsible for, and that limit is counted in parcels rather than in ground: a slot spent on a
+scrap of land costs exactly what a slot spent on a large field costs. So the machine goes on the
+biggest parcel it can still finish, and putting an expensive seeder on land a cheap one could have
+covered wastes the thing that is actually scarce. Seeders are dear early on, the fleet is short, and
+some parcel goes unseeded until it is not.
+
 ## Not decided yet
 
 What automation and optimization concretely consist of — the inputs a parcel takes, the knobs the
 player turns, and how profit is calculated. These get written here as they are settled, not before.
 
-Whether a machine's percentage is worth the same on every parcel. If it is, every farm asks for the
-same three mini games in the same order and optimizing becomes a chore list. The intent is that the
-bottleneck differs from parcel to parcel, so that leaving a machine at 60% is often the right call —
-but what decides the bottleneck is not settled.
+How a parcel's two readings turn into the three weights. That poor soil leans on the drone and dry
+land on irrigation is settled; the arithmetic that takes a fertility and a water figure and returns
+three numbers is not.
 
 Whether a crop is more than a look. Six of them exist, and right now choosing one is decoration. For
 a crop to become state it has to decide something: what it costs to plant, what it yields, how long
