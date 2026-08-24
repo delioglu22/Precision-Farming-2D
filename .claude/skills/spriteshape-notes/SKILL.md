@@ -1,6 +1,6 @@
 ---
 name: spriteshape-notes
-description: Bir parcel'in, pond'un ya da forest'in katmanlarina, fill dokusuna, spline'ina ya da collider bake'ine dokunan her iste MUTLAKA bu skill'i kullan. SpriteShape ile calisirken her biri bir tur kaybettirmis tuzaklari tasir: fill dokusunun import tipi, boundsScale, bake sirasi, edge sprite hizasi, fillOffset ve bayat ekran goruntusu.
+description: MUST use this skill for any work that touches a parcel's, pond's or forest's layers, fill texture, spline or collider bake. It carries the SpriteShape traps that have each cost a round trip: the fill texture's import type, boundsScale, bake order, edge sprite alignment, fillOffset and stale screenshots.
 ---
 
 # SpriteShape notes

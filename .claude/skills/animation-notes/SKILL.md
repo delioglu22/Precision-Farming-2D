@@ -1,6 +1,6 @@
 ---
 name: animation-notes
-description: Bir Animator, AnimationClip, state ya da transition olusturan/degistiren her iste MUTLAKA bu skill'i kullan. Panelin buyume animasyonunu, klip property eslesmesini, path binding'i ve sahnedeki dinlenme pozunu dogru kurmak icin gereken tuzaklari tasir.
+description: MUST use this skill for any work that creates or changes an Animator, an AnimationClip, a state or a transition. It carries what is needed to get the panel's growth animation, clip property matching, path bindings and the scene's resting pose right.
 ---
 
 # Animation notes

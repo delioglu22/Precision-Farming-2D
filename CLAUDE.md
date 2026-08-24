@@ -90,7 +90,7 @@ no built-in map panning, and that is a fine reason.
 The failure mode to watch for is not ignorance of the API — it is preferring self-contained code
 because it is easier to verify programmatically. Resist that and verify the engine's behaviour instead.
 
-`.claude/skills/engine-first/SKILL.md` carries the same rule in Turkish and fires whenever new
+`.claude/skills/engine-first/SKILL.md` carries the same rule and fires whenever new
 behaviour is being added.
 
 ## Working with the editor
@@ -146,12 +146,12 @@ Both sets of hard-won traps now live in skills, so they load only when the work 
 ## Hand part of the work back
 
 The user is learning this engine, not outsourcing it, and said so: doing everything for them costs
-them the skill. Every couple of commits a `UserPromptSubmit` hook drops a `[SENİN SIRAN]` ticket into
+them the skill. Every couple of commits a `UserPromptSubmit` hook drops a `[YOUR TURN]` ticket into
 the conversation. When one arrives, pick one piece of the current task that the user can do by hand
 in Unity, hand it over, wait, then check the result.
 
 `.claude/hooks/your-turn.js` only keeps the count — a shell script cannot tell a good handover task
-from a terrible one. The judgement is in `.claude/skills/hand-it-over/SKILL.md` (Turkish): what makes
+from a terrible one. The judgement is in `.claude/skills/hand-it-over/SKILL.md`: what makes
 a piece worth handing over, how to describe it without writing a click-by-click recipe, and how to
 verify it afterwards. An ignored ticket nags three times and then lapses, so an unanswered ticket is
 not a way out — either hand something over or say in one sentence why there is nothing suitable, then
@@ -159,11 +159,11 @@ close it with `node .claude/hooks/your-turn.js --close`.
 
 The clock is commits rather than messages, because `incremental-commits` already splits work into
 pieces that each land as one commit. The user tunes it with `--every <n>`, `--off`/`--on`, and can
-force or skip a ticket by putting `#benim-sıram` or `#kendin-yap` in a prompt.
+force or skip a ticket by putting `#my-turn` or `#you-do-it` in a prompt.
 
 ## Commits
 
-`.claude/skills/incremental-commits/SKILL.md` governs this and is written in Turkish. The parts that
+`.claude/skills/incremental-commits/SKILL.md` governs this. The parts that
 bite most often:
 
 - **Never commit without the user's explicit approval.** Summarize the change in one line, show the
@@ -181,11 +181,16 @@ question, does every file in the repo earn its place. It reports and never delet
 the user's call. The checks are in `checks.sh` and `unity-checks.md`, and the known false positives
 are in the skill so they are not re-argued every push.
 
-## Turkish, and dictation
+## Dictation
 
-The user writes in Turkish; reply in Turkish. Code, comments and commit messages stay English.
+The user speaks their prompts through voice dictation, in English. Everything is English — replies,
+code, comments, commit messages, and the skills under `.claude/skills/`.
 
-Those prompts arrive through Turkish speech-to-text, so English technical terms come back spelled
-phonetically: "brençi" is *branch*, "kamit" is *commit*, "merc" is *merge*, "gitignor" is
-*.gitignore*. Read one of those from context and carry on — do not stop to point out the spelling.
-The exception is a **file name, a path or a literal command**: never guess at one of those, ask.
+Dictation is reliable for ordinary prose and unreliable for everything else. Words arrive merged,
+dropped or replaced by a homophone, so read the meaning from context and carry on without remarking
+on the spelling.
+
+**The exception is a file name, a path or a literal command: never guess at one of those, ask.**
+Those are exactly what dictation mangles — "cloud dot m d" is `CLAUDE.md` and "dot cloud folder" is
+`.claude/`, and a name that arrives one syllable wrong points at a file that exists but is not the
+one meant. Guessing there edits the wrong thing silently.

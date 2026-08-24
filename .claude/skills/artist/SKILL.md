@@ -1,82 +1,86 @@
 ---
 name: artist
-description: Bu oyunun görsel dilini koruyarak art üret ve art kararları ver. Yeni doku, tile, renk, palet, dekor ya da import ayarı gerektiren her işte MUTLAKA bu skill'i kullan — "art" kelimesi geçmese bile. Bir rengin ayarlanması, bir görselin üretilmesi, bir sprite'ın projeye alınması bu kapsamdadır. Kullanıcı /artist yazdığında da bu şapka takılır.
+description: Produce art and make art decisions while keeping this game's visual language intact. MUST use this skill for any work involving a new texture, tile, colour, palette, prop or import setting — even when the word "art" never comes up. Adjusting a colour, generating an image, or bringing a sprite into the project are all in scope. Wearing this hat is also what /artist means.
 ---
 
-# Artist şapkası
+# The artist hat
 
-Bu oyunun bir görsel dili var ve o dil piksel düzeyinde düzenli. Senin işin yeni
-bir şey eklerken o düzeni bozmamak.
+This game has a visual language, and that language is regular down to the pixel. Your
+job is to add to it without breaking that regularity.
 
-**Önce `docs/art.md`'yi oku.** Izgara, ışık yönü, palet ve tile kuralı orada.
-Buradaki kurallar o dökümanı tekrar etmez, onu nasıl uygulayacağını söyler.
-Sayılar değişirse `art.md` değişir, bu dosya değişmez.
+**Read `docs/art.md` first.** The grid, the light direction, the palette and the tile
+rule live there. The rules here do not repeat that document — they tell you how to
+apply it. When the numbers change, `art.md` changes; this file does not.
 
-## Üretmeden önce ölç
+## Measure before you generate
 
-Buradaki art elle çizilmiş gibi durur ama değildir — piksele kadar düzenlidir.
-Yanına bir şey koyacaksan önce mevcudu ölç.
+The art here looks hand-drawn but is not — it is regular to the pixel. Before putting
+something next to it, measure what is already there.
 
-Somut: altı ekinin paleti, çizgi periyodunun 16 piksel olduğu ve çizgilerin hangi
-izometrik eksen boyunca gittiği, mevcut PNG'ler taranarak bulundu. Göz kararı
-seçilseydi **"neredeyse uyan"** bir şey çıkardı — ki bu, belirgin şekilde farklı
-olmaktan kötüdür, çünkü hata gözü rahatsız eder ama nedenini söylemez.
+Concretely: the palette of the six crops, the 16-pixel line period, and which
+isometric axis the lines run along were all found by scanning the existing PNGs.
+Eyeballing it would have produced something that **almost** matches — which is worse
+than being obviously different, because the error bothers the eye without telling it why.
 
-Ölçmek pahalı değil: dosyayı `Texture2D.LoadImage` ile oku, piksellere bak.
+Measuring is cheap: read the file with `Texture2D.LoadImage` and look at the pixels.
 
-## Düz renk dosya değil, kutudur
+## A flat colour is a swatch, not a file
 
-Tek renkten ibaret bir yüzey **texture olmaz**. Katmanın Inspector'daki renk
-alanına yazılır. Sadece bir **desen** kendi dosyasını hak eder.
+A surface that is one single colour is **not a texture**. It goes in the layer's
+colour field in the Inspector. Only a **pattern** earns its own file.
 
-Somut: pahın, konturun ve iki yan yüzün rengi 8x8 tek renk PNG'lere gömülmüştü.
-Rengi değiştirmek dosya yeniden üretmek demekti. Dördü tek beyaz dokuya indi,
-renkler `SpriteShapeRenderer.color`'a taşındı — dört dosya azaldı ve renk artık
-tıklanabilir bir kutu. Bu hatayı kullanıcı yakaladı, sen yakala.
+Concretely: the colours of the rim, the outline and the two side faces were baked into
+8x8 single-colour PNGs. Changing a colour meant regenerating a file. All four collapsed
+into one white texture with the colours moved to `SpriteShapeRenderer.color` — four
+fewer files, and the colour became a clickable swatch. The user caught that one; catch
+it yourself.
 
-## Tekrar eden yüzey dolgudur, nesne yığını değil
+## A repeating surface is a fill, not a pile of objects
 
-Bir yüzey aynı şeyi tekrar tekrar kaplıyorsa cevabı tile'lanan bir dolgudur. Dolgu
-parselle birlikte bedavaya büyür; nesneler büyümez, onları üretmen gerekir.
+If a surface covers the same thing over and over, the answer is a tiling fill. A fill
+grows with the parcel for free; objects do not — you have to generate them.
 
-Somut: orman için tek tek ağaç sprite'ları üretilip footprint'e göre serpen bir
-script yazıldı. Çalıştı — ama ekinlerde aynı problem zaten `fill_wheat` ile
-çözülmüştü. `fill_wood` tek dosya, script yok, sahnede 470 nesne yok, ve
-ölçekleme bedava. Script ve üç ağaç sprite'ı tamamen silindi.
+Concretely: individual tree sprites were generated for the forest, plus a script that
+scattered them across the footprint. It worked — but the same problem was already
+solved for crops with `fill_wheat`. `fill_wood` is one file, no script, no 470 objects
+in the scene, and scaling is free. The script and three tree sprites were deleted outright.
 
-Gerçek nesne sadece **tek tek anlamlı** olan şeyler için: oyuncunun tıklayacağı,
-sayacağı ya da yerinden oynatacağı bir şey. Manzara dolgudur.
+Real objects are only for things that are **individually meaningful**: something the
+player will click, count, or move. Scenery is fill.
 
-## Işık yönü pazarlık konusu değil
+## The light direction is not negotiable
 
-Sağ üstten, sabit. Yeni her katı nesnede üst yüz aydınlık, sol alta düşen yüz
-sahnenin en koyusu, sağ alta düşen yüz ikisinin arası. Buna uymayan bir nesne
-tarlaların yanında yamalı durur — tek başına bakınca güzel görünse bile.
+Top-right, fixed. On every new solid object the top face is lit, the face falling to
+the lower-left is the darkest in the scene, and the face falling to the lower-right
+sits between them. An object that ignores this looks patched-in next to the fields —
+even when it looks good on its own.
 
-## Görsel üreticiden kesin geometri isteme
+## Do not ask an image generator for exact geometry
 
-`generate_image` doku ve dekor için iyidir: toprak yüzeyi, ağaç, kaya, su. Izgaraya
-oturması gereken hiçbir şey için değil. İzometrik bir tile üç piksel şaşarsa
-haritanın tamamında saç teli kalınlığında dikiş çıkar, ve bu tek karede görünmez —
-yirmi tane yan yana gelince görünür.
+`generate_image` is good for texture and props: soil surface, trees, rock, water. It
+is not for anything that has to sit on the grid. If an isometric tile is three pixels
+out, the whole map gets a hairline seam, and that is invisible in a single frame — it
+shows up when twenty of them sit side by side.
 
-Şeklin matematiği varsa hesapla. Çizdirip sonra hizalamak, hesaplamaktan uzundur.
+If the shape has maths in it, compute it. Generating and then aligning takes longer
+than computing.
 
-## Import ayarı art'ın parçasıdır
+## Import settings are part of the art
 
-Yanlış import, yanlış çizilmiş dosya kadar bozar ve bulması daha zordur.
+A wrong import breaks things as badly as a wrongly drawn file, and is harder to find.
 
-| Ne | Ayar |
+| What | Setting |
 | --- | --- |
-| SpriteShape dolgu dokusu | **Default** tip, **Repeat** wrap — Sprite tipi verirsen şekil sessizce hiç çizilmez |
-| Sprite | PPU **100**, pivot bilinçli seçilmiş |
-| Hepsi | Point filter, mipmap kapalı, sıkıştırma yok |
+| SpriteShape fill texture | **Default** type, **Repeat** wrap — give it Sprite type and the shape silently draws nothing |
+| Sprite | PPU **100**, pivot chosen deliberately |
+| All of them | Point filter, mipmaps off, no compression |
 
-Düz renk ve keskin kenarlı art'ta sıkıştırma bantlaşma yapar; bu paletlerde
-fark edilir.
+On flat colours and hard edges, compression produces banding, and it is visible in
+these palettes.
 
-## Ters tarafa savrulma
+## Swinging too far the other way
 
-Bu skill "hiç üretme, hep ölç" değil. Dekor, doku, palet genişletme — bunlarda
-serbestsin ve cesur olman iyidir. Kısıt yalnızca **ızgaraya oturmak zorunda olan**
-şeyler için geçerli. Bir ağaca kimse cetvelle bakmaz; bir tarla tile'ına bakar.
+This skill is not "never generate, always measure". Props, texture, extending the
+palette — you are free there, and being bold is good. The constraint applies only to
+things that **have to sit on the grid**. Nobody holds a ruler to a tree; they do to a
+field tile.

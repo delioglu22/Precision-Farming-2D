@@ -1,6 +1,6 @@
 ---
 name: unity-mcp-quirks
-description: Unity MCP araclariyla editorde is yaparken MUTLAKA bu skill'i kullan. execute_code, refresh_unity, manage_gameobject, manage_camera, batch_execute ve unity_reflect uzerinde her biri bir tur kaybettirmis tuzaklari tasir: CodeDom'un C# 6 siniri, yeni script import'u, play mode'da kaybolan sahne duzenlemeleri, Overlay canvas'in ekran goruntusune girmemesi ve prefab instantiate etmenin dogru yolu.
+description: MUST use this skill when working in the editor through the Unity MCP tools. It carries the traps on execute_code, refresh_unity, manage_gameobject, manage_camera, batch_execute and unity_reflect that have each cost a round trip: CodeDom's C# 6 limit, importing a new script, scene edits lost in play mode, the Overlay canvas that screenshots cannot capture, and how to instantiate a prefab.
 ---
 
 # Tool quirks that will otherwise cost you a round trip

@@ -1,112 +1,110 @@
 ---
 name: hand-it-over
-description: Bu Unity projesinde işin bir parçasını kullanıcıya devret; o Unity'de kendi eliyle yapsın, sen bekle ve sonra kontrol et. "[SENİN SIRAN]" bileti geldiğinde MUTLAKA bu skill'i kullan. Kullanıcı "bunu ben yapayım", "bana bırak", "nasıl yapılır" dediğinde de bu skill geçerlidir.
+description: Hand a piece of the work in this Unity project back to the user so they do it themselves in Unity, then wait and check the result. MUST use this skill whenever a "[YOUR TURN]" ticket arrives. It also applies when the user says "let me do this one", "leave it to me", or asks how something is done.
 ---
 
-# İşin bir parçasını kullanıcıya devret
+# Hand a piece of the work back
 
-Kullanıcı bu oyunu kendi yapıyor; sen yardım ediyorsun. Her şeyi senin yapman
-kısa vadede hızlı, uzun vadede kullanıcının Unity'yi unutması demek. Bunu
-kendisi söyledi. Bu yüzden arada bir işin bir parçası ona gider.
+The user is making this game; you are helping. Doing all of it is fast today and
+means they forget Unity tomorrow. They said so themselves. So every so often a piece
+of the work goes to them.
 
-Devir gerçek bir parça olmalı. "Sen de bir kere dene" değil — o parçayı
-sen yapmayacaksın, kullanıcı yapacak, iş onun elinden çıkacak.
+A handover has to be a real piece. Not "you try it too" — you will not be doing that
+piece, the user will, and the work will come out of their hands.
 
-## Hangi parça devredilir
+## Which piece to hand over
 
-İyi bir devir parçası şu dördünü birden tutar:
+A good handover piece holds all four of these at once:
 
-1. **Unity'nin arayüzünde yapılır.** Inspector, Animation penceresi, Hierarchy,
-   Sprite Editor, Scene view. Kullanıcının kaybetmekten korktuğu el bu.
-2. **İçinde bir karar var.** Sadece tıklama değil; "hangi değer", "hangi
-   sıra", "hangi anchor" diye düşündüren bir şey.
-3. **5–15 dakika sürer.** Daha kısası ders değil, daha uzunu angarya.
-4. **Geri alınabilir.** Yanlış yaparsa tek Ctrl+Z ya da tek alan düzeltmesiyle
-   dönülür.
+1. **It is done in Unity's interface.** Inspector, Animation window, Hierarchy,
+   Sprite Editor, Scene view. That is the hand they are afraid of losing.
+2. **There is a decision inside it.** Not just clicking — something that makes them
+   think: which value, which order, which anchor.
+3. **It takes 5–15 minutes.** Shorter is not a lesson; longer is drudgery.
+4. **It is reversible.** A wrong move undoes with one Ctrl+Z or one field.
 
-Bu projede işe yarayanlar:
+What has worked in this project:
 
-| Devir | İçindeki karar |
+| Handover | The decision inside it |
 | --- | --- |
-| Inspector'daki ayarları oturtmak (`focusDamping`, `edgeMargin`, `sheetCover`, seçili ton) | Hangi değer doğru hissettiriyor — bunu sadece oynayan bilir |
-| Yeni bir parsel yerleştirmek | `sortingOrder`'ı topolojik kurala göre bulmak |
-| Animation penceresinde yeni bir poz klibi | Hangi özellik sürülür, hangisi instance override'ı ezer |
-| Prefab'a bileşen ekleyip referansı bağlamak | Prefab'ta mı instance'ta mı olmalı |
-| Bir parselin footprint'ini ve ekinini oturtmak | Hangi boy ve hangi ekin komşularının yanında doğru duruyor |
-| Bir katmanın rengini palete oturtmak | Işık yönüne uyuyor mu, mevcut dört tonun neresine düşüyor |
-| Bir UI öğesini anchor + layout group ile yerleştirmek | Kodla değil yerleşimle çözmek |
-| Yeni bir `ScriptableObject` varlığı açıp iki sahneye bağlamak | Sahneler arası referansın neden asset olması gerektiği |
+| Settling Inspector values (`focusDamping`, `edgeMargin`, `sheetCover`, the selected tint) | Which value feels right — only someone playing it knows |
+| Placing a new parcel | Working out `sortingOrder` from the topological rule |
+| A new pose clip in the Animation window | Which property to drive, which one overrides the instance |
+| Adding a component to a prefab and wiring the reference | Does it belong on the prefab or on the instance |
+| Settling a parcel's footprint and crop | Which size and crop sit right next to its neighbours |
+| Fitting a layer's colour into the palette | Does it follow the light, where does it land among the existing tones |
+| Placing a UI element with anchors and a layout group | Solving it by layout rather than by code |
+| Creating a `ScriptableObject` asset and wiring it into both scenes | Why a cross-scene reference has to be an asset |
 
-Devretme:
+Do not hand over:
 
-- Yarım kalmış bir refactor'ün ortasını
-- Kurulumu 6 MCP çağrısı isteyen şeyi
-- Sadece yazı işini (bir dosyayı baştan yazmak öğretmez)
-- Sen de nasıl yapılacağını bilmediğin şeyi
-- Kullanıcının o an acelesi olduğunu söylediği işi
+- The middle of a half-finished refactor
+- Something whose setup takes six MCP calls
+- Pure typing (rewriting a file from scratch teaches nothing)
+- Something you do not know how to do either
+- Work the user has just said they are in a hurry on
 
-## Nasıl devredilir
+## How to hand it over
 
-Dört satır. Tıkla-tıkla tarifi **verme** — tarifi izlemek öğretmez, o yüzden
-nerede olduğunu ve neyin doğru olduğunu söyle, sırayı kullanıcı bulsun.
+Four lines. Do **not** give a click-by-click recipe — following a recipe teaches
+nothing. Say where it lives and what "right" looks like, and let them find the order.
 
 ```
-Bu parçayı sen yap:
+Your turn on this one:
 
-  Ne     Parcel 7'yi haritanın kuzeydoğusuna ekle.
-  Nerede SampleScene > World > Parcels, Parcel.prefab'tan bir instance.
-  Neden  sortingOrder elle bulunacak: A, B'den önce çizilir — B bir izometrik
-         eksende daha ileride ve diğerinde üst üste biniyorlarsa.
-  Kontrol Tıklayınca doğru parsel seçiliyorsa collider da doğru oturmuştur.
+  What    Add Parcel 7 to the north-east of the map.
+  Where   SampleScene > World > Parcels, an instance of Parcel.prefab.
+  Why     sortingOrder has to be worked out by hand: A draws before B when B sits
+          further along one isometric axis and they overlap on the other.
+  Check   If clicking selects the right parcel, the collider fitted correctly too.
 
-Bittiğinde söyle, konsolu ve sahneyi kontrol ederim.
+Tell me when it's done and I'll check the console and the scene.
 ```
 
-Sıkışırsa yardım et — ama önce bir kez kendi denesin.
+If they get stuck, help — but let them try once first.
 
-## Devir açıkken ne yaparsın
+## What you do while a handover is open
 
-**O parçayı sen yapma.** Beklerken boş durma: aynı işin devre bağlı olmayan
-kısımlarını bitir, script tarafını hazırla, ama devredilen parçaya dokunma.
+**Do not do that piece.** Do not idle either: finish the parts of the same job that
+do not depend on it, get the script side ready, but leave the handed-over piece alone.
 
-Kullanıcı "sen yap" derse tartışma, yap ve bileti kapat.
+If the user says "you do it", do not argue. Do it and close the ticket.
 
-## Bittiğinde
+## When it comes back
 
-1. **Kontrol et.** `refresh_unity` + `read_console` `types: ["error"]` → 0
-   kayıt. Sahne değiştiyse durumu `execute_code` ile oku, gerekiyorsa
-   ekran görüntüsü al.
-2. **Tek satır geri bildirim.** Doğruysa doğru de. Yanlışsa neyin yanlış
-   olduğunu ve nedenini söyle — düzeltmeyi yine kullanıcı yapsın.
-3. **Bileti kapat:** `node .claude/hooks/your-turn.js --close`
-4. Normal işe devam et.
+1. **Check it.** `refresh_unity` + `read_console` `types: ["error"]` → 0 entries. If
+   the scene changed, read the state with `execute_code`; take a screenshot if needed.
+2. **One line of feedback.** If it is right, say it is right. If it is wrong, say what
+   is wrong and why — and let the user fix it.
+3. **Close the ticket:** `node .claude/hooks/your-turn.js --close`
+4. Carry on with the normal work.
 
-## Bilet mekanizması
+## The ticket mechanism
 
-`.claude/hooks/your-turn.js` bir `UserPromptSubmit` hook'u. Her N commit'te
-(varsayılan 2) bir "[SENİN SIRAN]" bileti düşürür — yani her N iş parçasında
-bir. Karar bu skill'de, sayaç hook'ta; hook hangi işin devredilebilir olduğunu
-bilemez, o yüzden seçim sana ait.
+`.claude/hooks/your-turn.js` is a `UserPromptSubmit` hook. It drops a "[YOUR TURN]"
+ticket every N commits (2 by default) — that is, every N pieces of finished work. The
+judgement is in this skill, the counter is in the hook; a script cannot tell which
+work is worth handing over, so the choice is yours.
 
-Bilet açık kalırsa hook 3 kez hatırlatır, sonra düşürür. Yani biletle
-ilgilenmemek bir seçenek değil: ya devret, ya **neden devretmediğini tek
-cümleyle söyle** ve bileti kapat.
+If a ticket is left open the hook nags three times, then drops it. So ignoring a
+ticket is not an option: either hand something over, or **say in one sentence why you
+did not** and close it.
 
-Kullanıcının kontrolleri:
+The user's controls:
 
 | | |
 | --- | --- |
-| `#benim-sıram` | istemin içine yazarsa hemen bilet çıkar |
-| `#kendin-yap` | bu seferlik atla |
-| `node .claude/hooks/your-turn.js --status` | durum |
-| `--every <n>` / `--off` / `--on` | sıklık ve açma kapama |
+| `#my-turn` | in a prompt, forces a ticket immediately |
+| `#you-do-it` | skip this one |
+| `node .claude/hooks/your-turn.js --status` | status |
+| `--every <n>` / `--off` / `--on` | frequency, and switching it off |
 
-## Ters tarafa savrulma
+## Swinging too far the other way
 
-Bu skill "işi kullanıcıya yıkma" değil. Kullanıcı bir şey istediyse onu
-yapıyorsun; devir işin **bir parçası**, tamamı değil. Bilet geldi diye
-kullanıcıya iki saatlik iş verme, ve devir yüzünden işi yarım bırakma —
-devredilen parça dışındaki her şey yine senin.
+This skill is not "dump the work on the user". If they asked for something, you are
+doing it; the handover is **one piece** of the job, not the whole thing. Do not hand
+over two hours of work because a ticket arrived, and do not leave the job half done
+because of a handover — everything outside the handed-over piece is still yours.
 
-Uygun parça yoksa uydurma. "Bu işte devredilecek anlamlı bir parça yok, çünkü
-..." de, bileti kapat, devam et.
+If there is no suitable piece, do not invent one. Say "there is no meaningful piece to
+hand over here, because ...", close the ticket, and carry on.

@@ -1,58 +1,59 @@
 ---
 name: engine-first
-description: Unity'de yeni bir davranış eklerken önce motorun hazır bileşenine bak, script'i son çare olarak yaz. Yeni bir MonoBehaviour gerektiren, girdi/tıklama işleyen, animasyon oynatan, UI gösterip gizleyen ya da veri taşıyan her işte MUTLAKA bu skill'i kullan — "script yazma" denmese bile. 50 satırı geçecek her yeni script bu kapsamdadır.
+description: When adding new behaviour in Unity, look for the engine's built-in component before writing a script. MUST use this skill for any work that would add a MonoBehaviour, handle input or clicks, play an animation, show or hide UI, or carry data — even when nobody says "write a script". Any new script over ~50 lines is in scope.
 ---
 
-# Önce motoru kullan
+# Use the engine first
 
-Unity, küçük bir oyunun ihtiyacı olan şeylerin çoğunu zaten yapıyor. Kod yazmadan
-önce o hazır çözümü bulmak senin işin.
+Unity already does most of what a small game needs. Finding that ready-made answer
+before writing code is your job.
 
-## Kural
+## The rule
 
-Yeni bir MonoBehaviour yazmadan önce **bu işi yapan Unity bileşeninin adını
-söyle**. Varsa onu kullan. Yoksa neden olmadığını tek cümleyle yaz, sonra
-script'i yaz.
+Before writing a new MonoBehaviour, **name the Unity component that would do this
+job**. If one exists, use it. If none does, say so in one sentence, then write the
+script.
 
-50 satırı geçecek her yeni script için bu zorunlu. Kullanıcıya sunarken de
-söyle: "şunu kullandım" ya da "Unity'de karşılığı yok çünkü ...".
+This is mandatory for any new script over 50 lines. Say it out loud when you hand
+the work over too: "I used this" or "Unity has no equivalent because ...".
 
-## Bu teorik bir kural değil
+## This is not a theoretical rule
 
-Bu projede tıklama algılamak için 138 satırlık bir `ParcelSelector` yazıldı:
-parmak takibi, sürükleme eşiği, `Physics2D.OverlapPointAll`, öndeki objeyi
-seçme, ve "UI'a mı denk geldi" kontrolü. Kameradaki `Physics2DRaycaster` artı
-`IPointerClickHandler` beşini de yapıyor. Script tamamen silindi, hiçbir şey
-kaybolmadı. 440 satır 286'ya indi.
+A 138-line `ParcelSelector` was written in this project to detect taps: pointer
+tracking, a drag threshold, `Physics2D.OverlapPointAll`, front-most sorting, and a
+"did this land on the UI" check. A `Physics2DRaycaster` on the camera plus
+`IPointerClickHandler` does all five. The script was deleted in full and nothing was
+lost. 440 lines became 286.
 
-## Nereye bakılır
+## Where to look
 
-| İş | Hazır çözüm |
+| Job | Reach for |
 | --- | --- |
-| Dünyadaki objeye tıklama | Kamerada `Physics2DRaycaster` + `IPointerClickHandler` |
-| Sürüklerken tıklama sayılmaması | Zaten var — `EventSystem.pixelDragThreshold` |
-| Tıklamanın UI'dan geçmemesi | Zaten var — EventSystem yutuyor |
-| UI açma, kapama, kaydırma | `Animator`: bir bool, iki poz, aradaki geçiş |
-| Ayarlanabilir değerler | `[SerializeField]` ve Inspector, sabit değil |
-| Sahneler arası veri | İki sahnenin de baktığı bir `ScriptableObject` |
-| UI yerleşimi | Anchor ve layout group, pozisyon hesaplayan kod değil |
-| Zamanlama, sıralı olaylar | `Animator` ya da Timeline |
-| Birden çok renderer'ın tek parça gibi sıralanması | `SortingGroup` — nesneye tek sayı, içine 0..n |
+| Clicks on world objects | `Physics2DRaycaster` on the camera + `IPointerClickHandler` |
+| A tap that must not fire mid-drag | Already handled — `EventSystem.pixelDragThreshold` |
+| A click that must not pass through UI | Already handled — the EventSystem consumes it |
+| Showing, hiding or sliding UI | `Animator`: one bool, two poses, a transition between them |
+| Values worth tuning | `[SerializeField]` and the Inspector, not constants |
+| State shared across scenes | A `ScriptableObject` both scenes point at |
+| Arranging UI | Anchors and layout groups, not code that computes positions |
+| Timing, sequenced events | `Animator` or Timeline |
+| Several renderers that must sort as one thing | A `SortingGroup` — one number outside, 0..n inside |
 
-`SortingGroup` satırı da teoriden gelmiyor: parsel beş katmanlı bir levhaya dönüşünce "her parselin
-sırasını katman başına beşe yay" diye bir plan yapılmıştı. `SortingGroup` katmanları bir arada tutup
-parsele tek sayı bıraktığı için o plan tamamen düştü ve `Parcel.cs` kaç katman olduğunu bilmekten
-kurtuldu.
+The `SortingGroup` row is not theory either. When a parcel became a five-layer slab,
+the plan was to spread every parcel's order across five numbers per layer.
+`SortingGroup` holds the layers together and leaves the parcel one number, so that
+plan collapsed entirely and `Parcel.cs` stopped needing to know how many layers exist.
 
-## Ters tarafa savrulma
+## Swinging too far the other way
 
-Kural **"script yazma" değil**, "alternatifini adıyla söyle". Bazı şeylerin
-Unity'de karşılığı yok. `MapPan` bu yüzden var — hazır harita kaydırma bileşeni
-yok, yazmak doğruydu. Gerekli kodu yazmaktan kaçınmak da en az gereksiz kod
-yazmak kadar kötü.
+The rule is **not** "never write scripts" — it is "name the alternative". Some things
+have no Unity equivalent. `MapPan` exists for exactly that reason: there is no
+built-in map panning, and writing it was correct. Avoiding necessary code is as bad
+as writing unnecessary code.
 
-## Asıl tehlike
+## The real danger
 
-Sorun API'yi bilmemek değil. Kendi yazdığın kodu programatik olarak doğrulamak
-daha kolay olduğu için ona kayıyorsun. Buna direnip motorun davranışını
-doğrula — EventSystem'e ışın attır, Animator'ı elle ilerlet, sonucu ölç.
+The problem is not ignorance of the API. It is that verifying your own code is easier
+than verifying the engine's, so you drift toward writing it. Resist that and verify
+the engine instead — raycast through the EventSystem, step the Animator by hand,
+measure the result.

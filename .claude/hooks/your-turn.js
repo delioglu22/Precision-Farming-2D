@@ -2,7 +2,7 @@
 'use strict';
 
 /**
- * UserPromptSubmit hook - "senin sıran".
+ * UserPromptSubmit hook - "your turn".
  *
  * Handing a piece of the work back to the user needs judgement, and a shell
  * script has none: it cannot tell a good handover task from a terrible one.
@@ -72,13 +72,13 @@ function commitCount(cwd) {
 // A follow-up inside a running task is the worst possible place to hand
 // something over - the work is already half done. Only a prompt that reads
 // like fresh work gets a ticket.
-const FOLLOW_UP = /^\s*(onay|tamam|evet|hay[ıi]r|yok|olur|peki|ok\b|oke|devam|commit|at\b|bekle|dur\b|geri al|iptal|te[şs]ekk[üu]r|sa[ğg]\s?ol|g[üu]zel|harika|oldu\b|olmu[şs])/i;
-const FORCE = /#benim-s[ıi]ram/i;
-const SKIP = /#kendin-yap/i;
+const FOLLOW_UP = /^\s*(ok(ay)?\b|yes\b|no\b|yeah\b|yep\b|sure\b|fine\b|go ahead\b|do it\b|commit\b|push\b|continue\b|carry on\b|wait\b|stop\b|undo\b|cancel\b|thanks\b|thank you\b|great\b|nice\b|good\b|done\b|perfect\b|right\b|leave it\b)/i;
+const FORCE = /#my-turn/i;
+const SKIP = /#you-do-it/i;
 
 function looksLikeNewWork(prompt) {
   const p = (prompt || '').trim();
-  if (p.length < 25) return false;        // "peki", "şunu da ekle" - too thin to split
+  if (p.length < 25) return false;        // "ok", "add that too" - too thin to split
   if (p.charAt(0) === '/') return false;  // slash command, not a task
   if (FOLLOW_UP.test(p)) return false;
   return true;
@@ -88,12 +88,12 @@ function ticket(state, commits, forced) {
   const since = state.lastTicketAtCommit === null ? commits : commits - state.lastTicketAtCommit;
   return [
     forced
-      ? '[SENİN SIRAN] Kullanıcı bileti elle istedi (#benim-sıram).'
-      : '[SENİN SIRAN] Son devirden bu yana ' + since + ' commit geçti.',
-    'Bu isteğe başlamadan önce içinden kullanıcının Unity\'de kendi eliyle',
-    'yapabileceği bir parça ayır ve ona devret. Nasıl devredileceği ' + SKILL + ' içinde.',
-    'Uygun bir parça yoksa tek cümleyle söyle ve normal devam et.',
-    'Devir bitince: node .claude/hooks/your-turn.js --close',
+      ? '[YOUR TURN] The user asked for a ticket by hand (#my-turn).'
+      : '[YOUR TURN] ' + since + ' commits have gone by since the last handover.',
+    'Before starting this request, pick one piece of it the user can do by hand',
+    'in Unity and hand that piece over. How to do it is in ' + SKILL + '.',
+    'If there is no suitable piece, say so in one sentence and carry on as normal.',
+    'When the handover is done: node .claude/hooks/your-turn.js --close',
     ''
   ].join('\n');
 }
@@ -102,10 +102,10 @@ function reminder(state) {
   const age = state.prompts - state.openTicket.openedAtPrompt;
   const left = state.maxReminders - state.openTicket.reminders;
   return [
-    '[SENİN SIRAN - hâlâ açık] Bilet ' + age + ' istek önce açıldı, kapanmadı.',
-    'Ya devri şimdi yap (' + SKILL + '), ya da neden yapmadığını tek cümleyle söyle.',
-    'Kapatmak için: node .claude/hooks/your-turn.js --close' +
-      (left <= 0 ? '  (son hatırlatma, sonra bilet düşer)' : ''),
+    '[YOUR TURN - still open] Ticket opened ' + age + ' requests ago, never closed.',
+    'Either hand something over now (' + SKILL + '), or say in one sentence why not.',
+    'To close it: node .claude/hooks/your-turn.js --close' +
+      (left <= 0 ? '  (last reminder, then the ticket lapses)' : ''),
     ''
   ].join('\n');
 }
@@ -173,17 +173,17 @@ function runCli(argv) {
     if (commits !== null) state.lastTicketAtCommit = commits;
     save(state);
     console.log(had
-      ? 'Devir kapatıldı. Sıradaki bilet ' + state.everyNCommits + ' commit sonra.'
-      : 'Açık bilet yoktu; sayaç yine de sıfırlandı.');
+      ? 'Handover closed. Next ticket in ' + state.everyNCommits + ' commits.'
+      : 'No ticket was open; the counter was reset anyway.');
     return;
   }
 
   if (cmd === '--every') {
     const n = parseInt(argv[1], 10);
-    if (!(n > 0)) { console.log('Kullanım: --every <commit sayısı>'); return; }
+    if (!(n > 0)) { console.log('Usage: --every <number of commits>'); return; }
     state.everyNCommits = n;
     save(state);
-    console.log('Her ' + n + ' committe bir devir.');
+    console.log('One handover every ' + n + ' commits.');
     return;
   }
 
@@ -191,24 +191,24 @@ function runCli(argv) {
     state.enabled = cmd === '--on';
     if (!state.enabled) state.openTicket = null;
     save(state);
-    console.log(state.enabled ? 'Açık.' : 'Kapalı.');
+    console.log(state.enabled ? 'On.' : 'Off.');
     return;
   }
 
   const commits = commitCount(process.cwd());
   console.log([
-    'senin sıran  ' + (state.enabled ? 'açık' : 'kapalı'),
-    '  sıklık     her ' + state.everyNCommits + ' commit',
-    '  commit     ' + (commits === null ? '?' : commits) +
-      ' (son devir: ' + (state.lastTicketAtCommit === null ? '-' : state.lastTicketAtCommit) + ')',
-    '  bilet      ' + (state.openTicket
-      ? 'AÇIK, ' + state.openTicket.reminders + ' hatırlatma'
-      : 'yok'),
-    '  devredilen ' + state.handovers + ' (düşen: ' + state.lapsed + ')',
-    '  görülen    ' + state.prompts + ' istem  <- artmıyorsa hook bağlı değil',
+    'your turn   ' + (state.enabled ? 'on' : 'off'),
+    '  every      ' + state.everyNCommits + ' commits',
+    '  commits    ' + (commits === null ? '?' : commits) +
+      ' (last handover: ' + (state.lastTicketAtCommit === null ? '-' : state.lastTicketAtCommit) + ')',
+    '  ticket     ' + (state.openTicket
+      ? 'OPEN, ' + state.openTicket.reminders + ' reminder(s)'
+      : 'none'),
+    '  handovers  ' + state.handovers + ' (lapsed: ' + state.lapsed + ')',
+    '  seen       ' + state.prompts + ' prompts  <- if this stops rising the hook is not wired',
     '',
-    'komutlar: --status | --close | --every <n> | --off | --on',
-    'istem içinde: #benim-sıram (hemen bilet)  #kendin-yap (bu seferlik atla)'
+    'commands: --status | --close | --every <n> | --off | --on',
+    'in a prompt: #my-turn (ticket now)  #you-do-it (skip this one)'
   ].join('\n'));
 }
 
