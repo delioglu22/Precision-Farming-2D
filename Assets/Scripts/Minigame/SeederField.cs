@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// The seeder's playfield: the parcel it was sent to, seen straight down, as ground to be
-/// covered.
+/// The seeder's playfield: the parcel it was sent to, seen straight down, and the one
+/// unbroken line the player drives over it.
 ///
 /// The map draws a parcel in isometric, but the field itself is the rectangle of cells it
 /// always was, and the rectangle is what the mini game hands the player. A diamond would
@@ -16,12 +17,14 @@ using UnityEngine.UI;
 /// crisper and would still have to be rasterised before it could be scored, which is two
 /// systems where one does.
 ///
-/// Unity does the rest: a RawImage takes a Texture straight off where an Image would want a
-/// Sprite, and an AspectRatioFitter holds the parcel's proportions inside whatever room the
-/// panel leaves it.
+/// Unity does the rest. The drag arrives from the EventSystem through the canvas raycaster,
+/// which means no polling, no drag threshold of our own and no "did this land on the UI"
+/// check. A RawImage takes a Texture straight off where an Image would want a Sprite, and an
+/// AspectRatioFitter holds the parcel's proportions inside whatever room the screen leaves.
 /// </summary>
+[RequireComponent(typeof(RawImage))]
 [DisallowMultipleComponent]
-public class SeederField : MonoBehaviour
+public class SeederField : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Tooltip("The run this scene is playing. Everything the field needs is in here, which is what lets this scene be opened and played on its own.")]
     [SerializeField] SeederRun run;
@@ -41,20 +44,52 @@ public class SeederField : MonoBehaviour
     [Tooltip("Bare ground ringing the parcel, as a fraction of its longer side. Seed thrown over the fence lands here.")]
     [SerializeField, Range(0f, 0.5f)] float margin = 0.12f;
 
-    [Tooltip("Ground inside the fence, waiting for seed.")]
-    [SerializeField] Color soil = new Color(0.34f, 0.25f, 0.17f, 1f);
+    [Tooltip("How wide a band the machine sows, in grid cells. The seeder's own measurement.")]
+    [SerializeField, Range(0.2f, 4f)] float bandCells = 0.9f;
 
-    [Tooltip("The verge outside the fence. Seed laid there is wasted, so it reads as ground you do not own.")]
-    [SerializeField] Color verge = new Color(0.16f, 0.15f, 0.13f, 1f);
+    // All four are measured out of docs/art.md rather than picked by eye, so the field sits in
+    // the same palette as the map it was opened from. The texture is sRGB, which is what
+    // Unity samples a RGBA32 into, so these go in as written and not as .linear.
+
+    [Tooltip("Ground inside the fence, waiting for seed. The plowed earth of art.md.")]
+    [SerializeField] Color soil = new Color(0.455f, 0.353f, 0.235f, 1f);
+
+    [Tooltip("The verge outside the fence, in the shadowed earth of a slab's left face. Seed laid there is wasted, so it reads as ground you do not own.")]
+    [SerializeField] Color verge = new Color(0.251f, 0.180f, 0.122f, 1f);
+
+    [Tooltip("Ground that got seed and will grow. The grass green of art.md.")]
+    [SerializeField] Color sown = new Color(0.486f, 0.663f, 0.333f, 1f);
+
+    [Tooltip("Seed that landed over the fence: the same green gone dull, because it grows but not for you.")]
+    [SerializeField] Color spilled = new Color(0.259f, 0.388f, 0.184f, 1f);
 
     Texture2D field;
+    Color32[] pixels;
 
     // Which texels fall inside the fence, and how many of them there are: the denominator
     // every run is scored against, worked out once when the field is built.
     bool[] fenced;
+    int fencedCount;
+
+    // Which texels have had seed on them. Set once and never cleared during a run, so driving
+    // back over ground already sown adds nothing - it only costs.
+    bool[] seeded;
+    int sownCount;
+
     int width;
     int height;
-    int fencedCount;
+    float texelsPerCell;
+
+    // The stroke is unbroken by rule: lifting a finger ends the run rather than pausing it.
+    bool driving;
+    bool spent;
+    Vector2 lastTexel;
+
+    /// <summary>The share of the parcel that has seed on it, from 0 to 1.</summary>
+    public float Coverage
+    {
+        get { return fencedCount <= 0 ? 0f : (float)sownCount / fencedCount; }
+    }
 
     // The scene stands on its own, so it lays its field out as soon as it opens rather than
     // waiting to be told to by the map.
@@ -77,6 +112,114 @@ public class SeederField : MonoBehaviour
         Build(run.Footprint);
     }
 
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (spent || field == null) return;
+
+        Vector2 texel;
+        if (!TexelAt(eventData, out texel)) return;
+
+        driving = true;
+        lastTexel = texel;
+
+        // The machine is already sowing where it was set down.
+        Stamp(texel, texel);
+        Show();
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (!driving) return;
+
+        Vector2 texel;
+        if (!TexelAt(eventData, out texel)) return;
+
+        Stamp(lastTexel, texel);
+        lastTexel = texel;
+        Show();
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (!driving) return;
+
+        // One unbroken line: letting go is the end of the run, not a pause in it.
+        driving = false;
+        spent = true;
+    }
+
+    /// <summary>
+    /// Where a pointer is on the field, in texels. The rect is the whole picture - parcel and
+    /// verge together - so a finger over the verge lands outside the fence but still on the
+    /// field, which is exactly what wasting seed looks like.
+    /// </summary>
+    bool TexelAt(PointerEventData eventData, out Vector2 texel)
+    {
+        texel = Vector2.zero;
+
+        RectTransform rect = transform as RectTransform;
+        Vector2 local;
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                rect, eventData.position, eventData.pressEventCamera, out local)) return false;
+
+        Rect r = rect.rect;
+        if (r.width <= 0f || r.height <= 0f) return false;
+
+        texel = new Vector2(
+            (local.x - r.xMin) / r.width * width,
+            (local.y - r.yMin) / r.height * height);
+        return true;
+    }
+
+    /// <summary>
+    /// Sows the band swept between two points: every texel within half a band's width of the
+    /// segment. A texel already sown is left alone, so crossing your own line adds nothing to
+    /// the count - which is what makes overlap a waste rather than a wash.
+    /// </summary>
+    void Stamp(Vector2 from, Vector2 to)
+    {
+        float radius = 0.5f * bandCells * texelsPerCell;
+        if (radius <= 0f) return;
+
+        int minX = Mathf.Max(0, Mathf.FloorToInt(Mathf.Min(from.x, to.x) - radius));
+        int maxX = Mathf.Min(width - 1, Mathf.CeilToInt(Mathf.Max(from.x, to.x) + radius));
+        int minY = Mathf.Max(0, Mathf.FloorToInt(Mathf.Min(from.y, to.y) - radius));
+        int maxY = Mathf.Min(height - 1, Mathf.CeilToInt(Mathf.Max(from.y, to.y) + radius));
+
+        Vector2 along = to - from;
+        float lengthSq = along.sqrMagnitude;
+        float radiusSq = radius * radius;
+
+        Color32 sown32 = sown;
+        Color32 spilled32 = spilled;
+
+        for (int y = minY; y <= maxY; y++)
+        {
+            for (int x = minX; x <= maxX; x++)
+            {
+                Vector2 here = new Vector2(x + 0.5f, y + 0.5f);
+
+                // The nearest point on the segment, so the band has round ends and leaves no
+                // gap between one frame's stamp and the next.
+                float t = lengthSq <= 1e-6f ? 0f : Mathf.Clamp01(Vector2.Dot(here - from, along) / lengthSq);
+                if ((here - (from + along * t)).sqrMagnitude > radiusSq) continue;
+
+                int i = y * width + x;
+                if (seeded[i]) continue;
+
+                seeded[i] = true;
+                if (fenced[i]) sownCount++;
+                pixels[i] = fenced[i] ? sown32 : spilled32;
+            }
+        }
+    }
+
+    void Show()
+    {
+        field.SetPixels32(pixels);
+        field.Apply(false);
+    }
+
     /// <summary>
     /// Rasterises the parcel into the field: the fence encloses its cells, and a verge of
     /// bare ground rings it so seed thrown over the fence has somewhere to land and can be
@@ -95,6 +238,7 @@ public class SeederField : MonoBehaviour
 
         width = Mathf.Max(1, Mathf.RoundToInt(resolution * boxWidth / longest));
         height = Mathf.Max(1, Mathf.RoundToInt(resolution * boxHeight / longest));
+        texelsPerCell = width / boxWidth;
 
         if (field == null || field.width != width || field.height != height)
         {
@@ -105,11 +249,15 @@ public class SeederField : MonoBehaviour
         }
 
         fenced = new bool[width * height];
+        seeded = new bool[width * height];
+        pixels = new Color32[width * height];
         fencedCount = 0;
+        sownCount = 0;
+        driving = false;
+        spent = false;
 
         Color32 soil32 = soil;
         Color32 verge32 = verge;
-        Color32[] pixels = new Color32[width * height];
 
         for (int y = 0; y < height; y++)
         {
@@ -130,17 +278,16 @@ public class SeederField : MonoBehaviour
             }
         }
 
-        field.SetPixels32(pixels);
-        field.Apply(false);
+        Show();
 
         if (ground != null) ground.texture = field;
         if (fitter != null) fitter.aspectRatio = boxWidth / boxHeight;
     }
 
     /// <summary>
-    /// Lets go of a texture made at runtime. Which call does that depends on whether the
-    /// game is running, and keeping the field drivable from the editor is worth the branch:
-    /// it is how the rasteriser gets checked without entering play mode.
+    /// Lets go of a texture made at runtime. Which call does that depends on whether the game
+    /// is running, and keeping the field drivable from the editor is worth the branch: it is
+    /// how the rasteriser gets checked without entering play mode.
     /// </summary>
     static void Discard(UnityEngine.Object doomed)
     {
