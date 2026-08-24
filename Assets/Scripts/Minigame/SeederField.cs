@@ -58,6 +58,9 @@ public class SeederField : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     [Tooltip("What is left in the tank. A Filled image, so the length of line remaining is something seen rather than read.")]
     [SerializeField] Image battery;
 
+    [Tooltip("What the run came to, once it is over. Optional.")]
+    [SerializeField] Text result;
+
     // All four are measured out of docs/art.md rather than picked by eye, so the field sits in
     // the same palette as the map it was opened from. The texture is sRGB, which is what
     // Unity samples a RGBA32 into, so these go in as written and not as .linear.
@@ -188,6 +191,7 @@ public class SeederField : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             lineLeft = 0f;
             driving = false;
             spent = true;
+            Finish();
         }
 
         Show();
@@ -201,6 +205,23 @@ public class SeederField : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         // One unbroken line: letting go is the end of the run, not a pause in it.
         driving = false;
         spent = true;
+        Finish();
+    }
+
+    /// <summary>
+    /// Closes the run and hands the number back. It goes onto the ticket rather than straight
+    /// to the map, because the map is a scene of its own and the ticket is the only thing the
+    /// two of them can both hold.
+    /// </summary>
+    void Finish()
+    {
+        if (run != null) run.Report(Coverage);
+        ShowResult();
+    }
+
+    void ShowResult()
+    {
+        if (result != null) result.text = Mathf.RoundToInt(Coverage * 100f) + "% sown";
     }
 
     /// <summary>
@@ -311,6 +332,7 @@ public class SeederField : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         driving = false;
         spent = false;
         lineLeft = batteryCells;
+        if (result != null) result.text = string.Empty;
 
         Color32 soil32 = soil;
         Color32 verge32 = verge;

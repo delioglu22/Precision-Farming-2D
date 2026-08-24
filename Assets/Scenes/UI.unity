@@ -2288,6 +2288,7 @@ MonoBehaviour:
   channel: {fileID: 11400000, guid: 2a9207ce20ace314095f1440b93e05bf, type: 2}
   run: {fileID: 11400000, guid: c7b25df7276ac0947bffc4a26253d51c, type: 2}
   scene: Seeder
+  coverage: {fileID: 1012714030}
 --- !u!4 &1047257618
 Transform:
   m_ObjectHideFlags: 0

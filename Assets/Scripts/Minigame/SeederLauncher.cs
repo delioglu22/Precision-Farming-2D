@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// Sends the seeder out to the parcel the player is looking at.
@@ -24,16 +25,28 @@ public class SeederLauncher : MonoBehaviour
     [Tooltip("The mini game's scene. Must be listed in the build settings.")]
     [SerializeField] string scene = "Seeder";
 
+    [Tooltip("Where the seeder's last result is shown on the parcel's page. Optional.")]
+    [SerializeField] Text coverage;
+
     Parcel held;
 
     void OnEnable()
     {
         if (channel != null) channel.Selected += OnSelected;
+        if (run != null) run.Finished += OnFinished;
     }
 
     void OnDisable()
     {
         if (channel != null) channel.Selected -= OnSelected;
+        if (run != null) run.Finished -= OnFinished;
+    }
+
+    // What the mini game managed comes back along the ticket, because a scene cannot hold a
+    // reference into another one.
+    void OnFinished(float sown)
+    {
+        if (coverage != null) coverage.text = Mathf.RoundToInt(sown * 100f) + "%";
     }
 
     void OnSelected(Parcel parcel)
