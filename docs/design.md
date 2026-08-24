@@ -61,11 +61,14 @@ away from it is correct, while on poor land it is the whole parcel.
 
 ## The seeder
 
-The seeder is tuned by driving it. Its mini game hands you the parcel and one unbroken line: you put a
+The seeder is tuned by driving it. The map draws a parcel in isometric, but the mini game lays the
+same field out straight down, as the rectangle of cells it is — seen at an angle it would spend half
+the screen on dead corners. Its mini game hands you that rectangle and one unbroken line: you put a
 finger down, the machine follows where you lead it, and you do not lift until the run is over. The
 line lays a band of seed around itself, and the job is to cover the parcel with that band before the
-battery runs out. The battery is the length of line you have left, so the budget is something you read
-against the ground still bare rather than a number draining in a corner. Ground seeded twice is
+battery runs out. The battery is a length of line rather than a stretch of time, and it empties along
+the foot of the screen as the machine drives, so what is being watched is how much line is left
+against how much ground is still bare. Ground seeded twice is
 battery spent for nothing, ground missed stays bare, and the run ends on a percentage — the share of
 the parcel that got seed. The run cannot be failed; an empty battery just stops the machine where it
 stands, and whatever was covered still pays. Seed laid outside the parcel is wasted, which makes the

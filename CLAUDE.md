@@ -10,10 +10,17 @@ and about the game, not about implementation. `docs/art.md` is its sibling for h
 the grid, the light, the palette, and what a new piece of art has to obey. Neither document carries
 implementation; that lives in this file and in the scripts' own comments.
 
-Two scenes. `Assets/Scenes/SampleScene.unity` is the one you play from; `Assets/Scenes/UI.unity`
-holds the canvas and the EventSystem and is pulled in additively by `SceneBootstrap`. Both are in the
-build settings. Edit the UI by opening `UI.unity` — alongside the map scene is fine, the bootstrap
-will not load it twice.
+Three scenes. `Assets/Scenes/SampleScene.unity` is the one you play from; `Assets/Scenes/UI.unity`
+holds the canvas and the EventSystem and is pulled in additively by `SceneBootstrap`;
+`Assets/Scenes/Seeder.unity` is the seeder's mini game, laid over the top by `SeederLauncher` when
+the parcel page's Optimize button is pressed and taken away again by its own Close button. All three
+are in the build settings. Edit the UI by opening `UI.unity` — alongside the map scene is fine, the
+bootstrap will not load it twice.
+
+**Leave `Seeder.unity` closed while working on the map.** Left open in the editor it is loaded like
+any other scene, so pressing Play draws its canvas over everything and the editor logs a second
+EventSystem. At runtime that never happens: it is loaded on demand and `LoneEventSystem` stands the
+spare one down.
 
 **`World` has to stay a common ancestor of everything clickable.** The EventSystem finds a drag
 handler by walking *up the hierarchy* from whatever was pressed, and `MapPan` lives on `World`.
@@ -34,6 +41,10 @@ for their own stacking and must stay that way.
 
 See `docs/art.md` for what a parcel looks like and `ParcelFootprint` / `ParcelLayer` for how it is
 put together.
+
+The two hats are skills as well, and nothing else here points at them: `.claude/skills/game-designer/`
+for talking about the game itself, and `.claude/skills/artist/` for anything touching a colour, a tile
+or an import setting.
 
 Note: this file, `.claude/skills/` and `.claude/hooks/` are tracked, so the instructions and the
 project skills travel with the repo to another machine. Only per-machine state is ignored:
