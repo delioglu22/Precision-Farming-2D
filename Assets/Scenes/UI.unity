@@ -182,7 +182,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 44
+    m_MaxSize: 56
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -624,10 +624,10 @@ RectTransform:
   - {fileID: 1941033683}
   m_Father: {fileID: 563334798}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 491.6242, y: -346}
+  m_SizeDelta: {x: 983.2484, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &217612669
 MonoBehaviour:
@@ -1082,7 +1082,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 292}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &420368981
 MonoBehaviour:
@@ -1207,16 +1207,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 145459231}
-        m_TargetAssemblyTypeName: MinigamePanel, Assembly-CSharp
+      - m_Target: {fileID: 1047257617}
+        m_TargetAssemblyTypeName: SeederLauncher, Assembly-CSharp
         m_MethodName: Open
-        m_Mode: 5
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Seeder
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &430147389
@@ -1290,10 +1290,10 @@ RectTransform:
   - {fileID: 991712012}
   m_Father: {fileID: 420368980}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 491.6242, y: -70}
+  m_SizeDelta: {x: 935.2484, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &531025154
 MonoBehaviour:
@@ -1432,7 +1432,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 692}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &563334799
 MonoBehaviour:
@@ -2040,7 +2040,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 44
+    m_MaxSize: 56
     m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2256,6 +2256,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1012714028}
   m_CullTransparentMesh: 1
+--- !u!1 &1047257616
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1047257618}
+  - component: {fileID: 1047257617}
+  m_Layer: 0
+  m_Name: Seeder Launcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1047257617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047257616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bd1eb177e7b5c94d85511cac775d1d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SeederLauncher
+  channel: {fileID: 11400000, guid: 2a9207ce20ace314095f1440b93e05bf, type: 2}
+  run: {fileID: 11400000, guid: c7b25df7276ac0947bffc4a26253d51c, type: 2}
+  scene: Seeder
+--- !u!4 &1047257618
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047257616}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1173281421
 GameObject:
   m_ObjectHideFlags: 0
@@ -2370,10 +2417,10 @@ RectTransform:
   - {fileID: 430147387}
   m_Father: {fileID: 563334798}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 491.6242, y: -110}
+  m_SizeDelta: {x: 983.2484, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1199344197
 MonoBehaviour:
@@ -2575,7 +2622,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 44
+    m_MaxSize: 56
     m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2707,10 +2754,10 @@ RectTransform:
   - {fileID: 275144917}
   m_Father: {fileID: 563334798}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 491.6242, y: -582}
+  m_SizeDelta: {x: 983.2484, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1358063834
 MonoBehaviour:
@@ -3084,10 +3131,10 @@ RectTransform:
   - {fileID: 1295930635}
   m_Father: {fileID: 420368980}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 491.6242, y: -222}
+  m_SizeDelta: {x: 935.2484, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1621612874
 MonoBehaviour:
@@ -3382,7 +3429,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 44
+    m_MaxSize: 56
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -4022,3 +4069,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 674119534}
   - {fileID: 2049174378}
+  - {fileID: 1047257618}

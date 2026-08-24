@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/UI.unity
     guid: 94e766899e09e03458da16d0577d592a
+  - enabled: 1
+    path: Assets/Scenes/Seeder.unity
+    guid: 4e9ff96fdc5700946837d01e9f4f3607
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
