@@ -49,6 +49,13 @@ description: MUST use this skill when working in the editor through the Unity MC
   objects in edit mode, so poses can be measured (`RectTransform.GetWorldCorners`) without entering
   play mode. Stop animation mode and restore the resting pose afterwards.
 - Bash heredocs (`cat > file << 'EOF'`) do work here, despite an earlier note to the contrary.
+- **Never force a layout rebuild before saving a scene.** `LayoutRebuilder.ForceRebuildLayoutImmediate`
+  or `Canvas.ForceUpdateCanvases()` ahead of `SaveScene` writes **zeroes** over every
+  layout-driven `RectTransform` in the file - anchors, `m_AnchoredPosition` and `m_SizeDelta` all
+  flatten - while the live objects still read the correct numbers, so it only shows up in
+  `git diff`. In `UI.unity` that is 30 lines of silent damage to `Actions`, `Readings` and
+  `Machines`. A plain `SaveScene` with no rebuild is safe: the same scene saved untouched comes
+  back as a one-line diff. Do not try to help the layout along.
 - `execute_code`'s CodeDom compiler does **not** reference the SpriteShape assembly, so
   `typeof(UnityEngine.U2D.SpriteShapeController)` will not compile. Find those types reflectively:
   loop `AppDomain.CurrentDomain.GetAssemblies()` and `asm.GetType("UnityEngine.U2D.…")`.
