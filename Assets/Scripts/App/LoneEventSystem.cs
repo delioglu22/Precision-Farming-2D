@@ -17,7 +17,12 @@ public class LoneEventSystem : MonoBehaviour
 {
     void Awake()
     {
-        if (EventSystem.current != null && EventSystem.current != GetComponent<EventSystem>())
-            Destroy(gameObject);
+        if (EventSystem.current == null || EventSystem.current == GetComponent<EventSystem>()) return;
+
+        // Stood down before it is destroyed: Destroy waits until the end of the frame, and in
+        // the meantime Unity would still run this EventSystem's OnEnable and complain about
+        // there being a second one. Deactivating first means that message never happens.
+        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }
