@@ -174,6 +174,13 @@ bite most often:
   `refactor` / `chore`. **No** `Co-Authored-By` line, no "Generated with Claude Code", no tool signature.
 - Commit `.meta` files alongside their assets, and the `.unity` scene when it changed.
 
+## Before pushing
+
+`.claude/skills/pre-push-review/` runs a quality pass before commits leave for the branch — one
+question, does every file in the repo earn its place. It reports and never deletes; what goes is
+the user's call. The checks are in `checks.sh` and `unity-checks.md`, and the known false positives
+are in the skill so they are not re-argued every push.
+
 ## Turkish, and dictation
 
 The user writes in Turkish; reply in Turkish. Code, comments and commit messages stay English.
