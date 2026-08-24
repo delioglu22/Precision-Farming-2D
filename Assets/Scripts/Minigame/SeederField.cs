@@ -47,6 +47,17 @@ public class SeederField : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     [Tooltip("How wide a band the machine sows, in grid cells. The seeder's own measurement.")]
     [SerializeField, Range(0.2f, 4f)] float bandCells = 0.9f;
 
+    // Measured rather than guessed: driving a perfect boustrophedon at a 0.9 cell band costs
+    // 18 cells of line on a 3x4, 28 on a 4x5, 46 on a 5x7 and 78 on a 9x7. Forty-eight puts
+    // the commonest footprint on the map about two cells short of comfortable - a clean route
+    // reaches the whole field, a wasteful one does not - and leaves the big parcels out of
+    // reach until a bigger machine is bought.
+    [Tooltip("How much line the machine carries, in grid cells. A machine stat and not a parcel one: this is what decides which fields it can finish at all.")]
+    [SerializeField, Min(1f)] float batteryCells = 48f;
+
+    [Tooltip("What is left in the tank. A Filled image, so the length of line remaining is something seen rather than read.")]
+    [SerializeField] Image battery;
+
     // All four are measured out of docs/art.md rather than picked by eye, so the field sits in
     // the same palette as the map it was opened from. The texture is sRGB, which is what
     // Unity samples a RGBA32 into, so these go in as written and not as .linear.
@@ -85,11 +96,21 @@ public class SeederField : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     bool spent;
     Vector2 lastTexel;
 
+    // What is left of the tank, in cells of line. Distance is distance: driving over the
+    // verge, or back over ground already sown, costs exactly what driving over bare soil does.
+    float lineLeft;
+
     /// <summary>The share of the parcel that has seed on it, from 0 to 1.</summary>
     public float Coverage
     {
         get { return fencedCount <= 0 ? 0f : (float)sownCount / fencedCount; }
     }
+
+    /// <summary>Cells of line still in the tank.</summary>
+    public float LineLeft { get { return lineLeft; } }
+
+    /// <summary>Whether the run is over, by a lifted finger or by a dry tank.</summary>
+    public bool Spent { get { return spent; } }
 
     // The scene stands on its own, so it lays its field out as soon as it opens rather than
     // waiting to be told to by the map.
@@ -122,7 +143,8 @@ public class SeederField : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         driving = true;
         lastTexel = texel;
 
-        // The machine is already sowing where it was set down.
+        // Setting the machine down sows where it stands and costs nothing; line is spent on
+        // travel, and it has not travelled yet.
         Stamp(texel, texel);
         Show();
     }
@@ -134,9 +156,42 @@ public class SeederField : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         Vector2 texel;
         if (!TexelAt(eventData, out texel)) return;
 
-        Stamp(lastTexel, texel);
-        lastTexel = texel;
+        Drive(texel);
+    }
+
+    /// <summary>
+    /// Runs the machine out to a point, sowing the band behind it and spending a cell of line
+    /// for every cell travelled. The tank empties in the middle of a stroke rather than at the
+    /// end of one, so the run stops where the machine stands and not where the finger got to.
+    /// A dry tank is not a failure - whatever was covered still counts.
+    /// </summary>
+    void Drive(Vector2 to)
+    {
+        if (lineLeft <= 0f || texelsPerCell <= 0f) return;
+
+        float cells = Vector2.Distance(lastTexel, to) / texelsPerCell;
+        if (cells <= 0f) return;
+
+        Vector2 reached = to;
+        if (cells > lineLeft)
+        {
+            reached = Vector2.Lerp(lastTexel, to, lineLeft / cells);
+            cells = lineLeft;
+        }
+
+        Stamp(lastTexel, reached);
+        lastTexel = reached;
+
+        lineLeft -= cells;
+        if (lineLeft <= 0f)
+        {
+            lineLeft = 0f;
+            driving = false;
+            spent = true;
+        }
+
         Show();
+        ShowBattery();
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -255,6 +310,7 @@ public class SeederField : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         sownCount = 0;
         driving = false;
         spent = false;
+        lineLeft = batteryCells;
 
         Color32 soil32 = soil;
         Color32 verge32 = verge;
@@ -279,9 +335,15 @@ public class SeederField : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         }
 
         Show();
+        ShowBattery();
 
         if (ground != null) ground.texture = field;
         if (fitter != null) fitter.aspectRatio = boxWidth / boxHeight;
+    }
+
+    void ShowBattery()
+    {
+        if (battery != null) battery.fillAmount = batteryCells <= 0f ? 0f : lineLeft / batteryCells;
     }
 
     /// <summary>
