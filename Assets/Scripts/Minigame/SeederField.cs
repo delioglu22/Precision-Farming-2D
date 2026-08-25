@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// The seeder's playfield: the parcel it was sent to, seen straight down, and the one
@@ -36,7 +37,7 @@ public class SeederField : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     [SerializeField] AspectRatioFitter fitter;
 
     [Tooltip("Names the field being worked. Optional.")]
-    [SerializeField] Text title;
+    [SerializeField] TMP_Text title;
 
     [Tooltip("Texels along the parcel's longer side. The grain of the score as much as of the picture.")]
     [SerializeField, Range(64, 512)] int resolution = 256;
@@ -59,7 +60,7 @@ public class SeederField : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     [SerializeField] Image battery;
 
     [Tooltip("What the run came to, once it is over. Optional.")]
-    [SerializeField] Text result;
+    [SerializeField] TMP_Text result;
 
     // All four are measured out of docs/art.md rather than picked by eye, so the field sits in
     // the same palette as the map it was opened from. The texture is sRGB, which is what

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// The sheet that rises from the bottom when a parcel is picked, and grows to fill
@@ -13,7 +14,7 @@ public class ParcelPanel : MonoBehaviour
     [Tooltip("Picks are announced here. The same asset the map scene raises on.")]
     [SerializeField] ParcelSelectionChannel channel;
     [SerializeField] Animator sheet;
-    [SerializeField] Text title;
+    [SerializeField] TMP_Text title;
     [SerializeField] Button closeButton;
 
     static readonly int Open = Animator.StringToHash("Open");

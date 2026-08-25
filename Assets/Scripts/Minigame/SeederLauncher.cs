@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Sends the seeder out to the parcel the player is looking at.
@@ -26,7 +26,7 @@ public class SeederLauncher : MonoBehaviour
     [SerializeField] string scene = "Seeder";
 
     [Tooltip("Where the seeder's last result is shown on the parcel's page. Optional.")]
-    [SerializeField] Text coverage;
+    [SerializeField] TMP_Text coverage;
 
     Parcel held;
 
