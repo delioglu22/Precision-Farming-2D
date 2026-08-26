@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8162066293336131229}
   - component: {fileID: 8491448616606267952}
   m_Layer: 0
-  m_Name: Canopy
+  m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,7 +84,7 @@ SpriteShapeRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 4
   m_MaskInteraction: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.28235295, g: 0.41568628, b: 0.23529412, a: 1}
   m_ShapeTexture: {fileID: 0}
   m_Sprites: []
   m_LocalAABB:

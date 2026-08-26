@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Slab_Wood
   m_EditorClassIdentifier: Unity.2D.SpriteShape.Runtime::UnityEngine.U2D.SpriteShape
   m_Angles: []
-  m_FillTexture: {fileID: 2800000, guid: 99c3775e61cd0534e95b9ec47458e6cc, type: 3}
+  m_FillTexture: {fileID: 2800000, guid: 59dbdb5d8d01d1d439870e05a00e362f, type: 3}
   m_CornerSprites:
   - m_CornerType: 0
     m_Sprites:
