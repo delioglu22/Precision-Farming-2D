@@ -66,6 +66,12 @@ public class ParcelFootprint : MonoBehaviour
         for (int s = 0; s < layers.Length; s++)
         {
             ParcelLayer layer = layers[s].GetComponent<ParcelLayer>();
+
+            // A pond's water is drawn by hand: surveyed edges are what make a pond
+            // read as a field someone filled with blue. Tracing it would undo that
+            // on every load, so an authored layer is left exactly as it was drawn.
+            if (layer != null && layer.Authored) continue;
+
             Vector2[] outline = layer == null ? corners : Outline(corners, layer);
 
             Spline spline = layers[s].spline;

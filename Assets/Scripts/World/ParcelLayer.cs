@@ -36,7 +36,11 @@ public class ParcelLayer : MonoBehaviour
     [Tooltip("Side faces only: how far the slab falls away, in world units.")]
     [SerializeField, Min(0f)] float depth = 0.2f;
 
+    [Tooltip("Leave this layer's spline alone. A pond's water is drawn by hand so it does not read as a surveyed plot, and the footprint must not trace over it.")]
+    [SerializeField] bool authored;
+
     public ParcelFace Face { get { return face; } }
+    public bool Authored { get { return authored; } }
     public float Inset { get { return inset; } }
     public float Depth { get { return depth; } }
 }
