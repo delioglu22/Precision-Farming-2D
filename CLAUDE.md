@@ -27,12 +27,20 @@ handler by walking *up the hierarchy* from whatever was pressed, and `MapPan` li
 Move `Parcels` or `Water` out from under it and dragging the map silently stops working.
 
 Three prefabs are built from the same slab: `Parcel.prefab` (clickable, has a crop),
-`PondSlab.prefab` (two steps of water) and `ForestSlab.prefab` (a canopy fill). They are siblings,
-not variants, so a change to the slab's layers has to be made in all three.
+`PondSlab.prefab` (a sand bank and two steps of water) and `ForestSlab.prefab` (a flat floor with
+trees stood on it). They are siblings, not variants, so a change to the slab's layers has to be made
+in all three. They no longer carry the same number of layers: a parcel and a wood have five, a pond
+has six.
 
 **Adding a parcel**: instantiate the prefab, then set its name, position, `ParcelFootprint.footprint`
 and the `SortingGroup`'s order. Nothing else. There is no sprite to pick and no collider to fit — the
-five layers are traced from the footprint and `autoUpdateCollider` bakes the outline.
+layers are traced from the footprint and `autoUpdateCollider` bakes the outline.
+
+**Except the ones marked `authored`.** `ParcelLayer.authored` tells `ParcelFootprint` to leave that
+layer's spline alone, and a pond's two water layers use it: water with a plot's edges reads as a
+field somebody filled with blue, so each pond's outline is drawn by hand and does not grow with the
+footprint. Adding a pond therefore means drawing its water, not just setting a number. See
+`docs/art.md` under "Woods and ponds".
 
 The group's order is a baked topological depth, so a new parcel needs the whole order recomputed —
 the rule is that A draws before B when B sits further along an isometric axis and they overlap on the

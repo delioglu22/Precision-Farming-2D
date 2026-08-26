@@ -38,15 +38,30 @@ it yourself.
 ## A repeating surface is a fill, not a pile of objects
 
 If a surface covers the same thing over and over, the answer is a tiling fill. A fill
-grows with the parcel for free; objects do not — you have to generate them.
+grows with the parcel for free; objects do not — every one has to be placed.
 
-Concretely: individual tree sprites were generated for the forest, plus a script that
-scattered them across the footprint. It worked — but the same problem was already
-solved for crops with `fill_wheat`. `fill_wood` is one file, no script, no 470 objects
-in the scene, and scaling is free. The script and three tree sprites were deleted outright.
+Crops and water are fills. **A wood is the exception, and the only one** — see "Woods
+and ponds" in `docs/art.md`. Its trees are individual sprites placed one at a time,
+because a wood has to differ from the next wood, and a lattice cannot do that. A pond
+is not the exception: every ring of it — sand, shallow, deep — is the same at every
+point, so all three stay fills, and only the props standing on the sand are placed.
 
-Real objects are only for things that are **individually meaningful**: something the
-player will click, count, or move. Scenery is fill.
+Placed does not mean placed anywhere. Props stand **inside** a slab's floor, never on
+the earth border — that ring is the track around the plot, which a parcel cannot be
+worked on either — and because height projects up the screen, tall props belong toward
+the near edge or they lean back onto the slab behind.
+
+Concretely, and mind which half of this survived: individual tree sprites were once
+generated for the forest **plus a script that scattered them across the footprint**,
+and both were deleted. The sprites have since come back — that is now how a wood is
+built. The script has not and will not. Scene content is placed in the scene, not
+produced by code at edit time (`CLAUDE.md`, "Build the scene, don't generate it"), so
+when the trees returned they returned as objects placed by hand. If you find yourself
+writing a scatter loop, that is the same mistake wearing the new direction as cover.
+
+Real objects are for things that earn it: something the player will click, count or
+move — or something whose whole point is that no two arrangements are alike. Scenery
+that is uniform is still fill.
 
 ## The light direction is not negotiable
 
