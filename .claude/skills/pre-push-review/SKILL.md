@@ -45,8 +45,20 @@ Do not re-argue these on every push:
 
 - **`ParcelFootprint.crop` and `cropLayer` are empty on Pond and Forest slabs.** Twenty
   of them turn up and all twenty are correct: a pond and a wood have no crop, they have
-  water and canopy fill instead. Only the `Parcel` ones should be filled in. **A number
+  water and a floor colour instead. Only the `Parcel` ones should be filled in. **A number
   other than 20 is worth a look.**
+- **`CustomButton` adds 22 more empty references, all of them nothing.** It extends
+  `Button` and lives in `Assembly-CSharp`, so unlike a plain `Button` the scan does not
+  skip it and walks its inherited `Selectable` fields too. `m_SelectOnUp/Down/Left/Right`
+  are explicit-navigation targets and navigation is Automatic; `m_ObjectArgument` is a
+  `UnityEvent` argument the calls do not use. **The whole-project baseline is therefore
+  42, not 20** — 20 real false positives plus these 22.
+- **The jetty prefabs and sprites are unreferenced on purpose.** `Jetty Low`,
+  `Jetty Posts` and their two PNGs came out of the ponds when a jetty was judged to
+  promise boats and fishing the game will not have. They are kept for later, deliberately.
+  Do not offer to delete them again.
+- **`Art/UI/Bars/slider_background.png` and `slider_fill.png` are unreferenced on
+  purpose** — they are for the seeder's battery bar, which is not wired yet.
 - **Nothing references a folder's GUID** — the check only looks at files anyway.
 - **Scene files look unreferenced**; they are reached through the build settings.
 - `SampleScene.unity` showing as modified in `git status` with an empty `git diff` is
