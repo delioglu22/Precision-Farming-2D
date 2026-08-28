@@ -41,18 +41,29 @@ report "$(grep -rn 'goes here\|Lorem\|placeholder\|PLACEHOLDER\|coming soon' --i
 section "Docs naming a file that is not there"
 # CLAUDE.md and docs/ name files in backticks, usually by basename. A renamed or
 # deleted script leaves the sentence behind, and nothing else ever notices.
-report "$(grep -oh '`[^`]*`' CLAUDE.md docs/*.md 2>/dev/null | tr -d '`' | sort -u | while IFS= read -r t; do
-  case "$t" in *' '*|http*|/*|.[a-z]*) continue ;; esac
-  case "$t" in
-    */*)
-      [ -e "$t" ] && continue
-      git check-ignore -q "$t" 2>/dev/null && continue
-      echo "MISSING PATH: $t" ;;
-    *.cs|*.unity|*.prefab|*.md|*.asset|*.js|*.anim|*.controller)
-      [ -n "$({ find Assets docs .claude ProjectSettings -name "$t" 2>/dev/null; find . -maxdepth 1 -name "$t" 2>/dev/null; } | head -1)" ] && continue
-      echo "MISSING FILE: $t" ;;
-  esac
-done)"
+# Computed into a variable first, not nested straight inside report "$(...)" - that
+# double nesting of quoted command substitutions is what silently corrupts $t below.
+# if/[[ ]], not case: macOS ships bash 3.2 (frozen since 2007, GPLv3), whose parser
+# cannot reliably close a "case...esac" when it sits inside a $(...) command
+# substitution - it misreads the pattern-closing ")" against the substitution's own
+# closing ")" and dies on the first ";;" with "syntax error near unexpected token".
+# Confirmed with a minimal repro: identical case/esac, works standalone, breaks the
+# instant it's wrapped in $(...), on this bash and no other. if/[[ ]] has no such bug.
+docs_missing=$(grep -oh '`[^`]*`' CLAUDE.md docs/*.md 2>/dev/null | tr -d '`' | sort -u | while IFS= read -r t; do
+  if [[ "$t" == *' '* || "$t" == http* || "$t" == /* || "$t" == .[a-z]* ]]; then
+    continue
+  fi
+  if [[ "$t" == */* ]]; then
+    [ -e "$t" ] && continue
+    git check-ignore -q "$t" 2>/dev/null && continue
+    echo "MISSING PATH: $t"
+  elif [[ "$t" == *.cs || "$t" == *.unity || "$t" == *.prefab || "$t" == *.md || "$t" == *.asset || "$t" == *.js || "$t" == *.anim || "$t" == *.controller ]]; then
+    found=$( { find Assets docs .claude ProjectSettings -name "$t" 2>/dev/null; find . -maxdepth 1 -name "$t" 2>/dev/null; } | head -1)
+    [ -n "$found" ] && continue
+    echo "MISSING FILE: $t"
+  fi
+done)
+report "$docs_missing"
 
 section "Tracked .claude entries CLAUDE.md never mentions"
 report "$(for d in .claude/skills/*/; do

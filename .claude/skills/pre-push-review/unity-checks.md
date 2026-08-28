@@ -48,8 +48,8 @@ foreach (var guid in UnityEditor.AssetDatabase.FindAssets("t:Prefab")) {
 return "scanned " + checkedComps + " project components, " + nulls + " empty reference(s)\n" + sb.ToString();
 ```
 
-Expected baseline: **20 empty references, all of them correct** — see the known
-false positives in `SKILL.md`. A number other than 20 is what deserves a look.
+Expected baseline: **30 empty references, all of them correct** — see the known
+false positives in `SKILL.md`. A number other than 30 is what deserves a look.
 
 ## 2. Every pose of an animator keys the same properties
 
@@ -86,4 +86,7 @@ foreach (var guid in UnityEditor.AssetDatabase.FindAssets("t:AnimatorController"
 return sb.ToString();
 ```
 
-Expected baseline: `Minigame` 2/2, `Parcel` 2/2, `ParcelPanel` 3/3, all OK.
+Expected baseline: `ParcelPanel` 3/3, all OK. `Parcel` no longer has a controller -
+the tilemap `Parcel` drives its lift and highlight directly, not through an Animator.
+`Minigame` was already gone before this note was last checked; if a controller by
+that name turns up again, it is new, not a regression.

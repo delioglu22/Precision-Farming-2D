@@ -1,0 +1,2665 @@
+fileFormatVersion: 2
+guid: 94b836deb2b334758bf2dd292ca6433c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5561239423533295154
+    second: SimpleSpriteSheet_Veggies_0
+  - first:
+      213: -6202851399795752741
+    second: SimpleSpriteSheet_Veggies_1
+  - first:
+      213: 7207875390339884372
+    second: SimpleSpriteSheet_Veggies_2
+  - first:
+      213: -8696787277687110949
+    second: SimpleSpriteSheet_Veggies_3
+  - first:
+      213: -2675546201702785146
+    second: SimpleSpriteSheet_Veggies_4
+  - first:
+      213: 8619770965681340742
+    second: SimpleSpriteSheet_Veggies_5
+  - first:
+      213: 4546976931010436027
+    second: SimpleSpriteSheet_Veggies_6
+  - first:
+      213: 8012903518819580698
+    second: SimpleSpriteSheet_Veggies_7
+  - first:
+      213: -1132903288784327301
+    second: SimpleSpriteSheet_Veggies_8
+  - first:
+      213: 1181534898096207914
+    second: SimpleSpriteSheet_Veggies_9
+  - first:
+      213: 6410163383184791047
+    second: SimpleSpriteSheet_Veggies_10
+  - first:
+      213: -389461775219457259
+    second: SimpleSpriteSheet_Veggies_11
+  - first:
+      213: -5862914309335730610
+    second: SimpleSpriteSheet_Veggies_12
+  - first:
+      213: -5245589067410131288
+    second: SimpleSpriteSheet_Veggies_13
+  - first:
+      213: -1346112803466113391
+    second: SimpleSpriteSheet_Veggies_14
+  - first:
+      213: 1375497159575906680
+    second: SimpleSpriteSheet_Veggies_15
+  - first:
+      213: 3013345719274927370
+    second: SimpleSpriteSheet_Veggies_16
+  - first:
+      213: 8354396883298453774
+    second: SimpleSpriteSheet_Veggies_17
+  - first:
+      213: -3099626668773781118
+    second: SimpleSpriteSheet_Veggies_18
+  - first:
+      213: 3475691069621187884
+    second: SimpleSpriteSheet_Veggies_19
+  - first:
+      213: -3451367682240954324
+    second: SimpleSpriteSheet_Veggies_20
+  - first:
+      213: 3168160022277291641
+    second: SimpleSpriteSheet_Veggies_21
+  - first:
+      213: 4859814709408534486
+    second: SimpleSpriteSheet_Veggies_22
+  - first:
+      213: 815860297313057884
+    second: SimpleSpriteSheet_Veggies_23
+  - first:
+      213: 733983819919151160
+    second: SimpleSpriteSheet_Veggies_24
+  - first:
+      213: 8931469134092106419
+    second: SimpleSpriteSheet_Veggies_25
+  - first:
+      213: 929449632441511435
+    second: SimpleSpriteSheet_Veggies_26
+  - first:
+      213: -6761501491682053011
+    second: SimpleSpriteSheet_Veggies_27
+  - first:
+      213: 8279595693964238859
+    second: SimpleSpriteSheet_Veggies_28
+  - first:
+      213: 652444370089648479
+    second: SimpleSpriteSheet_Veggies_29
+  - first:
+      213: -1485776647164084632
+    second: SimpleSpriteSheet_Veggies_30
+  - first:
+      213: 7730255430253842626
+    second: SimpleSpriteSheet_Veggies_31
+  - first:
+      213: 3220518247375253133
+    second: SimpleSpriteSheet_Veggies_32
+  - first:
+      213: 6331684442979995523
+    second: SimpleSpriteSheet_Veggies_33
+  - first:
+      213: -174036376103277584
+    second: SimpleSpriteSheet_Veggies_34
+  - first:
+      213: -5829870519083977779
+    second: SimpleSpriteSheet_Veggies_35
+  - first:
+      213: -2604629672262507318
+    second: SimpleSpriteSheet_Veggies_36
+  - first:
+      213: -2273213699665533497
+    second: SimpleSpriteSheet_Veggies_37
+  - first:
+      213: -2083128690998596387
+    second: SimpleSpriteSheet_Veggies_38
+  - first:
+      213: 5919884107568184900
+    second: SimpleSpriteSheet_Veggies_39
+  - first:
+      213: -5382700966071319854
+    second: SimpleSpriteSheet_Veggies_40
+  - first:
+      213: 6903332797735140435
+    second: SimpleSpriteSheet_Veggies_41
+  - first:
+      213: -3149865221948083720
+    second: SimpleSpriteSheet_Veggies_42
+  - first:
+      213: 8471296965780884471
+    second: SimpleSpriteSheet_Veggies_43
+  - first:
+      213: 1637432849765462565
+    second: SimpleSpriteSheet_Veggies_44
+  - first:
+      213: -957589265557975762
+    second: SimpleSpriteSheet_Veggies_45
+  - first:
+      213: 1352842762815843473
+    second: SimpleSpriteSheet_Veggies_46
+  - first:
+      213: -9153346835205861006
+    second: SimpleSpriteSheet_Veggies_47
+  - first:
+      213: -6802627419006397275
+    second: SimpleSpriteSheet_Veggies_48
+  - first:
+      213: 5123623425516428
+    second: SimpleSpriteSheet_Veggies_49
+  - first:
+      213: 5126415029369391504
+    second: SimpleSpriteSheet_Veggies_50
+  - first:
+      213: -8391320340713032168
+    second: SimpleSpriteSheet_Veggies_51
+  - first:
+      213: -5355340895991258758
+    second: SimpleSpriteSheet_Veggies_52
+  - first:
+      213: 3704216685071948215
+    second: SimpleSpriteSheet_Veggies_53
+  - first:
+      213: -733784417208417225
+    second: SimpleSpriteSheet_Veggies_54
+  - first:
+      213: -327760310761235829
+    second: SimpleSpriteSheet_Veggies_55
+  - first:
+      213: -1089056067602530282
+    second: SimpleSpriteSheet_Veggies_56
+  - first:
+      213: 2008909966214547691
+    second: SimpleSpriteSheet_Veggies_57
+  - first:
+      213: -2093907806434289412
+    second: SimpleSpriteSheet_Veggies_58
+  - first:
+      213: -4618389501216819754
+    second: SimpleSpriteSheet_Veggies_59
+  - first:
+      213: -7996056301698184678
+    second: SimpleSpriteSheet_Veggies_60
+  - first:
+      213: 6638586029083747623
+    second: SimpleSpriteSheet_Veggies_61
+  - first:
+      213: -8952717238887709633
+    second: SimpleSpriteSheet_Veggies_62
+  - first:
+      213: 2622038329849978272
+    second: SimpleSpriteSheet_Veggies_63
+  - first:
+      213: -3808357809713417399
+    second: SimpleSpriteSheet_Veggies_64
+  - first:
+      213: -258046670710116104
+    second: SimpleSpriteSheet_Veggies_65
+  - first:
+      213: -4257362680725118532
+    second: SimpleSpriteSheet_Veggies_66
+  - first:
+      213: -3449258423216489673
+    second: SimpleSpriteSheet_Veggies_67
+  - first:
+      213: -6041096528596420461
+    second: SimpleSpriteSheet_Veggies_68
+  - first:
+      213: 8562047385122615371
+    second: SimpleSpriteSheet_Veggies_69
+  - first:
+      213: 2874906477853767265
+    second: SimpleSpriteSheet_Veggies_70
+  - first:
+      213: 2174465883337857572
+    second: SimpleSpriteSheet_Veggies_71
+  - first:
+      213: 2750373845945607653
+    second: SimpleSpriteSheet_Veggies_72
+  - first:
+      213: 2157445381678872175
+    second: SimpleSpriteSheet_Veggies_73
+  - first:
+      213: 4507124477804687270
+    second: SimpleSpriteSheet_Veggies_74
+  - first:
+      213: -5339680104585642055
+    second: SimpleSpriteSheet_Veggies_75
+  - first:
+      213: 5627864125755474751
+    second: SimpleSpriteSheet_Veggies_76
+  - first:
+      213: 6970975630073841866
+    second: SimpleSpriteSheet_Veggies_77
+  - first:
+      213: -8002587029692207581
+    second: SimpleSpriteSheet_Veggies_78
+  - first:
+      213: 6778909066073437186
+    second: SimpleSpriteSheet_Veggies_79
+  - first:
+      213: -940900778208292945
+    second: SimpleSpriteSheet_Veggies_80
+  - first:
+      213: 2451237509436502619
+    second: SimpleSpriteSheet_Veggies_81
+  - first:
+      213: 3026947484765025769
+    second: SimpleSpriteSheet_Veggies_82
+  - first:
+      213: -2639509734459142235
+    second: SimpleSpriteSheet_Veggies_83
+  - first:
+      213: 7666274121173149903
+    second: SimpleSpriteSheet_Veggies_84
+  - first:
+      213: 8571120999003130386
+    second: SimpleSpriteSheet_Veggies_85
+  - first:
+      213: -1623812324408803811
+    second: SimpleSpriteSheet_Veggies_86
+  - first:
+      213: 8311526634183235858
+    second: SimpleSpriteSheet_Veggies_87
+  - first:
+      213: 7908963053382429266
+    second: SimpleSpriteSheet_Veggies_88
+  - first:
+      213: 2028695588350240364
+    second: SimpleSpriteSheet_Veggies_89
+  - first:
+      213: -5734055164051804902
+    second: SimpleSpriteSheet_Veggies_90
+  - first:
+      213: 8497410455454561666
+    second: SimpleSpriteSheet_Veggies_91
+  - first:
+      213: -2483697946072457909
+    second: SimpleSpriteSheet_Veggies_92
+  - first:
+      213: -634318280831733963
+    second: SimpleSpriteSheet_Veggies_93
+  - first:
+      213: -950624288397977213
+    second: SimpleSpriteSheet_Veggies_94
+  - first:
+      213: 7641194608572643159
+    second: SimpleSpriteSheet_Veggies_95
+  - first:
+      213: 6092195425420947164
+    second: SimpleSpriteSheet_Veggies_96
+  - first:
+      213: -437809248194992700
+    second: SimpleSpriteSheet_Veggies_97
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_0
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 1519
+        width: 180
+        height: 238
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 236a99e7acd7d2d40800000000000000
+      internalID: 5561239423533295154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_1
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 1698
+        width: 46
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd0c3a8148b0be9a0800000000000000
+      internalID: -6202851399795752741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_2
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 1685
+        width: 36
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4552d728a74870460800000000000000
+      internalID: 7207875390339884372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_3
+      rect:
+        serializedVersion: 2
+        x: 463
+        y: 1648
+        width: 86
+        height: 116
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd2c25a6c0ece4780800000000000000
+      internalID: -8696787277687110949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_4
+      rect:
+        serializedVersion: 2
+        x: 557
+        y: 1607
+        width: 108
+        height: 158
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68f1c5bb7ec8edad0800000000000000
+      internalID: -2675546201702785146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_5
+      rect:
+        serializedVersion: 2
+        x: 666
+        y: 1614
+        width: 110
+        height: 144
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64189a616049f9770800000000000000
+      internalID: 8619770965681340742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_6
+      rect:
+        serializedVersion: 2
+        x: 787
+        y: 1526
+        width: 234
+        height: 224
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbbd5c68d6b1a1f30800000000000000
+      internalID: 4546976931010436027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_7
+      rect:
+        serializedVersion: 2
+        x: 1058
+        y: 1693
+        width: 48
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1bf7b2db4d833f60800000000000000
+      internalID: 8012903518819580698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_8
+      rect:
+        serializedVersion: 2
+        x: 1150
+        y: 1676
+        width: 64
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7d6323167e1740f0800000000000000
+      internalID: -1132903288784327301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_9
+      rect:
+        serializedVersion: 2
+        x: 1239
+        y: 1679
+        width: 86
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2870c2dab7a56010800000000000000
+      internalID: 1181534898096207914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_10
+      rect:
+        serializedVersion: 2
+        x: 1338
+        y: 1674
+        width: 88
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70612fe62a975f850800000000000000
+      internalID: 6410163383184791047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_11
+      rect:
+        serializedVersion: 2
+        x: 1432
+        y: 1665
+        width: 110
+        height: 101
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5138372349a589af0800000000000000
+      internalID: -389461775219457259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_12
+      rect:
+        serializedVersion: 2
+        x: 1556
+        y: 1522
+        width: 228
+        height: 232
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e463d7baf7eb2aea0800000000000000
+      internalID: -5862914309335730610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_13
+      rect:
+        serializedVersion: 2
+        x: 1828
+        y: 1697
+        width: 40
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a6b857198ce337b0800000000000000
+      internalID: -5245589067410131288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_14
+      rect:
+        serializedVersion: 2
+        x: 1928
+        y: 1691
+        width: 40
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19e0cc98985a15de0800000000000000
+      internalID: -1346112803466113391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_15
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 1438
+        width: 62
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 879a412016fb61310800000000000000
+      internalID: 1375497159575906680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_16
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 1424
+        width: 80
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0573de57fd81d920800000000000000
+      internalID: 3013345719274927370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_17
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 1415
+        width: 99
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0982ada3b7c0f370800000000000000
+      internalID: 8354396883298453774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_18
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 1266
+        width: 220
+        height: 232
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 281596f97f9ebf4d0800000000000000
+      internalID: -3099626668773781118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_19
+      rect:
+        serializedVersion: 2
+        x: 589
+        y: 1441
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c25b4c1ec922c3030800000000000000
+      internalID: 3475691069621187884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_20
+      rect:
+        serializedVersion: 2
+        x: 677
+        y: 1423
+        width: 58
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c20c3ce01674a10d0800000000000000
+      internalID: -3451367682240954324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_21
+      rect:
+        serializedVersion: 2
+        x: 766
+        y: 1419
+        width: 80
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97e7e6f21c097fb20800000000000000
+      internalID: 3168160022277291641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_22
+      rect:
+        serializedVersion: 2
+        x: 860
+        y: 1393
+        width: 92
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6df8384dab7817340800000000000000
+      internalID: 4859814709408534486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_23
+      rect:
+        serializedVersion: 2
+        x: 969
+        y: 1400
+        width: 74
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5c70b72e94825b00800000000000000
+      internalID: 815860297313057884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_24
+      rect:
+        serializedVersion: 2
+        x: 1079
+        y: 1266
+        width: 210
+        height: 232
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8305a293562af2a00800000000000000
+      internalID: 733983819919151160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_25
+      rect:
+        serializedVersion: 2
+        x: 1342
+        y: 1428
+        width: 40
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bafce34bd3f2fb70800000000000000
+      internalID: 8931469134092106419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_26
+      rect:
+        serializedVersion: 2
+        x: 1435
+        y: 1431
+        width: 54
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0e2b4a248116ec00800000000000000
+      internalID: 929449632441511435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_27
+      rect:
+        serializedVersion: 2
+        x: 1532
+        y: 1421
+        width: 60
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d647400a7325a22a0800000000000000
+      internalID: -6761501491682053011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_28
+      rect:
+        serializedVersion: 2
+        x: 1619
+        y: 1412
+        width: 86
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b00a79e9a6807e270800000000000000
+      internalID: 8279595693964238859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_29
+      rect:
+        serializedVersion: 2
+        x: 1722
+        y: 1401
+        width: 80
+        height: 108
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f51a5e2a2b2fd0900800000000000000
+      internalID: 652444370089648479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_30
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 1007
+        width: 228
+        height: 238
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86eb63ae206716be0800000000000000
+      internalID: -1485776647164084632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_31
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 1181
+        width: 28
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c0905f6b52674b60800000000000000
+      internalID: 7730255430253842626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_32
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 1170
+        width: 62
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8e277f684491bc20800000000000000
+      internalID: 3220518247375253133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_33
+      rect:
+        serializedVersion: 2
+        x: 465
+        y: 1127
+        width: 82
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38f80b54479aed750800000000000000
+      internalID: 6331684442979995523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_34
+      rect:
+        serializedVersion: 2
+        x: 560
+        y: 1058
+        width: 92
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fb2e5886d2b59df0800000000000000
+      internalID: -174036376103277584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_35
+      rect:
+        serializedVersion: 2
+        x: 663
+        y: 999
+        width: 106
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc33a7f96a3281fa0800000000000000
+      internalID: -5829870519083977779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_36
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 1176
+        width: 42
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac4e95dec1f7adbd0800000000000000
+      internalID: -2604629672262507318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_37
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 1161
+        width: 77
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c562e42f2ce370e0800000000000000
+      internalID: -2273213699665533497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_38
+      rect:
+        serializedVersion: 2
+        x: 979
+        y: 1135
+        width: 95
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddcaa9f0e7d3713e0800000000000000
+      internalID: -2083128690998596387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_39
+      rect:
+        serializedVersion: 2
+        x: 1077
+        y: 1137
+        width: 98
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44ef41f1b37a72250800000000000000
+      internalID: 5919884107568184900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_40
+      rect:
+        serializedVersion: 2
+        x: 1181
+        y: 1104
+        width: 120
+        height: 150
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d2ca297dfdcc45b0800000000000000
+      internalID: -5382700966071319854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_41
+      rect:
+        serializedVersion: 2
+        x: 1356
+        y: 1009
+        width: 156
+        height: 234
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35c7e47aa909dcf50800000000000000
+      internalID: 6903332797735140435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_42
+      rect:
+        serializedVersion: 2
+        x: 1577
+        y: 1015
+        width: 226
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f17d63f44e6944d0800000000000000
+      internalID: -3149865221948083720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_43
+      rect:
+        serializedVersion: 2
+        x: 1846
+        y: 1180
+        width: 44
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fbc63025b7109570800000000000000
+      internalID: 8471296965780884471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_44
+      rect:
+        serializedVersion: 2
+        x: 1948
+        y: 1175
+        width: 40
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52273d9508459b610800000000000000
+      internalID: 1637432849765462565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_45
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 1134
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2d80b1f2a5f5b2f0800000000000000
+      internalID: -957589265557975762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_46
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 847
+        width: 116
+        height: 152
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19ca89a335346c210800000000000000
+      internalID: 1352842762815843473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_47
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 861
+        width: 106
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 271db95cc87c8f080800000000000000
+      internalID: -9153346835205861006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_48
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 842
+        width: 136
+        height: 152
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a49ace77663891a0800000000000000
+      internalID: -6802627419006397275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_49
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 759
+        width: 226
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c83ad3a88e3321000800000000000000
+      internalID: 5123623425516428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_50
+      rect:
+        serializedVersion: 2
+        x: 658
+        y: 930
+        width: 56
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09949ccee4fa42740800000000000000
+      internalID: 5126415029369391504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_51
+      rect:
+        serializedVersion: 2
+        x: 756
+        y: 915
+        width: 60
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8163a47fb9a0c8b80800000000000000
+      internalID: -8391320340713032168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_52
+      rect:
+        serializedVersion: 2
+        x: 845
+        y: 913
+        width: 82
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a71a15334d10ea5b0800000000000000
+      internalID: -5355340895991258758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_53
+      rect:
+        serializedVersion: 2
+        x: 946
+        y: 906
+        width: 80
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b9d9c40375086330800000000000000
+      internalID: 3704216685071948215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_54
+      rect:
+        serializedVersion: 2
+        x: 1046
+        y: 914
+        width: 80
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7344396d5f211d5f0800000000000000
+      internalID: -733784417208417225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_55
+      rect:
+        serializedVersion: 2
+        x: 1156
+        y: 748
+        width: 216
+        height: 244
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8ada91ebbf837bf0800000000000000
+      internalID: -327760310761235829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_56
+      rect:
+        serializedVersion: 2
+        x: 1424
+        y: 926
+        width: 36
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 610411ec645e2e0f0800000000000000
+      internalID: -1089056067602530282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_57
+      rect:
+        serializedVersion: 2
+        x: 1520
+        y: 913
+        width: 44
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be8c5f978f411eb10800000000000000
+      internalID: 2008909966214547691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_58
+      rect:
+        serializedVersion: 2
+        x: 1610
+        y: 898
+        width: 64
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf8111da1f1f0f2e0800000000000000
+      internalID: -2093907806434289412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_59
+      rect:
+        serializedVersion: 2
+        x: 1707
+        y: 881
+        width: 70
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d5f399c73f28efb0800000000000000
+      internalID: -4618389501216819754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_60
+      rect:
+        serializedVersion: 2
+        x: 1802
+        y: 909
+        width: 80
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1a8145982d480190800000000000000
+      internalID: -7996056301698184678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_61
+      rect:
+        serializedVersion: 2
+        x: 1916
+        y: 922
+        width: 46
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 725686a12def02c50800000000000000
+      internalID: 6638586029083747623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_62
+      rect:
+        serializedVersion: 2
+        x: 1960
+        y: 923
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f340591da1f81c380800000000000000
+      internalID: -8952717238887709633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_63
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 661
+        width: 66
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ad9a2608f9536420800000000000000
+      internalID: 2622038329849978272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_64
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 631
+        width: 60
+        height: 112
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9437276efbef52bc0800000000000000
+      internalID: -3808357809713417399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_65
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 592
+        width: 90
+        height: 150
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f0f9d09beb3b6cf0800000000000000
+      internalID: -258046670710116104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_66
+      rect:
+        serializedVersion: 2
+        x: 301
+        y: 583
+        width: 128
+        height: 158
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb1ef57c23fcae4c0800000000000000
+      internalID: -4257362680725118532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_67
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 495
+        width: 222
+        height: 238
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73b38a13db5c120d0800000000000000
+      internalID: -3449258423216489673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_68
+      rect:
+        serializedVersion: 2
+        x: 696
+        y: 535
+        width: 236
+        height: 158
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3983a2fd6b6b92ca0800000000000000
+      internalID: -6041096528596420461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_69
+      rect:
+        serializedVersion: 2
+        x: 979
+        y: 675
+        width: 26
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b40bb4cabb082d670800000000000000
+      internalID: 8562047385122615371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_70
+      rect:
+        serializedVersion: 2
+        x: 1071
+        y: 665
+        width: 42
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16671fea538b5e720800000000000000
+      internalID: 2874906477853767265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_71
+      rect:
+        serializedVersion: 2
+        x: 1144
+        y: 625
+        width: 96
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42a1f8833314d2e10800000000000000
+      internalID: 2174465883337857572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_72
+      rect:
+        serializedVersion: 2
+        x: 1244
+        y: 614
+        width: 96
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e5ec17d07a4b2620800000000000000
+      internalID: 2750373845945607653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_73
+      rect:
+        serializedVersion: 2
+        x: 1357
+        y: 611
+        width: 70
+        height: 132
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f66b64dd429c0fd10800000000000000
+      internalID: 2157445381678872175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_74
+      rect:
+        serializedVersion: 2
+        x: 1489
+        y: 524
+        width: 162
+        height: 180
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6af240235d58c8e30800000000000000
+      internalID: 4507124477804687270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_75
+      rect:
+        serializedVersion: 2
+        x: 1731
+        y: 672
+        width: 34
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9bfb3f75c35a5e5b0800000000000000
+      internalID: -5339680104585642055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_76
+      rect:
+        serializedVersion: 2
+        x: 1823
+        y: 662
+        width: 50
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f33c1dbca903a1e40800000000000000
+      internalID: 5627864125755474751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_77
+      rect:
+        serializedVersion: 2
+        x: 1910
+        y: 642
+        width: 76
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac8c478d661edb060800000000000000
+      internalID: 6970975630073841866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_78
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 339
+        width: 82
+        height: 144
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32e2c0bfe7911f090800000000000000
+      internalID: -8002587029692207581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_79
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 338
+        width: 86
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2047bff11e5831e50800000000000000
+      internalID: 6778909066073437186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_80
+      rect:
+        serializedVersion: 2
+        x: 238
+        y: 254
+        width: 180
+        height: 208
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: faf81023abf31f2f0800000000000000
+      internalID: -940900778208292945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_81
+      rect:
+        serializedVersion: 2
+        x: 491
+        y: 415
+        width: 30
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b527312178b840220800000000000000
+      internalID: 2451237509436502619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_82
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 403
+        width: 62
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e57e2f23b0e10a20800000000000000
+      internalID: 3026947484765025769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_83
+      rect:
+        serializedVersion: 2
+        x: 667
+        y: 403
+        width: 78
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5af806891e39e5bd0800000000000000
+      internalID: -2639509734459142235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_84
+      rect:
+        serializedVersion: 2
+        x: 759
+        y: 388
+        width: 94
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc8ab4f02b3146a60800000000000000
+      internalID: 7666274121173149903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_85
+      rect:
+        serializedVersion: 2
+        x: 855
+        y: 378
+        width: 102
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21a0978032db2f670800000000000000
+      internalID: 8571120999003130386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_86
+      rect:
+        serializedVersion: 2
+        x: 974
+        y: 245
+        width: 220
+        height: 226
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1e36b55b4f0779e0800000000000000
+      internalID: -1623812324408803811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_87
+      rect:
+        serializedVersion: 2
+        x: 1242
+        y: 417
+        width: 40
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21990bbff69785370800000000000000
+      internalID: 8311526634183235858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_88
+      rect:
+        serializedVersion: 2
+        x: 1330
+        y: 403
+        width: 64
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25a6c8a5ef742cd60800000000000000
+      internalID: 7908963053382429266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_89
+      rect:
+        serializedVersion: 2
+        x: 1420
+        y: 389
+        width: 84
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c66a40d93ef572c10800000000000000
+      internalID: 2028695588350240364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_90
+      rect:
+        serializedVersion: 2
+        x: 1513
+        y: 357
+        width: 98
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1da238653b8c60b0800000000000000
+      internalID: -5734055164051804902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_91
+      rect:
+        serializedVersion: 2
+        x: 1614
+        y: 307
+        width: 126
+        height: 178
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2853f0cb9cddce570800000000000000
+      internalID: 8497410455454561666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_92
+      rect:
+        serializedVersion: 2
+        x: 1760
+        y: 240
+        width: 220
+        height: 236
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4ddbf290e1288dd0800000000000000
+      internalID: -2483697946072457909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_93
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 150
+        width: 26
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53fec7462e27237f0800000000000000
+      internalID: -634318280831733963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_94
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 142
+        width: 56
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3891e2f0f34bec2f0800000000000000
+      internalID: -950624288397977213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_95
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 84
+        width: 84
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7573a9ff20afa0a60800000000000000
+      internalID: 7641194608572643159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_96
+      rect:
+        serializedVersion: 2
+        x: 307
+        y: 39
+        width: 86
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdea97a2673db8450800000000000000
+      internalID: 6092195425420947164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SimpleSpriteSheet_Veggies_97
+      rect:
+        serializedVersion: 2
+        x: 410
+        y: 0
+        width: 80
+        height: 230
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c5e4f1fec69ce9f0800000000000000
+      internalID: -437809248194992700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      SimpleSpriteSheet_Veggies_0: 5561239423533295154
+      SimpleSpriteSheet_Veggies_1: -6202851399795752741
+      SimpleSpriteSheet_Veggies_10: 6410163383184791047
+      SimpleSpriteSheet_Veggies_11: -389461775219457259
+      SimpleSpriteSheet_Veggies_12: -5862914309335730610
+      SimpleSpriteSheet_Veggies_13: -5245589067410131288
+      SimpleSpriteSheet_Veggies_14: -1346112803466113391
+      SimpleSpriteSheet_Veggies_15: 1375497159575906680
+      SimpleSpriteSheet_Veggies_16: 3013345719274927370
+      SimpleSpriteSheet_Veggies_17: 8354396883298453774
+      SimpleSpriteSheet_Veggies_18: -3099626668773781118
+      SimpleSpriteSheet_Veggies_19: 3475691069621187884
+      SimpleSpriteSheet_Veggies_2: 7207875390339884372
+      SimpleSpriteSheet_Veggies_20: -3451367682240954324
+      SimpleSpriteSheet_Veggies_21: 3168160022277291641
+      SimpleSpriteSheet_Veggies_22: 4859814709408534486
+      SimpleSpriteSheet_Veggies_23: 815860297313057884
+      SimpleSpriteSheet_Veggies_24: 733983819919151160
+      SimpleSpriteSheet_Veggies_25: 8931469134092106419
+      SimpleSpriteSheet_Veggies_26: 929449632441511435
+      SimpleSpriteSheet_Veggies_27: -6761501491682053011
+      SimpleSpriteSheet_Veggies_28: 8279595693964238859
+      SimpleSpriteSheet_Veggies_29: 652444370089648479
+      SimpleSpriteSheet_Veggies_3: -8696787277687110949
+      SimpleSpriteSheet_Veggies_30: -1485776647164084632
+      SimpleSpriteSheet_Veggies_31: 7730255430253842626
+      SimpleSpriteSheet_Veggies_32: 3220518247375253133
+      SimpleSpriteSheet_Veggies_33: 6331684442979995523
+      SimpleSpriteSheet_Veggies_34: -174036376103277584
+      SimpleSpriteSheet_Veggies_35: -5829870519083977779
+      SimpleSpriteSheet_Veggies_36: -2604629672262507318
+      SimpleSpriteSheet_Veggies_37: -2273213699665533497
+      SimpleSpriteSheet_Veggies_38: -2083128690998596387
+      SimpleSpriteSheet_Veggies_39: 5919884107568184900
+      SimpleSpriteSheet_Veggies_4: -2675546201702785146
+      SimpleSpriteSheet_Veggies_40: -5382700966071319854
+      SimpleSpriteSheet_Veggies_41: 6903332797735140435
+      SimpleSpriteSheet_Veggies_42: -3149865221948083720
+      SimpleSpriteSheet_Veggies_43: 8471296965780884471
+      SimpleSpriteSheet_Veggies_44: 1637432849765462565
+      SimpleSpriteSheet_Veggies_45: -957589265557975762
+      SimpleSpriteSheet_Veggies_46: 1352842762815843473
+      SimpleSpriteSheet_Veggies_47: -9153346835205861006
+      SimpleSpriteSheet_Veggies_48: -6802627419006397275
+      SimpleSpriteSheet_Veggies_49: 5123623425516428
+      SimpleSpriteSheet_Veggies_5: 8619770965681340742
+      SimpleSpriteSheet_Veggies_50: 5126415029369391504
+      SimpleSpriteSheet_Veggies_51: -8391320340713032168
+      SimpleSpriteSheet_Veggies_52: -5355340895991258758
+      SimpleSpriteSheet_Veggies_53: 3704216685071948215
+      SimpleSpriteSheet_Veggies_54: -733784417208417225
+      SimpleSpriteSheet_Veggies_55: -327760310761235829
+      SimpleSpriteSheet_Veggies_56: -1089056067602530282
+      SimpleSpriteSheet_Veggies_57: 2008909966214547691
+      SimpleSpriteSheet_Veggies_58: -2093907806434289412
+      SimpleSpriteSheet_Veggies_59: -4618389501216819754
+      SimpleSpriteSheet_Veggies_6: 4546976931010436027
+      SimpleSpriteSheet_Veggies_60: -7996056301698184678
+      SimpleSpriteSheet_Veggies_61: 6638586029083747623
+      SimpleSpriteSheet_Veggies_62: -8952717238887709633
+      SimpleSpriteSheet_Veggies_63: 2622038329849978272
+      SimpleSpriteSheet_Veggies_64: -3808357809713417399
+      SimpleSpriteSheet_Veggies_65: -258046670710116104
+      SimpleSpriteSheet_Veggies_66: -4257362680725118532
+      SimpleSpriteSheet_Veggies_67: -3449258423216489673
+      SimpleSpriteSheet_Veggies_68: -6041096528596420461
+      SimpleSpriteSheet_Veggies_69: 8562047385122615371
+      SimpleSpriteSheet_Veggies_7: 8012903518819580698
+      SimpleSpriteSheet_Veggies_70: 2874906477853767265
+      SimpleSpriteSheet_Veggies_71: 2174465883337857572
+      SimpleSpriteSheet_Veggies_72: 2750373845945607653
+      SimpleSpriteSheet_Veggies_73: 2157445381678872175
+      SimpleSpriteSheet_Veggies_74: 4507124477804687270
+      SimpleSpriteSheet_Veggies_75: -5339680104585642055
+      SimpleSpriteSheet_Veggies_76: 5627864125755474751
+      SimpleSpriteSheet_Veggies_77: 6970975630073841866
+      SimpleSpriteSheet_Veggies_78: -8002587029692207581
+      SimpleSpriteSheet_Veggies_79: 6778909066073437186
+      SimpleSpriteSheet_Veggies_8: -1132903288784327301
+      SimpleSpriteSheet_Veggies_80: -940900778208292945
+      SimpleSpriteSheet_Veggies_81: 2451237509436502619
+      SimpleSpriteSheet_Veggies_82: 3026947484765025769
+      SimpleSpriteSheet_Veggies_83: -2639509734459142235
+      SimpleSpriteSheet_Veggies_84: 7666274121173149903
+      SimpleSpriteSheet_Veggies_85: 8571120999003130386
+      SimpleSpriteSheet_Veggies_86: -1623812324408803811
+      SimpleSpriteSheet_Veggies_87: 8311526634183235858
+      SimpleSpriteSheet_Veggies_88: 7908963053382429266
+      SimpleSpriteSheet_Veggies_89: 2028695588350240364
+      SimpleSpriteSheet_Veggies_9: 1181534898096207914
+      SimpleSpriteSheet_Veggies_90: -5734055164051804902
+      SimpleSpriteSheet_Veggies_91: 8497410455454561666
+      SimpleSpriteSheet_Veggies_92: -2483697946072457909
+      SimpleSpriteSheet_Veggies_93: -634318280831733963
+      SimpleSpriteSheet_Veggies_94: -950624288397977213
+      SimpleSpriteSheet_Veggies_95: 7641194608572643159
+      SimpleSpriteSheet_Veggies_96: 6092195425420947164
+      SimpleSpriteSheet_Veggies_97: -437809248194992700
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

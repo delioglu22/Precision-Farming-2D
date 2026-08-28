@@ -43,10 +43,11 @@ sentence false — no mechanical check reaches that.
 
 Do not re-argue these on every push:
 
-- **`ParcelFootprint.crop` and `cropLayer` are empty on Pond and Forest slabs.** Twenty
-  of them turn up and all twenty are correct: a pond and a wood have no crop, they have
-  water and a floor colour instead. Only the `Parcel` ones should be filled in. **A number
-  other than 20 is worth a look.**
+- **`Parcel.crop` is empty on fallow parcels.** A parcel with nothing planted is
+  correct, not a bug — that is what "fallow, ploughed field" means. The count should
+  match however many parcels are currently fallow (8 as of this writing: the six the
+  map started with, plus any added since). **A number that does not match the actual
+  fallow count is worth a look** — it means a working parcel lost its crop.
 - **`CustomButton` adds 22 more empty references, all of them nothing.** It extends
   `Button` and lives in `Assembly-CSharp`, so unlike a plain `Button` the scan does not
   skip it and walks its inherited `Selectable` fields too. `m_SelectOnUp/Down/Left/Right`
