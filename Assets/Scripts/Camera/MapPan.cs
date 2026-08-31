@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 /// <summary>
 /// Drags the camera across the farm the way a map on a phone moves, and keeps it
@@ -8,7 +10,13 @@ using UnityEngine.EventSystems;
 /// The drag comes from Unity's EventSystem, so it never fights the UI: a finger
 /// that starts on the panel belongs to the panel, not to the map. This lives on
 /// the root the whole map hangs off, because the EventSystem walks up the
-/// hierarchy from whatever was pressed to find a drag handler.
+/// hierarchy from whatever was pressed to find a drag handler. The scroll wheel
+/// rides the same bubbling for the same reason - IScrollHandler is one more
+/// interface on the same ancestor, nothing new to wire.
+///
+/// Pinch has no such handler to lean on - UGUI has no multi-touch gesture
+/// interface, only single-pointer ones - so it is read directly from the new
+/// Input System's EnhancedTouch API in Update, alongside the existing glide.
 ///
 /// What has to stay over the land is not the screen but the *band* of it the
 /// panel leaves uncovered. Measuring against the whole screen is what used to
@@ -16,7 +24,7 @@ using UnityEngine.EventSystems;
 /// parcels permanently under the sheet.
 /// </summary>
 [DisallowMultipleComponent]
-public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IScrollHandler
 {
     [SerializeField] Camera view;
 
@@ -33,10 +41,16 @@ public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     [SerializeField, Range(0f, 0.8f)] float sheetCover = 0.396f;
 
     [Header("How close the view sits")]
-    [Tooltip("Orthographic size with nothing picked. The whole island is this tall, so going further only adds water.")]
-    [SerializeField, Min(0.1f)] float restingSize = 6.4f;
     [Tooltip("Orthographic size while a parcel is open, close enough to read one field.")]
-    [SerializeField, Min(0.1f)] float pickedSize = 4.8f;
+    [SerializeField, Min(0.1f)] float pickedSize = 5f;
+
+    [Header("Player-controlled zoom, with nothing picked")]
+    [Tooltip("How close the wheel or a pinch may bring the view.")]
+    [SerializeField, Min(0.1f)] float minZoomSize = 3f;
+    [Tooltip("How far the wheel or a pinch may push the view out. The camera starts here.")]
+    [SerializeField, Min(0.1f)] float maxZoomSize = 9f;
+    [Tooltip("World units of orthographic size per wheel notch.")]
+    [SerializeField, Min(0f)] float scrollSensitivity = 0.6f;
 
     [Header("Feel")]
     [Tooltip("How quickly the view closes on a pick and opens back out. Higher arrives sooner.")]
@@ -54,6 +68,10 @@ public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     bool focusing;
     Vector3 focusTarget;
 
+    /// <summary>Where the wheel or a pinch has left the view. Starts at maxZoomSize - far - every time the map loads.</summary>
+    float manualSize;
+    float? pinchDistance;
+
     void Reset() { view = Camera.main; }
 
     void OnEnable()
@@ -63,10 +81,13 @@ public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         dragging = false;
         focusing = false;
         sheetOpen = false;
+        manualSize = maxZoomSize;
+        pinchDistance = null;
+        EnhancedTouchSupport.Enable();
         if (channel != null) channel.Selected += OnSelected;
         if (view != null)
         {
-            view.orthographicSize = restingSize;
+            view.orthographicSize = manualSize;
             view.transform.position = Clamped(view.transform.position);
         }
     }
@@ -74,6 +95,33 @@ public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     void OnDisable()
     {
         if (channel != null) channel.Selected -= OnSelected;
+        EnhancedTouchSupport.Disable();
+    }
+
+    /// <summary>Mouse wheel / trackpad. Bubbles up from whatever the pointer is over, same as a drag.</summary>
+    public void OnScroll(PointerEventData eventData)
+    {
+        manualSize = Mathf.Clamp(manualSize - eventData.scrollDelta.y * scrollSensitivity, minZoomSize, maxZoomSize);
+    }
+
+    /// <summary>
+    /// Two fingers moving apart or together. Unlike a drag this is not offered by
+    /// the EventSystem - there is no multi-touch gesture interface in UGUI - so it
+    /// is read straight from EnhancedTouch every frame instead of from an event.
+    /// </summary>
+    void Pinch()
+    {
+        if (Touch.activeTouches.Count != 2) { pinchDistance = null; return; }
+
+        float distance = Vector2.Distance(Touch.activeTouches[0].screenPosition, Touch.activeTouches[1].screenPosition);
+        if (pinchDistance.HasValue && pinchDistance.Value > 0.01f)
+        {
+            // Fingers spreading (distance grows) shrinks the ratio, which zooms in -
+            // the same sense as scrolling up.
+            float ratio = pinchDistance.Value / distance;
+            manualSize = Mathf.Clamp(manualSize * ratio, minZoomSize, maxZoomSize);
+        }
+        pinchDistance = distance;
     }
 
     /// <summary>
@@ -135,6 +183,7 @@ public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         if (view == null) return;
 
         // A hand on the map does not stop the view from finishing its approach.
+        Pinch();
         Zoom();
         if (dragging) return;
 
@@ -156,13 +205,14 @@ public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     }
 
     /// <summary>
-    /// Eases between the resting distance and the closer one a pick asks for. The
-    /// clamp is redone as it goes, since how far the view may travel depends on how
-    /// much of the map fits on screen.
+    /// Eases toward the closer distance a pick asks for, or back toward wherever
+    /// the wheel or a pinch last left the view. The clamp is redone as it goes,
+    /// since how far the view may travel depends on how much of the map fits on
+    /// screen.
     /// </summary>
     void Zoom()
     {
-        float wanted = sheetOpen ? pickedSize : restingSize;
+        float wanted = sheetOpen ? pickedSize : manualSize;
         if (view.orthographicSize == wanted) return;
 
         float size = Mathf.Lerp(view.orthographicSize, wanted, 1f - Mathf.Exp(-zoomDamping * Time.unscaledDeltaTime));
