@@ -62,14 +62,11 @@ public class SeederLauncher : MonoBehaviour
     {
         if (held == null || run == null || string.IsNullOrEmpty(scene)) return;
 
-        ParcelFootprint shape = held.GetComponent<ParcelFootprint>();
-        if (shape == null) return;
-
         // A second copy would stack another camera and another canvas on the first.
         Scene already = SceneManager.GetSceneByName(scene);
         if (already.IsValid() && already.isLoaded) return;
 
-        run.Send(shape.Footprint, held.DisplayName);
+        run.Send(held.Footprint, held.DisplayName);
         SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
     }
 }

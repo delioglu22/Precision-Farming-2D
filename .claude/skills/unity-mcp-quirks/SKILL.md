@@ -71,3 +71,8 @@ description: MUST use this skill when working in the editor through the Unity MC
   is a different job — opening and saving the prefab stage — and reaching for it here wastes a turn.
 - `batch_execute` takes 25 commands by default (hard cap 100), and `parallel` only ever parallelises
   **read-only** commands: a batch that writes runs sequentially no matter what you pass.
+- A `MonoBehaviour` without `[ExecuteAlways]` never runs `Awake`, `OnEnable` or `OnDisable` in edit
+  mode — Unity only calls them in Play Mode. Reflection-invoking a private method like
+  `OnSelectionChanged` to test it from `execute_code` silently does nothing useful if that method
+  reads fields the real `Awake` would have cached, because they are still null/default. Invoke
+  `Awake` by reflection first, in the same call, to get a result that means anything.
