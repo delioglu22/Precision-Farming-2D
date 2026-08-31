@@ -109,7 +109,7 @@ next, and mostly rectangular outlines with the occasional corner traded between 
 grid does not read as uniform. They must never look like jigsaw pieces — no thin teeth, no long
 narrow arms, no interlocking by a single cell.
 
-The farmland sits on an island in open water, and carries a few small woods and ponds among the
+The farmland is open grassland closed in by forest, and carries a few small woods and ponds among the
 fields. Those are scenery — they are not parcels, cannot be clicked, and take no part in the loop.
 
 The map is authored in the scene, not generated at runtime.

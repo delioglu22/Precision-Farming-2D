@@ -39,10 +39,12 @@ lost. 440 lines became 286.
 | Timing, sequenced events | `Animator` or Timeline |
 | Several renderers that must sort as one thing | A `SortingGroup` — one number outside, 0..n inside |
 
-The `SortingGroup` row is not theory either. When a parcel became a five-layer slab,
+The `SortingGroup` row is not theory either. Back when a parcel was a five-layer slab,
 the plan was to spread every parcel's order across five numbers per layer.
-`SortingGroup` holds the layers together and leaves the parcel one number, so that
-plan collapsed entirely and `Parcel.cs` stopped needing to know how many layers exist.
+`SortingGroup` holds the layers together and leaves the parcel one number, so that plan
+collapsed entirely and `Parcel.cs` stopped needing to know how many layers exist. The
+slab is gone — parcels are tilemaps now — but that is exactly why the lesson kept:
+the engine's answer outlived the thing it was answering for.
 
 ## Swinging too far the other way
 

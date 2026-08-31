@@ -28,10 +28,10 @@ What has worked in this project:
 | Handover | The decision inside it |
 | --- | --- |
 | Settling Inspector values (`focusDamping`, `edgeMargin`, `sheetCover`, the selected tint) | Which value feels right — only someone playing it knows |
-| Placing a new parcel | Working out `sortingOrder` from the topological rule |
+| Placing a new parcel | Working out the cell rect so it sits square against its neighbours |
 | A new pose clip in the Animation window | Which property to drive, which one overrides the instance |
 | Adding a component to a prefab and wiring the reference | Does it belong on the prefab or on the instance |
-| Settling a parcel's footprint and crop | Which size and crop sit right next to its neighbours |
+| Settling a parcel's cell rect and crop | Which size and crop sit right next to its neighbours |
 | Fitting a layer's colour into the palette | Does it follow the light, where does it land among the existing tones |
 | Placing a UI element with anchors and a layout group | Solving it by layout rather than by code |
 | Creating a `ScriptableObject` asset and wiring it into both scenes | Why a cross-scene reference has to be an asset |
@@ -52,11 +52,11 @@ nothing. Say where it lives and what "right" looks like, and let them find the o
 ```
 Your turn on this one:
 
-  What    Add Parcel 7 to the north-east of the map.
-  Where   SampleScene > World > Parcels, an instance of Parcel.prefab.
-  Why     sortingOrder has to be worked out by hand: A draws before B when B sits
-          further along one isometric axis and they overlap on the other.
-  Check   If clicking selects the right parcel, the collider fitted correctly too.
+  What    Add Parcel 32 to the north-east of the map.
+  Where   SampleScene > World > Parcels, duplicated from a parcel already there.
+  Why     The cells rect has to be worked out by hand so the new field sits square
+          against its neighbours without overlapping any of them.
+  Check   If clicking selects the new parcel, its Field collider repainted too.
 
 Tell me when it's done and I'll check the console and the scene.
 ```

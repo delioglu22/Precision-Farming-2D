@@ -56,9 +56,11 @@ description: MUST use this skill when working in the editor through the Unity MC
   `git diff`. In `UI.unity` that is 30 lines of silent damage to `Actions`, `Readings` and
   `Machines`. A plain `SaveScene` with no rebuild is safe: the same scene saved untouched comes
   back as a one-line diff. Do not try to help the layout along.
-- `execute_code`'s CodeDom compiler does **not** reference the SpriteShape assembly, so
-  `typeof(UnityEngine.U2D.SpriteShapeController)` will not compile. Find those types reflectively:
-  loop `AppDomain.CurrentDomain.GetAssemblies()` and `asm.GetType("UnityEngine.U2D.…")`.
+- `execute_code`'s CodeDom compiler does **not** reference every Unity assembly, so a `typeof(...)`
+  against a package type can fail to compile even though the package is installed — this cost a
+  round trip on `UnityEngine.U2D.SpriteShapeController` back when the parcels used it. When a type
+  will not resolve, find it reflectively: loop `AppDomain.CurrentDomain.GetAssemblies()` and
+  `asm.GetType("Namespace.Type")`. `UnityEngine.Tilemaps` does resolve normally.
 - `capture_source: "scene_view"` **cannot frame an object in an additively loaded scene**. Both
   `UI` and `Parcel Panel` come back as "Target GameObject not found" while `UI.unity` is loaded and
   they plainly exist. Capture the whole viewport instead, or select the object first. That viewport

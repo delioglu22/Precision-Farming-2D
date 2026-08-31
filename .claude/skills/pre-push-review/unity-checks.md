@@ -48,8 +48,8 @@ foreach (var guid in UnityEditor.AssetDatabase.FindAssets("t:Prefab")) {
 return "scanned " + checkedComps + " project components, " + nulls + " empty reference(s)\n" + sb.ToString();
 ```
 
-Expected baseline: **30 empty references, all of them correct** — see the known
-false positives in `SKILL.md`. A number other than 30 is what deserves a look.
+Expected baseline: **28 empty references, all of them correct** — see the known
+false positives in `SKILL.md`. A number other than 28 is what deserves a look.
 
 ## 2. Every pose of an animator keys the same properties
 

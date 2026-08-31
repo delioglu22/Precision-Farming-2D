@@ -33,7 +33,7 @@ Use `git diff --stat origin/main..HEAD` to see what is going out in this push, t
 | --- | --- |
 | `docs/design.md` | The game itself — the loop, how the panel behaves, what a parcel is. **If a behaviour changed, look here.** |
 | `docs/art.md` | The look — grid, light, palette. If a new colour, layer or sprite arrived. |
-| `CLAUDE.md` | How the project is built: scene structure, prefabs, rules, and **the numbers it quotes** (camera 6.4 / 4.8, `water_sheet` 26x14). If a tunable changed. |
+| `CLAUDE.md` | How the project is built: scene structure, the parcel tilemaps, rules, and **the numbers it quotes** (camera 4.5 / 3.2, `MapPan.mapSize` 41.5 x 20.75, the forest border's reach). If a tunable changed. |
 
 The kind that slips through most often: the panel's behaviour changes and
 `docs/design.md` still describes the old behaviour. File present, name correct,
@@ -44,16 +44,25 @@ sentence false — no mechanical check reaches that.
 Do not re-argue these on every push:
 
 - **`Parcel.crop` is empty on fallow parcels.** A parcel with nothing planted is
-  correct, not a bug — that is what "fallow, ploughed field" means. The count should
-  match however many parcels are currently fallow (8 as of this writing: the six the
-  map started with, plus any added since). **A number that does not match the actual
-  fallow count is worth a look** — it means a working parcel lost its crop.
+  correct, not a bug — that is what "fallow, ploughed field" means. **6 of the 27
+  parcels are fallow as of this writing** — 04, 08, 14, 18, 24 and 31. **A number that
+  does not match the actual fallow count is worth a look** — it means a working parcel
+  lost its crop. Mind that the names run past the count: numbers were skipped when the
+  map was rebuilt, so the highest is `Parcel 31` while there are 27 of them.
+- **`fieldTile` and `fenceTile` null is a real state, not a break.** `Parcel.Rebuild`
+  deliberately leaves soil and fence alone while either is unassigned, so a freshly
+  duplicated parcel cannot clear itself to bare grid. All 27 are wired as of this
+  writing, so a null one now means a parcel that was added and not finished.
 - **`CustomButton` adds 22 more empty references, all of them nothing.** It extends
   `Button` and lives in `Assembly-CSharp`, so unlike a plain `Button` the scan does not
   skip it and walks its inherited `Selectable` fields too. `m_SelectOnUp/Down/Left/Right`
   are explicit-navigation targets and navigation is Automatic; `m_ObjectArgument` is a
-  `UnityEvent` argument the calls do not use. **The whole-project baseline is therefore
-  42, not 20** — 20 real false positives plus these 22.
+  `UnityEvent` argument the calls do not use. **The whole-project baseline is 28** — 6
+  fallow parcels plus these 22, and as of this writing nothing else shows up. Earlier
+  versions of this note said 42 (assuming 8 fallow parcels and 12 further false
+  positives on the pre-tilemap `ParcelFootprint`/`ParcelLayer` scripts); both of those
+  are gone along with the scripts. A count under 28 is missing something real; a count
+  over 28 is a new empty reference worth a look.
 - **The jetty prefabs and sprites are unreferenced on purpose.** `Jetty Low`,
   `Jetty Posts` and their two PNGs came out of the ponds when a jetty was judged to
   promise boats and fishing the game will not have. They are kept for later, deliberately.

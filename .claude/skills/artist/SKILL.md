@@ -29,11 +29,11 @@ Measuring is cheap: read the file with `Texture2D.LoadImage` and look at the pix
 A surface that is one single colour is **not a texture**. It goes in the layer's
 colour field in the Inspector. Only a **pattern** earns its own file.
 
-Concretely: the colours of the rim, the outline and the two side faces were baked into
-8x8 single-colour PNGs. Changing a colour meant regenerating a file. All four collapsed
-into one white texture with the colours moved to `SpriteShapeRenderer.color` — four
-fewer files, and the colour became a clickable swatch. The user caught that one; catch
-it yourself.
+Concretely: the colours of the rim, the outline and the two side faces were once baked
+into 8x8 single-colour PNGs. Changing a colour meant regenerating a file. All four
+collapsed into one white texture with the colours moved to a renderer swatch — four
+fewer files, and the colour became a clickable field. That slab has since been retired
+for tilemaps, but the lesson outlived it: the user caught that one; catch it yourself.
 
 ## A repeating surface is a fill, not a pile of objects
 
@@ -43,13 +43,12 @@ grows with the parcel for free; objects do not — every one has to be placed.
 Crops and water are fills. **A wood is the exception, and the only one** — see "Woods
 and ponds" in `docs/art.md`. Its trees are individual sprites placed one at a time,
 because a wood has to differ from the next wood, and a lattice cannot do that. A pond
-is not the exception: every ring of it — sand, shallow, deep — is the same at every
-point, so all three stay fills, and only the props standing on the sand are placed.
+is not the exception: its water is the same at every point, so it stays painted, and
+only the props standing on the bank are placed.
 
-Placed does not mean placed anywhere. Props stand **inside** a slab's floor, never on
-the earth border — that ring is the track around the plot, which a parcel cannot be
-worked on either — and because height projects up the screen, tall props belong toward
-the near edge or they lean back onto the slab behind.
+Placed does not mean placed anywhere. Props stand **inside** the thing they belong to
+and never across its boundary, and because height projects up the screen, tall props
+belong toward the near edge or they lean back onto whatever sits behind them.
 
 Concretely, and mind which half of this survived: individual tree sprites were once
 generated for the forest **plus a script that scattered them across the footprint**,
@@ -86,7 +85,7 @@ A wrong import breaks things as badly as a wrongly drawn file, and is harder to 
 
 | What | Setting |
 | --- | --- |
-| SpriteShape fill texture | **Default** type, **Repeat** wrap — give it Sprite type and the shape silently draws nothing |
+| Tile sprite | Sliced to the grid exactly — a tile a few pixels out seams across every field at once, not just the one being looked at |
 | Sprite | PPU **100**, pivot chosen deliberately |
 | All of them | Point filter, mipmaps off, no compression |
 

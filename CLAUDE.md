@@ -10,12 +10,16 @@ and about the game, not about implementation. `docs/art.md` is its sibling for h
 the grid, the light, the palette, and what a new piece of art has to obey. Neither document carries
 implementation; that lives in this file and in the scripts' own comments.
 
-Three scenes. `Assets/Scenes/SampleScene.unity` is the one you play from; `Assets/Scenes/UI.unity`
+Three scenes ship. `Assets/Scenes/SampleScene.unity` is the one you play from; `Assets/Scenes/UI.unity`
 holds the canvas and the EventSystem and is pulled in additively by `SceneBootstrap`;
 `Assets/Scenes/Seeder.unity` is the seeder's mini game, laid over the top by `SeederLauncher` when
-the parcel page's Optimize button is pressed and taken away again by its own Close button. All three
+the parcel page's Optimize button is pressed and taken away again by its own Close button. Those three
 are in the build settings. Edit the UI by opening `UI.unity` — alongside the map scene is fine, the
 bootstrap will not load it twice.
+
+`Assets/Scenes/Sandbox.unity` is a fourth scene file and is **deliberately not in the build settings**
+— it is a workbench, where the woods were arranged before being moved into the map. Nothing loads it
+at runtime. Leave it out of the build settings unless it stops being scratch.
 
 **Leave `Seeder.unity` closed while working on the map.** Left open in the editor it is loaded like
 any other scene, so pressing Play draws its canvas over everything and the editor logs a second
@@ -24,30 +28,42 @@ spare one down.
 
 **`World` has to stay a common ancestor of everything clickable.** The EventSystem finds a drag
 handler by walking *up the hierarchy* from whatever was pressed, and `MapPan` lives on `World`.
-Move `Parcels` or `Water` out from under it and dragging the map silently stops working.
+Move `Parcels`, `Map` or `Ground` out from under it and dragging the map silently stops working.
 
-Three prefabs are built from the same slab: `Parcel.prefab` (clickable, has a crop),
-`PondSlab.prefab` (a sand bank and two steps of water) and `ForestSlab.prefab` (a flat floor with
-trees stood on it). They are siblings, not variants, so a change to the slab's layers has to be made
-in all three. They no longer carry the same number of layers: a parcel and a wood have five, a pond
-has six.
+The map is built from **tilemaps**, not from prefabs. `World` holds five children:
 
-**Adding a parcel**: instantiate the prefab, then set its name, position, `ParcelFootprint.footprint`
-and the `SortingGroup`'s order. Nothing else. There is no sprite to pick and no collider to fit — the
-layers are traced from the footprint and `autoUpdateCollider` bakes the outline.
+| Child | What it is |
+| --- | --- |
+| `Ground` | One `SpriteRenderer` under everything, with a `BoxCollider2D` and `DeselectOnClick` so a click on bare ground closes the panel |
+| `Map` | One shared `Grid` carrying the `Path` and `Ponds` tilemaps |
+| `Woods` | `Wood 1`..`Wood 6`, each a cluster of individually placed tree sprites |
+| `Parcels` | `Parcel 01`..`Parcel 27`, the clickable fields |
+| `Forest Border` | ~900 trees ringing the map so the view never runs off into the clear colour |
 
-**Except the ones marked `authored`.** `ParcelLayer.authored` tells `ParcelFootprint` to leave that
-layer's spline alone, and a pond's two water layers use it: water with a plot's edges reads as a
-field somebody filled with blue, so each pond's outline is drawn by hand and does not grow with the
-footprint. Adding a pond therefore means drawing its water, not just setting a number. See
-`docs/art.md` under "Woods and ponds".
+**A parcel owns its own geometry.** Each `Parcel` carries a child `Grid` with three tilemaps —
+`Field`, `Crops` and `Fence`. `Parcel.cells` is a `RectInt` of tilemap cells; editing it in the
+Inspector repaints all three to match, and that is what "designing a parcel" means now. What is
+planted is a `TileBase` in `Parcel.crop`, and empty means fallow.
 
-The group's order is a baked topological depth, so a new parcel needs the whole order recomputed —
-the rule is that A draws before B when B sits further along an isometric axis and they overlap on the
-other one. It lives on the `SortingGroup`, not on a renderer: the renderers inside a parcel use 0–4
-for their own stacking and must stay that way.
+**Adding a parcel**: duplicate an existing one, rename it, set `cells`. `fieldTile` and `fenceTile`
+come across with the duplicate, which is the point — `Rebuild` leaves soil and fence untouched while
+either is null, so a half-wired parcel cannot clear itself to bare grid.
 
-See `docs/art.md` for what a parcel looks like and `ParcelFootprint` / `ParcelLayer` for how it is
+**The per-parcel `Grid` must sit at the world origin.** `Parcel.CacheLayers` forces it back to
+`(0,0,0)` on every rebuild whatever its parent is doing, so its cells line up with the shared `Map`
+grid. The parcel's own transform is free to sit at its rect's centre — that is what makes Frame
+Selected land somewhere useful.
+
+**`Rebuild` is deferred by one frame on purpose.** `OnValidate` only raises a flag and `Update` does
+the work, because `Tilemap.SetTile` notifies the collider through `SendMessage`, which Unity forbids
+from inside `OnValidate`. Calling it directly logs a warning *and* still runs the clear before the
+guarded refill, wiping `Crops`.
+
+Clicking needs no code of ours beyond raising the pick: a `Physics2DRaycaster` on the camera and a
+`TilemapCollider2D` on the `Field` child do the hit test, and the EventSystem walks up to
+`IPointerClickHandler` on `Parcel` — the same walk `MapPan` relies on to catch a drag.
+
+See `docs/art.md` for what a parcel looks like and `Assets/Scripts/World/Parcel.cs` for how it is
 put together.
 
 The two hats are skills as well, and nothing else here points at them: `.claude/skills/game-designer/`
@@ -143,24 +159,45 @@ The editor's tool quirks — the ones that each cost a round trip — now live i
 CodeDom's C# 6 limit, importing a new script, scene edits lost in play mode, the Overlay
 canvas that screenshots cannot capture, and how to instantiate a prefab.
 
-## SpriteShape and animation traps
+## Animation traps
 
-Both sets of hard-won traps now live in skills, so they load only when the work needs them:
-`.claude/skills/spriteshape-notes/` (fill textures, baking order, edge sprites, stale screenshots) and
-`.claude/skills/animation-notes/` (clip properties, growing the panel, path bindings).
+The hard-won ones live in `.claude/skills/animation-notes/` (clip properties, growing the panel,
+path bindings), so they load only when the work needs them.
+
+**SpriteShape is gone.** Parcels, ponds and woods were rebuilt on tilemaps and nothing in the project
+uses `SpriteShapeController` any more. If a note anywhere still describes tracing a spline from a
+footprint, it is describing a system that was deleted.
 
 ## Rendering notes
 
-- The project is **Linear** color space. `SpriteRenderer.color` and `SpriteShapeRenderer.color` both
-  convert automatically; `Mesh.SetColors` does not — write mesh vertex colors as `color.linear`.
-- A parcel's flat colours (outline, rim, both side faces) are **renderer tints over one white
-  texture**, not one texture per colour. Adding a colour means a swatch, not a file.
+- The project is **Linear** color space. `SpriteRenderer.color` converts automatically;
+  `Mesh.SetColors` does not — write mesh vertex colors as `color.linear`.
+- A picked parcel is tinted **per cell**: `Parcel.Warm` multiplies each tile's existing colour by
+  `highlight` and `Parcel.Restore` puts the old colours back, so a tile that already carried a tint
+  keeps it. `SetTileFlags(cell, TileFlags.None)` has to come first or the colour is ignored.
+- A picked parcel also rises by `Parcel.lift` (0.10). Keep it under 0.24 — one cell's step up the
+  screen — or a lifted row sorts past the row in front of it.
 - Editor-generated objects should carry `HideFlags.DontSaveInEditor | DontSaveInBuild` if they are
   transient, or they bloat the scene file. Authored content is the opposite: it belongs in the scene.
-- The view rests at orthographic size **6.4** and closes to **4.8** while a parcel is open, both
-  driven by `MapPan` and both tunable in the Inspector. 6.4 is a ceiling rather than a taste: the
-  water sprite is 26 x 14 world units, so a taller view runs off its edge and shows the camera's
-  clear colour. Pulling further back means enlarging `water_sheet` first.
+- **Zoom is player-controlled, not fixed.** `MapPan` starts the camera at `maxZoomSize` (9, a wide
+  view of the farm) every time the map loads, and the mouse wheel or a two-finger pinch moves it
+  between `minZoomSize` (3) and `maxZoomSize`, both tunable in the Inspector. Picking a parcel still
+  overrides this and closes to the fixed `pickedSize` (5); releasing the pick eases back to
+  wherever the wheel or a pinch last left it, not back to a fixed resting size. The camera is
+  **portrait** (aspect ≈ 0.56), so the horizontal half-width is always noticeably less than the
+  orthographic size itself.
+- **The wheel rides the same EventSystem bubbling as the drag.** `MapPan` implements `IScrollHandler`
+  alongside the drag interfaces, so a scroll over any collider under `World` reaches it exactly the
+  way a drag does — no separate wiring. **Pinch has no such handler.** UGUI has no multi-touch
+  gesture interface, so it is read every frame from the new Input System's `EnhancedTouch.Touch.
+  activeTouches` instead — two active touches, the distance between them compared frame to frame.
+  `EnhancedTouchSupport.Enable()`/`Disable()` in `OnEnable`/`OnDisable` is required for that API to
+  report anything.
+- **The old zoom ceiling is void.** It used to be the `water_sheet` sprite's 26 x 14 edge; that sprite
+  is gone and water is tiles now. What keeps the camera's clear colour off screen at the widest zoom
+  is the `Forest Border`, which reaches ±36 x ±20 while `MapPan.mapSize` clamps panning to
+  41.5 x 20.75 — so the border always overhangs the pannable area. Raising `maxZoomSize` much further
+  needs the border to grow with it.
 
 ## Hand part of the work back
 
