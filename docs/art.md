@@ -105,6 +105,56 @@ right face  5E462D      the side catching the light
 border      8A6E46      worked earth between a boundary and a crop
 ```
 
+## Vendor props
+
+The buildings, tools and standalone objects — `Assets/Art/Vendor/Gr8FarmPack`,
+`Gr8OutdoorsPack_ODDBLOT`, `Gr8Pond_ExpansionPack_ODDBLOT` — are a different register
+from the tile/slab system above, not an extension of it. They are flat-vector cartoon
+art, not the pixel-grid look "The world" describes, and a new standalone prop (a
+tractor, a new tool, a new building) has to sit among **these**, not among the tiles.
+
+**Every prop in every one of the three packs shares one outline colour**, measured
+directly from the PNGs: `#33363F`, a dark navy-charcoal — never pure black, and
+consistent to within a couple of hex steps across packs made at different times
+(`Gr8OutdoorsPack`'s boat measures `#353540`). It is stroked around every silhouette
+edge and most internal panel lines (a shed's wall boards, a windmill's cross-bracing).
+
+**The fill palette is genuinely shared, not per-prop.** The same handful of tones
+recur across unrelated objects — a barn's walls and a tomato's fruit measure to
+nearly the same red pair. Measured swatches, reused across `Gr8FarmPack`:
+
+```
+outline        33363F      dark navy-charcoal, every stroke in every pack
+cream          EBE5D9      roofs, trim, highlights
+warm grey      BFB8B2      secondary light surface, shadow-on-cream
+barn red dark  A74C49      \  the same pair on a barn wall and a tomato
+barn red light C95854      /
+metal grey     626166 .. 928C8C   a 3-4 step ramp, windmill and silo hardware
+sage green     557D57 / 8B9151   plant stem and leaf
+```
+
+Colour is flat per facet here too, in the same spirit as "The world" — but the
+shading step between facets is closer together in value than the ground's, and small
+linework (hatching, rivet dots, board seams) carries texture that a hard colour step
+alone does not attempt.
+
+**Each prop casts a soft-edged shadow blob at its base.** This is the one deliberate
+exception to "a soft edge looks like an error" above — that rule is about the
+pixel-grid ground and tiles; a vendor prop is an imported sprite with its own baked
+shadow, and Point filtering (see the artist skill's import table) stops Unity from
+adding blur on top, not from ever having any.
+
+**There is no single fixed camera angle for props**, unlike the tile grid. A
+structure the size of a shed or a silo leans into roughly the same 3/4 isometric
+read as the world; a small hand-prop (a bucket, a trowel) is framed closer to a flat
+icon, nearly front-on. Match the framing to the object's size, not to one fixed rule.
+
+**No pack has a vehicle.** A tractor or anything like it is new ground, not a measured
+extension of an existing item the way a new crate would be — lean harder on the
+outline colour and the shared palette above for exactly that reason; they are what
+will make it read as belonging next to a shed that already exists, when nothing else
+about its shape has a precedent to match.
+
 ## Making a new piece
 
 **Measure before inventing.** The art already here is regular to the pixel. Guessing produces
@@ -124,4 +174,6 @@ built out over it.
 
 **Do not ask an image generator for a tile or for anything on the grid.** It cannot hit a grid to
 the pixel, and a tile that is three pixels off seams across the whole map. Ask it for a one-off that
-stands alone and lines up with nothing — a building, a boat, a signpost.
+stands alone and lines up with nothing — a building, a boat, a signpost, matching the measured
+outline colour and shared palette in "Vendor props" above, since that is the register it has to
+sit in.

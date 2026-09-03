@@ -71,13 +71,20 @@ even when it looks good on its own.
 
 ## Do not ask an image generator for exact geometry
 
-`generate_image` is good for texture and props: soil surface, trees, rock, water. It
-is not for anything that has to sit on the grid. If an isometric tile is three pixels
-out, the whole map gets a hairline seam, and that is invisible in a single frame — it
-shows up when twenty of them sit side by side.
+An image generator (there is no standing one connected as of this writing — check
+before assuming one is available) is good for texture and standalone props: a
+building, a tool, a vehicle. It is not for anything that has to sit on the grid. If
+an isometric tile is three pixels out, the whole map gets a hairline seam, and that
+is invisible in a single frame — it shows up when twenty of them sit side by side.
 
 If the shape has maths in it, compute it. Generating and then aligning takes longer
 than computing.
+
+A standalone prop has to match the vendor packs' own register, not the ground's —
+see "Vendor props" in `docs/art.md` for the measured outline colour (`#33363F`) and
+the shared fill palette. Feed those numbers into the prompt or a post-generation
+palette snap; a generic "flat cartoon" prompt with no measured colours behind it
+tends to drift toward whatever the base model's own default look is instead.
 
 ## Import settings are part of the art
 
