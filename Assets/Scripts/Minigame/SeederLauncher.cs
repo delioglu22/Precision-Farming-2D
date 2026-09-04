@@ -62,11 +62,17 @@ public class SeederLauncher : MonoBehaviour
     {
         if (held == null || run == null || string.IsNullOrEmpty(scene)) return;
 
+        run.Send(held.Footprint, held.DisplayName);
+
         // A second copy would stack another camera and another canvas on the first.
         Scene already = SceneManager.GetSceneByName(scene);
-        if (already.IsValid() && already.isLoaded) return;
+        if (already.IsValid() && already.isLoaded)
+        {
+            var field = Object.FindFirstObjectByType<SeederField>();
+            if (field != null) field.Begin();
+            return;
+        }
 
-        run.Send(held.Footprint, held.DisplayName);
         SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
     }
 }
