@@ -371,7 +371,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0883c5875873cd94ca995e1fa4a6687d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 030bb1176f2fb45fa90a0d3cbbcdb01d, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -755,7 +755,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &963252132
 RectTransform:
   m_ObjectHideFlags: 0
@@ -800,19 +800,25 @@ MonoBehaviour:
   result: {fileID: 51451113}
   battery: {fileID: 2002334510}
   title: {fileID: 0}
-  resolution: 512
-  margin: 0.04
+  dirtSource: {fileID: 2800000, guid: 6456a1d79cdcf449aa8a86d7f05fca96, type: 3}
+  cellPixels: 120
+  sideMargin: 60
+  topBottomMargin: 120
+  tornBleed: 40
   batteryCells: 48
-  furrowsPerTile: 4
+  noiseFreq1: 0.03
+  noiseWeight1: 0.35
+  noiseFreq2: 0.13
+  noiseWeight2: 1
+  noiseAmplitude: 15
+  edgeSoftness: 4
+  shadowColor: {r: 0.094, g: 0.063, b: 0.043, a: 1}
+  aoFade: 105
+  aoMax: 0.38
   bandCells: 0.95
   centerLineWidth: 1.4
   centerLineColor: {r: 0.78, g: 0.68, b: 0.215, a: 1}
   phosphorGlowColor: {r: 1, g: 0.99, b: 0.65, a: 0.44}
-  soil: {r: 0.22, g: 0.157, b: 0.118, a: 1}
-  clodDark: {r: 0.094, g: 0.063, b: 0.043, a: 1}
-  clodLight: {r: 0.294, g: 0.22, b: 0.165, a: 1}
-  tileSeam: {r: 0.071, g: 0.047, b: 0.031, a: 1}
-  verge: {r: 0.149, g: 0.106, b: 0.078, a: 1}
   spilledGlow: {r: 1, g: 0.99, b: 0.65, a: 0.28}
 --- !u!114 &963252137
 MonoBehaviour:
@@ -978,78 +984,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &1064700306
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1064700307}
-  - component: {fileID: 1064700309}
-  - component: {fileID: 1064700308}
-  m_Layer: 0
-  m_Name: Dirt
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1064700307
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1064700306}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2121714812}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1040, y: 1760}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1064700308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1064700306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Texture: {fileID: 2800000, guid: e862bab46287b477ebc1c200c1bae66a, type: 3}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
---- !u!222 &1064700309
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1064700306}
-  m_CullTransparentMesh: 1
 --- !u!1 &1274578298
 GameObject:
   m_ObjectHideFlags: 0
@@ -1315,8 +1249,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 923.14606, y: 41.43498}
+  m_AnchoredPosition: {x: 10.903, y: -0.0000019073}
+  m_SizeDelta: {x: 958.8934, y: 41.435}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2002334510
 MonoBehaviour:
@@ -1343,7 +1277,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.89939666
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 1
   m_UseSpriteMesh: 0
@@ -1452,7 +1386,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1798712891}
-  - {fileID: 1064700307}
   - {fileID: 963252132}
   - {fileID: 2129363220}
   - {fileID: 501433062}

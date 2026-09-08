@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e862bab46287b477ebc1c200c1bae66a
+guid: 030bb1176f2fb45fa90a0d3cbbcdb01d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7085590697667533565
-    second: Seeder_DirtWindow_0
+      213: 4088576167296427540
+    second: Seeder_CloseButtonFlat_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,18 +46,18 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteBorder: {x: 30, y: 30, z: 30, w: 30}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
-  textureType: 0
+  textureType: 8
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Seeder_DirtWindow_0
+      name: Seeder_CloseButtonFlat_0
       rect:
         serializedVersion: 2
-        x: 19
-        y: 24
-        width: 1028
-        height: 1744
+        x: 0
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 305e6b13dcceaad90800000000000000
-      internalID: -7085590697667533565
+      spriteID: 416e4d8ac5a8db830800000000000000
+      internalID: 4088576167296427540
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Seeder_DirtWindow_0: -7085590697667533565
+      Seeder_CloseButtonFlat_0: 4088576167296427540
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
