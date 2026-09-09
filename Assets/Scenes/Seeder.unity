@@ -805,6 +805,9 @@ MonoBehaviour:
   machineAnimator: {fileID: 965025365}
   machineCellsWide: 1.5
   machineAspect: 1.7087379
+  machineSpeed: 6
+  pathSmoothingPasses: 2
+  machineTurnSpeed: 480
   dirtSource: {fileID: 2800000, guid: 6456a1d79cdcf449aa8a86d7f05fca96, type: 3}
   cellPixels: 120
   sideMargin: 60
@@ -821,14 +824,10 @@ MonoBehaviour:
   aoFade: 105
   aoMax: 0.38
   bandCells: 0.95
-  centerLineWidth: 1.4
-  dashLength: 14
-  dashGapLength: 10
-  outlineWidth: 6
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  centerLineColor: {r: 1, g: 1, b: 1, a: 1}
-  phosphorGlowColor: {r: 1, g: 1, b: 1, a: 0.44}
-  spilledGlow: {r: 1, g: 1, b: 1, a: 0.28}
+  seedSprite: {fileID: 2800000, guid: dae848149249a446e9d7c111fc72c378, type: 3}
+  seedSpacingCells: 0.5
+  seedCellsWide: 0.4
+  seedRotationJitter: 25
 --- !u!114 &963252137
 MonoBehaviour:
   m_ObjectHideFlags: 0

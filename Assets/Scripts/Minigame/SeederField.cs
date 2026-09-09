@@ -16,7 +16,9 @@ using TMPro;
 /// grass is a separate, static object behind this one - this script never touches it.
 ///
 /// As the player drags across the soil, a thin bright neon central line is drawn with a glowing
-/// phosphor (highlighter) aura around it.
+/// phosphor (highlighter) aura around it - untouched while drawing. Only once the line is finished
+/// does the machine set out along it (see <see cref="TravelPath"/>): as it passes, it wipes the
+/// marker back to plain dirt and leaves a seed mark behind instead.
 /// </summary>
 [DisallowMultipleComponent]
 public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
@@ -59,6 +61,19 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     [Tooltip("How fast the machine turns to face its new heading, in degrees per second.")]
     [SerializeField, Min(1f)] private float machineTurnSpeed = 480f;
+
+    [Header("Seeding (left behind by the traveling machine)")]
+    [Tooltip("The seed mark stamped behind the machine as it drives the finished line (Read/Write must be enabled).")]
+    [SerializeField] private Texture2D seedSprite;
+
+    [Tooltip("Distance between two seed marks, in grid cells.")]
+    [SerializeField, Min(0.05f)] private float seedSpacingCells = 0.5f;
+
+    [Tooltip("A seed mark's width, in grid cells.")]
+    [SerializeField, Min(0.05f)] private float seedCellsWide = 0.4f;
+
+    [Tooltip("Maximum random tilt on each seed mark, in degrees, so a run doesn't look machine-stamped.")]
+    [SerializeField, Range(0f, 90f)] private float seedRotationJitter = 25f;
 
     [Header("Field Parameters")]
     [Tooltip("The soil photo the window is cropped from (Read/Write must be enabled).")]
@@ -139,6 +154,7 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     bool[] seeded;
     bool[] isCoreLine;
     bool[] isOutline;
+    bool[] hasSeed;
     float[] minDist;
     int sownCount;
 
@@ -349,9 +365,17 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     IEnumerator TravelPath()
     {
         machine.gameObject.SetActive(true);
-        PlaceMachine(smoothPath[0]);
+        Vector2 prevPos = smoothPath[0];
+        PlaceMachine(prevPos);
         ResetOrientation(smoothPath[0], smoothPath[1]);
         SetDriving(true);
+
+        float seedSpacing = Mathf.Max(0.05f, seedSpacingCells) * texelsPerCell;
+        float traveledTotal = 0f;
+        float nextSeedAt = 0f;
+
+        SowBehind(prevPos, prevPos, traveledTotal, ref nextSeedAt, seedSpacing);
+        Show();
 
         float speed = machineSpeed * texelsPerCell;
         for (int i = 0; i < smoothPath.Count - 1; i++)
@@ -367,15 +391,38 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             while (traveled < segLength)
             {
                 float dt = Time.deltaTime;
-                traveled += speed * dt;
-                PlaceMachine(Vector2.Lerp(from, to, Mathf.Clamp01(traveled / segLength)));
+                float step = speed * dt;
+                traveled += step;
+                traveledTotal += step;
+
+                Vector2 pos = Vector2.Lerp(from, to, Mathf.Clamp01(traveled / segLength));
+                PlaceMachine(pos);
                 ApplyOrientation(dt);
+                SowBehind(prevPos, pos, traveledTotal, ref nextSeedAt, seedSpacing);
+                prevPos = pos;
+                Show();
                 yield return null;
             }
         }
 
         SetDriving(false);
         travelRoutine = null;
+    }
+
+    /// <summary>
+    /// Wipes the marker line out from under the machine along the stretch it just crossed - back to
+    /// the plain baked dirt, swept as a whole segment so a fast frame can't skip over part of it - and,
+    /// every <paramref name="seedSpacing"/> texels of travel, leaves a seed mark in its place. The
+    /// marker stays untouched everywhere the machine hasn't reached yet.
+    /// </summary>
+    void SowBehind(Vector2 from, Vector2 to, float traveledTotal, ref float nextSeedAt, float seedSpacing)
+    {
+        ErasePath(from, to);
+        while (traveledTotal >= nextSeedAt)
+        {
+            StampSeed(to, JitterAngle(to));
+            nextSeedAt += seedSpacing;
+        }
     }
 
     /// <summary>Moves the machine to sit over the given texel, in the ground's own local space.</summary>
@@ -655,6 +702,101 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         field.Apply(false);
     }
 
+    /// <summary>Clears only the thin matte center line back to the plain baked dirt along the segment
+    /// just crossed - the phosphor band and its outline are left exactly as drawn, untouched. Swept as
+    /// a capsule between two points rather than a circle at one, so a fast frame's big step still
+    /// erases the whole stretch instead of leaving untouched dashes between where each frame landed.</summary>
+    void ErasePath(Vector2 from, Vector2 to)
+    {
+        float radius = centerLineWidth * 0.5f + 0.5f;
+        if (radius <= 0f) return;
+
+        int minX = Mathf.Max(0, Mathf.FloorToInt(Mathf.Min(from.x, to.x) - radius));
+        int maxX = Mathf.Min(width - 1, Mathf.CeilToInt(Mathf.Max(from.x, to.x) + radius));
+        int minY = Mathf.Max(0, Mathf.FloorToInt(Mathf.Min(from.y, to.y) - radius));
+        int maxY = Mathf.Min(height - 1, Mathf.CeilToInt(Mathf.Max(from.y, to.y) + radius));
+        float radiusSq = radius * radius;
+
+        Vector2 along = to - from;
+        float lengthSq = along.sqrMagnitude;
+
+        for (int y = minY; y <= maxY; y++)
+        {
+            for (int x = minX; x <= maxX; x++)
+            {
+                Vector2 here = new Vector2(x + 0.5f, y + 0.5f);
+                float t = lengthSq <= 1e-6f ? 0f : Mathf.Clamp01(Vector2.Dot(here - from, along) / lengthSq);
+                Vector2 nearest = from + along * t;
+                if ((here - nearest).sqrMagnitude > radiusSq) continue;
+
+                int i = y * width + x;
+                if (hasSeed != null && hasSeed[i]) continue;
+                pixels[i] = basePixels[i];
+                if (isCoreLine != null) isCoreLine[i] = false;
+            }
+        }
+    }
+
+    /// <summary>A cheap, deterministic pseudo-random angle from a position, so the same spot always
+    /// jitters the same way rather than picking a new tilt every time it is recomputed.</summary>
+    float JitterAngle(Vector2 texel)
+    {
+        float h = Mathf.Sin(Vector2.Dot(texel, new Vector2(12.9898f, 78.233f))) * 43758.5453f;
+        h -= Mathf.Floor(h);
+        return (h * 2f - 1f) * seedRotationJitter;
+    }
+
+    /// <summary>Blits <see cref="seedSprite"/> onto the baked texture at <paramref name="center"/>,
+    /// rotated by <paramref name="angleDeg"/>, alpha-composited over whatever is already there.</summary>
+    void StampSeed(Vector2 center, float angleDeg)
+    {
+        if (seedSprite == null) return;
+
+        float w = seedCellsWide * texelsPerCell;
+        float h = w * seedSprite.height / (float)seedSprite.width;
+        if (w <= 0f || h <= 0f) return;
+
+        float rad = -angleDeg * Mathf.Deg2Rad;
+        float cos = Mathf.Cos(rad);
+        float sin = Mathf.Sin(rad);
+
+        float halfDiag = 0.5f * Mathf.Sqrt(w * w + h * h);
+        int minX = Mathf.Max(0, Mathf.FloorToInt(center.x - halfDiag));
+        int maxX = Mathf.Min(width - 1, Mathf.CeilToInt(center.x + halfDiag));
+        int minY = Mathf.Max(0, Mathf.FloorToInt(center.y - halfDiag));
+        int maxY = Mathf.Min(height - 1, Mathf.CeilToInt(center.y + halfDiag));
+
+        for (int y = minY; y <= maxY; y++)
+        {
+            for (int x = minX; x <= maxX; x++)
+            {
+                float lx = x + 0.5f - center.x;
+                float ly = y + 0.5f - center.y;
+                float rx = lx * cos - ly * sin;
+                float ry = lx * sin + ly * cos;
+
+                float u = rx / w + 0.5f;
+                float v = ry / h + 0.5f;
+                if (u < 0f || u > 1f || v < 0f || v > 1f) continue;
+
+                Color src = seedSprite.GetPixelBilinear(u, v);
+                if (src.a <= 0.004f) continue;
+
+                int i = y * width + x;
+                if (hasSeed != null) hasSeed[i] = true;
+                Color dst = pixels[i];
+                float outA = src.a + dst.a * (1f - src.a);
+                pixels[i] = outA > 0.0001f
+                    ? new Color(
+                        (src.r * src.a + dst.r * dst.a * (1f - src.a)) / outA,
+                        (src.g * src.a + dst.g * dst.a * (1f - src.a)) / outA,
+                        (src.b * src.a + dst.b * dst.a * (1f - src.a)) / outA,
+                        outA)
+                    : new Color(0f, 0f, 0f, 0f);
+            }
+        }
+    }
+
     /// <summary>Two octaves of Perlin noise, normalised to roughly [-1, 1], sampled along one edge.</summary>
     float EdgeNoise(float pos, float seed)
     {
@@ -709,6 +851,7 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         seeded = new bool[n];
         isCoreLine = new bool[n];
         isOutline = new bool[n];
+        hasSeed = new bool[n];
         minDist = new float[n];
         for (int i = 0; i < n; i++) minDist[i] = float.MaxValue;
         pixels = new Color32[n];
