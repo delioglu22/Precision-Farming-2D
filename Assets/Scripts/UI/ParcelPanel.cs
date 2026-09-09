@@ -12,10 +12,10 @@ using TMPro;
 public class ParcelPanel : MonoBehaviour
 {
     [Tooltip("Picks are announced here. The same asset the map scene raises on.")]
-    [SerializeField] ParcelSelectionChannel channel;
-    [SerializeField] Animator sheet;
-    [SerializeField] TMP_Text title;
-    [SerializeField] Button closeButton;
+    [SerializeField] private ParcelSelectionChannel channel;
+    [SerializeField] private Animator sheet;
+    [SerializeField] private TMP_Text title;
+    [SerializeField] private Button closeButton;
 
     static readonly int Open = Animator.StringToHash("Open");
     static readonly int Expanded = Animator.StringToHash("Expanded");

@@ -17,10 +17,10 @@ using UnityEngine;
 public class SeederRun : ScriptableObject
 {
     [Tooltip("The parcel's size in cells. What the mini game lays out as ground.")]
-    [SerializeField] Vector2Int footprint = new Vector2Int(5, 7);
+    [SerializeField] private Vector2Int footprint = new Vector2Int(5, 7);
 
     [Tooltip("Whose field is being worked. Shown as the run's title.")]
-    [SerializeField] string parcelName = "Parcel";
+    [SerializeField] private string parcelName = "Parcel";
 
     /// <summary>Raised when a run ends, carrying the share of the parcel that got seed.</summary>
     public event System.Action<float> Finished;

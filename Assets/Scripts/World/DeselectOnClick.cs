@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 [DisallowMultipleComponent]
 public class DeselectOnClick : MonoBehaviour, IPointerClickHandler
 {
-    [SerializeField] ParcelSelectionChannel channel;
+    [SerializeField] private ParcelSelectionChannel channel;
 
     public void OnPointerClick(PointerEventData eventData)
     {

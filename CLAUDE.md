@@ -128,6 +128,9 @@ because it is easier to verify programmatically. Resist that and verify the engi
 `.claude/skills/engine-first/SKILL.md` carries the same rule and fires whenever new
 behaviour is being added.
 
+Once a script is being written, `.claude/skills/script-style/SKILL.md` carries the
+field-declaration, `[Header]` grouping and event-coupling conventions to follow.
+
 ## Working with the editor
 
 There is no CLI build/lint/test loop. Everything runs through the Unity Editor over the

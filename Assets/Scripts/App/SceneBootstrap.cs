@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 public class SceneBootstrap : MonoBehaviour
 {
     [Tooltip("Loaded additively on start. Must be listed in the build settings.")]
-    [SerializeField] string uiScene = "UI";
+    [SerializeField] private string uiScene = "UI";
 
     // Start, not Awake: while editing, the UI scene is often already open beside
     // this one, and during Awake it is not in the scene list yet. Loading it a

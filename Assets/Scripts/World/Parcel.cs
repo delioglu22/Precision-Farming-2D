@@ -22,26 +22,26 @@ using UnityEngine.EventSystems;
 public class Parcel : MonoBehaviour, IPointerClickHandler
 {
     [Tooltip("Shown in the panel. Falls back to the object name when left empty.")]
-    [SerializeField] string displayName;
+    [SerializeField] private string displayName;
 
     [Tooltip("The block of cells this parcel owns, in tilemap coordinates. Editing this repaints the parcel.")]
-    [SerializeField] RectInt cells = new RectInt(0, 0, 7, 5);
+    [SerializeField] private RectInt cells = new RectInt(0, 0, 7, 5);
 
     [Tooltip("What is planted, or none for a fallow, ploughed field.")]
-    [SerializeField] UnityEngine.Tilemaps.TileBase crop;
+    [SerializeField] private UnityEngine.Tilemaps.TileBase crop;
 
     [Tooltip("The soil and boundary tiles a parcel is built from. Assigned once - a new parcel gets these by duplicating an existing one.")]
-    [SerializeField] UnityEngine.Tilemaps.TileBase fieldTile;
-    [SerializeField] UnityEngine.Tilemaps.TileBase fenceTile;
+    [SerializeField] private UnityEngine.Tilemaps.TileBase fieldTile;
+    [SerializeField] private UnityEngine.Tilemaps.TileBase fenceTile;
 
     [Tooltip("Where the pick is announced. The UI listens on the other side.")]
-    [SerializeField] ParcelSelectionChannel channel;
+    [SerializeField] private ParcelSelectionChannel channel;
 
     [Tooltip("How much the picked parcel warms up. Over 1 brightens where the renderer allows it and warms it either way, so it reads even if the value is clamped.")]
-    [SerializeField] Color highlight = new Color(1.15f, 1.08f, 0.92f, 1f);
+    [SerializeField] private Color highlight = new Color(1.15f, 1.08f, 0.92f, 1f);
 
     [Tooltip("How far the picked parcel rises off the map, in world units. Keep it under a quarter - one cell's step up the screen - or a lifted row can sort past the row in front of it.")]
-    [SerializeField, Range(0f, 0.24f)] float lift = 0.10f;
+    [SerializeField, Range(0f, 0.24f)] private float lift = 0.10f;
 
     Transform grid;
     UnityEngine.Tilemaps.Tilemap[] layers;

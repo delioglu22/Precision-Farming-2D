@@ -17,16 +17,16 @@ using TMPro;
 public class SeederLauncher : MonoBehaviour
 {
     [Tooltip("Picks are announced here. Whichever parcel is held is the one that gets seeded.")]
-    [SerializeField] ParcelSelectionChannel channel;
+    [SerializeField] private ParcelSelectionChannel channel;
 
     [Tooltip("The ticket the mini game reads when it opens.")]
-    [SerializeField] SeederRun run;
+    [SerializeField] private SeederRun run;
 
     [Tooltip("The mini game's scene. Must be listed in the build settings.")]
-    [SerializeField] string scene = "Seeder";
+    [SerializeField] private string scene = "Seeder";
 
     [Tooltip("Where the seeder's last result is shown on the parcel's page. Optional.")]
-    [SerializeField] TMP_Text coverage;
+    [SerializeField] private TMP_Text coverage;
 
     Parcel held;
 

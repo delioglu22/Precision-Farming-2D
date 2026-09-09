@@ -20,74 +20,74 @@ using TMPro;
 public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Tooltip("The run this scene is playing. Everything the field needs is in here.")]
-    [SerializeField] SeederRun run;
+    [SerializeField] private SeederRun run;
 
     [Header("Ground Display")]
     [Tooltip("RawImage the baked window is drawn into. Its RectTransform is resized to match every time.")]
-    [SerializeField] RawImage ground;
+    [SerializeField] private RawImage ground;
 
     [Header("UI & Scoring")]
     [Tooltip("Percentage text display (top right).")]
-    [SerializeField] TMP_Text result;
+    [SerializeField] private TMP_Text result;
 
     [Tooltip("Battery gauge image at the bottom.")]
-    [SerializeField] Image battery;
+    [SerializeField] private Image battery;
 
     [Tooltip("Optional field title.")]
-    [SerializeField] TMP_Text title;
+    [SerializeField] private TMP_Text title;
 
     [Header("Field Parameters")]
     [Tooltip("The soil photo the window is cropped from (Read/Write must be enabled).")]
-    [SerializeField] Texture2D dirtSource;
+    [SerializeField] private Texture2D dirtSource;
 
     [Tooltip("Pixels per cell, both axes - the same unit the map's canvas already uses.")]
-    [SerializeField, Min(1f)] float cellPixels = 120f;
+    [SerializeField, Min(1f)] private float cellPixels = 120f;
 
     [Tooltip("Grass left showing on the window's left and right, in canvas pixels.")]
-    [SerializeField, Min(0f)] float sideMargin = 60f;
+    [SerializeField, Min(0f)] private float sideMargin = 60f;
 
     [Tooltip("Grass left showing above and below the window, in canvas pixels.")]
-    [SerializeField, Min(0f)] float topBottomMargin = 120f;
+    [SerializeField, Min(0f)] private float topBottomMargin = 120f;
 
     [Tooltip("How far the torn edge's teeth can reach past the window's clean rectangle.")]
-    [SerializeField, Min(0f)] float tornBleed = 40f;
+    [SerializeField, Min(0f)] private float tornBleed = 40f;
 
     [Tooltip("How much line the machine carries, in grid cells.")]
-    [SerializeField, Min(1f)] float batteryCells = 48f;
+    [SerializeField, Min(1f)] private float batteryCells = 48f;
 
     [Header("Torn Edge")]
-    [SerializeField] float noiseFreq1 = 0.03f;
-    [SerializeField] float noiseWeight1 = 0.35f;
-    [SerializeField] float noiseFreq2 = 0.13f;
-    [SerializeField] float noiseWeight2 = 1.0f;
+    [SerializeField] private float noiseFreq1 = 0.03f;
+    [SerializeField] private float noiseWeight1 = 0.35f;
+    [SerializeField] private float noiseFreq2 = 0.13f;
+    [SerializeField] private float noiseWeight2 = 1.0f;
     [Tooltip("How far the noise displaces the edge, in pixels.")]
-    [SerializeField] float noiseAmplitude = 15f;
+    [SerializeField] private float noiseAmplitude = 15f;
     [Tooltip("Width of the antialiased band at the torn edge, in pixels.")]
-    [SerializeField, Min(0.5f)] float edgeSoftness = 4f;
+    [SerializeField, Min(0.5f)] private float edgeSoftness = 4f;
 
     [Header("Ambient Occlusion")]
     [Tooltip("Shadow tint the torn edge fades to, cast by the raised grass lip.")]
-    [SerializeField] Color shadowColor = new Color(0.094f, 0.063f, 0.043f, 1f);
+    [SerializeField] private Color shadowColor = new Color(0.094f, 0.063f, 0.043f, 1f);
     [Tooltip("How far the shadow reaches in from the edge, in pixels.")]
-    [SerializeField] float aoFade = 105f;
+    [SerializeField] private float aoFade = 105f;
     [Tooltip("Shadow strength at the very edge, 0-1.")]
-    [SerializeField, Range(0f, 1f)] float aoMax = 0.38f;
+    [SerializeField, Range(0f, 1f)] private float aoMax = 0.38f;
 
     [Header("Drawing Style (Phosphor & Center Line)")]
     [Tooltip("How wide the phosphor glow aura is, in grid cells.")]
-    [SerializeField, Range(0.2f, 2f)] float bandCells = 0.95f;
+    [SerializeField, Range(0.2f, 2f)] private float bandCells = 0.95f;
 
     [Tooltip("Thickness of the central matte yellow line in pixels/texels.")]
-    [SerializeField, Range(0.5f, 5f)] float centerLineWidth = 1.4f;
+    [SerializeField, Range(0.5f, 5f)] private float centerLineWidth = 1.4f;
 
     [Tooltip("Color of the central matte yellow line.")]
-    [SerializeField] Color centerLineColor = new Color(0.780f, 0.680f, 0.215f, 1f);
+    [SerializeField] private Color centerLineColor = new Color(0.780f, 0.680f, 0.215f, 1f);
 
     [Tooltip("Color of the lighter yellow transparent phosphor band.")]
-    [SerializeField] Color phosphorGlowColor = new Color(1.000f, 0.990f, 0.650f, 0.44f);
+    [SerializeField] private Color phosphorGlowColor = new Color(1.000f, 0.990f, 0.650f, 0.44f);
 
     [Tooltip("Stroke color that spilled past the parcel, onto the torn edge or bare grass.")]
-    [SerializeField] Color spilledGlow = new Color(1.000f, 0.990f, 0.650f, 0.28f);
+    [SerializeField] private Color spilledGlow = new Color(1.000f, 0.990f, 0.650f, 0.28f);
 
     const float CanvasWidth = 1080f;
     const float CanvasHeight = 1920f;

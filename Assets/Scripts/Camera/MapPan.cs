@@ -26,41 +26,41 @@ using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 [DisallowMultipleComponent]
 public class MapPan : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IScrollHandler
 {
-    [SerializeField] Camera view;
+    [SerializeField] private Camera view;
 
     [Header("Extent of the farm, in world units")]
-    [SerializeField] Vector2 mapCentre = Vector2.zero;
-    [SerializeField] Vector2 mapSize = new Vector2(24f, 12f);
+    [SerializeField] private Vector2 mapCentre = Vector2.zero;
+    [SerializeField] private Vector2 mapSize = new Vector2(24f, 12f);
     [Tooltip("How far past the edge of the land the view may travel.")]
-    [SerializeField, Min(0f)] float edgeMargin = 0.3f;
+    [SerializeField, Min(0f)] private float edgeMargin = 0.3f;
 
     [Header("The sheet that covers the bottom of the screen")]
     [Tooltip("Picks are announced here. The map centres on them, and the panel is open for as long as one is held.")]
-    [SerializeField] ParcelSelectionChannel channel;
+    [SerializeField] private ParcelSelectionChannel channel;
     [Tooltip("How much of the screen height the open panel hides. Keep this in step with the panel's own height.")]
-    [SerializeField, Range(0f, 0.8f)] float sheetCover = 0.396f;
+    [SerializeField, Range(0f, 0.8f)] private float sheetCover = 0.396f;
 
     [Header("How close the view sits")]
     [Tooltip("Orthographic size while a parcel is open, close enough to read one field.")]
-    [SerializeField, Min(0.1f)] float pickedSize = 5f;
+    [SerializeField, Min(0.1f)] private float pickedSize = 5f;
 
     [Header("Player-controlled zoom, with nothing picked")]
     [Tooltip("How close the wheel or a pinch may bring the view.")]
-    [SerializeField, Min(0.1f)] float minZoomSize = 3f;
+    [SerializeField, Min(0.1f)] private float minZoomSize = 3f;
     [Tooltip("How far the wheel or a pinch may push the view out. The camera starts here.")]
-    [SerializeField, Min(0.1f)] float maxZoomSize = 9f;
+    [SerializeField, Min(0.1f)] private float maxZoomSize = 9f;
     [Tooltip("World units of orthographic size per wheel notch.")]
-    [SerializeField, Min(0f)] float scrollSensitivity = 0.6f;
+    [SerializeField, Min(0f)] private float scrollSensitivity = 0.6f;
 
     [Header("Feel")]
     [Tooltip("How quickly the view closes on a pick and opens back out. Higher arrives sooner.")]
-    [SerializeField, Range(0.5f, 20f)] float zoomDamping = 8f;
+    [SerializeField, Range(0.5f, 20f)] private float zoomDamping = 8f;
     [Tooltip("How quickly the glide after a swipe runs out. Higher stops sooner.")]
-    [SerializeField, Range(0.5f, 20f)] float glideDamping = 6f;
+    [SerializeField, Range(0.5f, 20f)] private float glideDamping = 6f;
     [Tooltip("Below this speed the glide is dropped instead of crawling to a stop.")]
-    [SerializeField, Min(0f)] float glideCutoff = 0.05f;
+    [SerializeField, Min(0f)] private float glideCutoff = 0.05f;
     [Tooltip("How quickly the view settles on the parcel it was sent to. Higher arrives sooner.")]
-    [SerializeField, Range(0.5f, 20f)] float focusDamping = 8f;
+    [SerializeField, Range(0.5f, 20f)] private float focusDamping = 8f;
 
     Vector2 glide;
     bool dragging;
