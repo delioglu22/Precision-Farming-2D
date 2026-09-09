@@ -817,9 +817,9 @@ MonoBehaviour:
   aoMax: 0.38
   bandCells: 0.95
   centerLineWidth: 1.4
-  centerLineColor: {r: 0.78, g: 0.68, b: 0.215, a: 1}
-  phosphorGlowColor: {r: 1, g: 0.99, b: 0.65, a: 0.44}
-  spilledGlow: {r: 1, g: 0.99, b: 0.65, a: 0.28}
+  centerLineColor: {r: 1, g: 1, b: 1, a: 1}
+  phosphorGlowColor: {r: 1, g: 1, b: 1, a: 0.44}
+  spilledGlow: {r: 1, g: 1, b: 1, a: 0.28}
 --- !u!114 &963252137
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -80,14 +80,26 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     [Tooltip("Thickness of the central matte yellow line in pixels/texels.")]
     [SerializeField, Range(0.5f, 5f)] private float centerLineWidth = 1.4f;
 
-    [Tooltip("Color of the central matte yellow line.")]
-    [SerializeField] private Color centerLineColor = new Color(0.780f, 0.680f, 0.215f, 1f);
+    [Tooltip("Length of each dash of the center line, in pixels/texels.")]
+    [SerializeField, Min(1f)] private float dashLength = 30f;
 
-    [Tooltip("Color of the lighter yellow transparent phosphor band.")]
-    [SerializeField] private Color phosphorGlowColor = new Color(1.000f, 0.990f, 0.650f, 0.44f);
+    [Tooltip("Length of each gap between dashes, in pixels/texels.")]
+    [SerializeField, Min(1f)] private float dashGapLength = 22f;
+
+    [Tooltip("Thickness of the outline drawn around the phosphor band's own edge, in pixels/texels.")]
+    [SerializeField, Min(0f)] private float outlineWidth = 6f;
+
+    [Tooltip("Color of the outline around the phosphor band's edge.")]
+    [SerializeField] private Color outlineColor = new Color(1f, 1f, 1f, 1f);
+
+    [Tooltip("Color of the central matte line.")]
+    [SerializeField] private Color centerLineColor = new Color(1f, 1f, 1f, 1f);
+
+    [Tooltip("Color of the lighter transparent phosphor band.")]
+    [SerializeField] private Color phosphorGlowColor = new Color(1f, 1f, 1f, 0.44f);
 
     [Tooltip("Stroke color that spilled past the parcel, onto the torn edge or bare grass.")]
-    [SerializeField] private Color spilledGlow = new Color(1.000f, 0.990f, 0.650f, 0.28f);
+    [SerializeField] private Color spilledGlow = new Color(1f, 1f, 1f, 0.28f);
 
     const float CanvasWidth = 1080f;
     const float CanvasHeight = 1920f;
@@ -102,7 +114,8 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     bool[] opaque;
     bool[] seeded;
     bool[] isCoreLine;
-    byte[] glowLevel;
+    bool[] isOutline;
+    float[] minDist;
     int sownCount;
 
     int width;
@@ -113,6 +126,7 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     bool spent;
     Vector2 lastTexel;
     float lineLeft;
+    float lineTraveled;
 
     /// <summary>The share of the parcel that has seed on it, from 0 to 1.</summary>
     public float Coverage
@@ -222,6 +236,7 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         Stamp(lastTexel, reached);
 
+        lineTraveled += Vector2.Distance(lastTexel, reached);
         lastTexel = reached;
         lineLeft -= cells;
 
@@ -296,8 +311,11 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         Vector2 along = to - from;
         float lengthSq = along.sqrMagnitude;
+        float segmentLength = Mathf.Sqrt(lengthSq);
         float radiusSq = radius * radius;
         float coreRadius = centerLineWidth * 0.5f;
+        float dashPeriod = dashLength + dashGapLength;
+        float outlineInner = radius - outlineWidth;
 
         Color32 core32 = centerLineColor;
         core32.a = 255;
@@ -305,6 +323,8 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         glow32.a = 255;
         Color32 spilled32 = spilledGlow;
         spilled32.a = 255;
+        Color32 outline32 = outlineColor;
+        outline32.a = 255;
         float maxGlowBlend = phosphorGlowColor.a > 0f ? phosphorGlowColor.a : 0.70f;
         float maxSpillBlend = spilledGlow.a > 0f ? spilledGlow.a : 0.45f;
 
@@ -328,21 +348,46 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
                 float dist = Mathf.Sqrt(distSq);
 
-                // Phosphor highlighter band with natural soft marker edge on outer 30%
-                float normDist = dist / radius; // 0..1
-                float falloff = 1f;
-                if (normDist > 0.70f)
-                {
-                    float ft = (normDist - 0.70f) / 0.30f;
-                    falloff = 1f - (ft * ft * (3f - 2f * ft));
-                }
+                // The best (smallest) distance to the whole swept path this pixel has ever seen -
+                // not just this one segment - so the outline traces the path as a whole instead of
+                // ringing every short segment's own little capsule.
+                if (dist < minDist[i]) minDist[i] = dist;
+                float md = minDist[i];
 
-                byte curAlpha = (byte)Mathf.RoundToInt(falloff * 255f);
-                if (glowLevel == null || curAlpha > glowLevel[i])
+                if (isCoreLine == null || !isCoreLine[i])
                 {
-                    if (glowLevel != null) glowLevel[i] = curAlpha;
-                    if (isCoreLine == null || !isCoreLine[i])
+                    bool edge = outlineWidth > 0f && md > outlineInner;
+                    if (isOutline != null) isOutline[i] = edge;
+
+                    if (edge)
                     {
+                        if (opaque[i])
+                        {
+                            Color32 baseColor = basePixels != null ? basePixels[i] : pixels[i];
+                            baseColor.a = 255;
+                            Color32 blended = Color32.Lerp(baseColor, outline32, outlineColor.a);
+                            blended.a = 255;
+                            pixels[i] = blended;
+                        }
+                        else
+                        {
+                            Color32 c = outline32;
+                            c.a = (byte)Mathf.RoundToInt(outlineColor.a * 255f);
+                            pixels[i] = c;
+                        }
+                    }
+                    else
+                    {
+                        // Phosphor highlighter band with natural soft marker edge on outer 30%
+                        float normDist = md / radius; // 0..1
+                        float falloff = 1f;
+                        if (normDist > 0.70f)
+                        {
+                            float ft = (normDist - 0.70f) / 0.30f;
+                            falloff = 1f - (ft * ft * (3f - 2f * ft));
+                        }
+                        byte curAlpha = (byte)Mathf.RoundToInt(falloff * 255f);
+
                         if (opaque[i])
                         {
                             float baseBlend = fenced[i] ? maxGlowBlend : maxSpillBlend;
@@ -364,22 +409,28 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                     }
                 }
 
-                // Thin matte yellow pen line on top
-                if (dist <= coreRadius)
+                // Thin matte pen line on top, broken into dashes along the stroke
+                float alongDist = lineTraveled + t * segmentLength;
+                bool dashOn = Mathf.Repeat(alongDist, dashPeriod) < dashLength;
+
+                if (dashOn)
                 {
-                    if (isCoreLine != null) isCoreLine[i] = true;
-                    Color32 c = core32;
-                    c.a = 255;
-                    pixels[i] = c;
-                }
-                else if (dist <= coreRadius + 0.5f)
-                {
-                    if (isCoreLine == null || !isCoreLine[i])
+                    if (dist <= coreRadius)
                     {
-                        float lineEdge = 1f - (dist - coreRadius) / 0.5f;
-                        Color32 c = Color32.Lerp(pixels[i], core32, lineEdge * 0.65f);
+                        if (isCoreLine != null) isCoreLine[i] = true;
+                        Color32 c = core32;
                         c.a = 255;
                         pixels[i] = c;
+                    }
+                    else if (dist <= coreRadius + 0.5f)
+                    {
+                        if (isCoreLine == null || !isCoreLine[i])
+                        {
+                            float lineEdge = 1f - (dist - coreRadius) / 0.5f;
+                            Color32 c = Color32.Lerp(pixels[i], core32, lineEdge * 0.65f);
+                            c.a = 255;
+                            pixels[i] = c;
+                        }
                     }
                 }
             }
@@ -445,7 +496,9 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         opaque = new bool[n];
         seeded = new bool[n];
         isCoreLine = new bool[n];
-        glowLevel = new byte[n];
+        isOutline = new bool[n];
+        minDist = new float[n];
+        for (int i = 0; i < n; i++) minDist[i] = float.MaxValue;
         pixels = new Color32[n];
         basePixels = new Color32[n];
         fencedCount = 0;
@@ -453,6 +506,7 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         driving = false;
         spent = false;
         lineLeft = batteryCells;
+        lineTraveled = 0f;
         if (result != null) result.text = "0%";
 
         for (int y = 0; y < height; y++)
