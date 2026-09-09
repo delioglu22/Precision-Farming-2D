@@ -1,0 +1,429 @@
+fileFormatVersion: 2
+guid: c3228b981f71440b28b4ac600a9eee97
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5723062068887112268
+    second: imen_spritesheet_0
+  - first:
+      213: 5061894779638825759
+    second: imen_spritesheet_1
+  - first:
+      213: -2619746756589033655
+    second: imen_spritesheet_2
+  - first:
+      213: -4391349357697923666
+    second: imen_spritesheet_3
+  - first:
+      213: -2327690830252948791
+    second: imen_spritesheet_4
+  - first:
+      213: 5910640080572631461
+    second: imen_spritesheet_5
+  - first:
+      213: 6029847240467399430
+    second: imen_spritesheet_6
+  - first:
+      213: 3546990911770220117
+    second: imen_spritesheet_7
+  - first:
+      213: 635100928627822687
+    second: imen_spritesheet_8
+  - first:
+      213: -7738909612150738102
+    second: imen_spritesheet_9
+  - first:
+      213: -2707274628107558339
+    second: imen_spritesheet_10
+  - first:
+      213: -3925312954160866164
+    second: imen_spritesheet_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: imen_spritesheet_0
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 667
+        width: 352
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b5b874de599390b0800000000000000
+      internalID: -5723062068887112268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imen_spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 592
+        y: 666
+        width: 352
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f13c6c6ab767f3640800000000000000
+      internalID: 5061894779638825759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imen_spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 1104
+        y: 664
+        width: 352
+        height: 206
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9476704743ac4abd0800000000000000
+      internalID: -2619746756589033655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imen_spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 1616
+        y: 664
+        width: 352
+        height: 206
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea586c9860bce03c0800000000000000
+      internalID: -4391349357697923666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imen_spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 2128
+        y: 664
+        width: 352
+        height: 206
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c2c6d3c58162bfd0800000000000000
+      internalID: -2327690830252948791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imen_spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 2640
+        y: 664
+        width: 352
+        height: 205
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a9c7bd56dfc60250800000000000000
+      internalID: 5910640080572631461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imen_spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 152
+        width: 352
+        height: 206
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 603cde12e125ea350800000000000000
+      internalID: 6029847240467399430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imen_spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 592
+        y: 152
+        width: 352
+        height: 206
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5565a950171793130800000000000000
+      internalID: 3546990911770220117
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imen_spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 1104
+        y: 152
+        width: 352
+        height: 206
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f50d16ffde450d800800000000000000
+      internalID: 635100928627822687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imen_spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 1616
+        y: 152
+        width: 352
+        height: 205
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4336e2d5bed99490800000000000000
+      internalID: -7738909612150738102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imen_spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 2128
+        y: 152
+        width: 352
+        height: 206
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d32a83ac114dd6ad0800000000000000
+      internalID: -2707274628107558339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imen_spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 2640
+        y: 152
+        width: 352
+        height: 206
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8c90075aac7689c0800000000000000
+      internalID: -3925312954160866164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      imen_spritesheet_0: -5723062068887112268
+      imen_spritesheet_1: 5061894779638825759
+      imen_spritesheet_10: -2707274628107558339
+      imen_spritesheet_11: -3925312954160866164
+      imen_spritesheet_2: -2619746756589033655
+      imen_spritesheet_3: -4391349357697923666
+      imen_spritesheet_4: -2327690830252948791
+      imen_spritesheet_5: 5910640080572631461
+      imen_spritesheet_6: 6029847240467399430
+      imen_spritesheet_7: 3546990911770220117
+      imen_spritesheet_8: 635100928627822687
+      imen_spritesheet_9: -7738909612150738102
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
