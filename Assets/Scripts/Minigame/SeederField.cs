@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -35,6 +37,28 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     [Tooltip("Optional field title.")]
     [SerializeField] private TMP_Text title;
+
+    [Header("Machine")]
+    [Tooltip("Vehicle that rides along the drawn line while driving.")]
+    [SerializeField] private RectTransform machine;
+
+    [Tooltip("Drives the machine's wheel-spin loop through the 'Driving' bool.")]
+    [SerializeField] private Animator machineAnimator;
+
+    [Tooltip("The machine's width, in grid cells.")]
+    [SerializeField, Min(0.1f)] private float machineCellsWide = 1.5f;
+
+    [Tooltip("The machine sprite's own width-to-height ratio, so it keeps its shape at any size.")]
+    [SerializeField, Min(0.1f)] private float machineAspect = 352f / 206f;
+
+    [Tooltip("How fast the machine retraces the finished line, in grid cells per second.")]
+    [SerializeField, Min(0.1f)] private float machineSpeed = 6f;
+
+    [Tooltip("How tightly the traced path is rounded off before the machine follows it - a hand-drawn line is never straight.")]
+    [SerializeField, Min(0f)] private int pathSmoothingPasses = 2;
+
+    [Tooltip("How fast the machine turns to face its new heading, in degrees per second.")]
+    [SerializeField, Min(1f)] private float machineTurnSpeed = 480f;
 
     [Header("Field Parameters")]
     [Tooltip("The soil photo the window is cropped from (Read/Write must be enabled).")]
@@ -128,6 +152,15 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     float lineLeft;
     float lineTraveled;
 
+    readonly List<Vector2> path = new List<Vector2>();
+    readonly List<Vector2> smoothPath = new List<Vector2>();
+    Coroutine travelRoutine;
+
+    bool machineVertical;
+    bool machineFacingLeft;
+    float machineAngle;
+    float machineTargetAngle;
+
     /// <summary>The share of the parcel that has seed on it, from 0 to 1.</summary>
     public float Coverage
     {
@@ -171,6 +204,8 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         driving = true;
         lastTexel = texel;
+        path.Clear();
+        path.Add(texel);
 
         Stamp(texel, texel);
         Show();
@@ -186,6 +221,8 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         driving = true;
         lastTexel = texel;
+        path.Clear();
+        path.Add(texel);
 
         Stamp(texel, texel);
         Show();
@@ -218,6 +255,7 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         driving = false;
         spent = true;
         Finish();
+        StartTravel();
     }
 
     void Drive(Vector2 to)
@@ -235,22 +273,196 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
 
         Stamp(lastTexel, reached);
+        path.Add(reached);
 
         lineTraveled += Vector2.Distance(lastTexel, reached);
         lastTexel = reached;
         lineLeft -= cells;
 
-        if (lineLeft <= 0f)
+        bool ranOut = lineLeft <= 0f;
+        if (ranOut)
         {
             lineLeft = 0f;
             driving = false;
             spent = true;
-            Finish();
         }
 
         Show();
         ShowBattery();
         ShowResult();
+
+        if (ranOut)
+        {
+            Finish();
+            StartTravel();
+        }
+    }
+
+    /// <summary>Sends the machine along the just-finished line, from start to end, once drawing is over.</summary>
+    void StartTravel()
+    {
+        if (machine == null || path.Count < 2) return;
+        if (travelRoutine != null) StopCoroutine(travelRoutine);
+
+        smoothPath.Clear();
+        smoothPath.AddRange(SmoothPath(path));
+        if (smoothPath.Count < 2) return;
+
+        travelRoutine = StartCoroutine(TravelPath());
+    }
+
+    /// <summary>
+    /// A hand-drawn line is never straight - the raw path is a wobble of tiny, near-random zigzags,
+    /// and a machine that chases every one of them stutters. This first drops points that are too
+    /// close together to mean anything, then rounds off what is left with a couple of passes of
+    /// Chaikin corner-cutting, which turns a jagged polyline into a smooth, gently rounded one while
+    /// keeping the exact start and end point.
+    /// </summary>
+    List<Vector2> SmoothPath(List<Vector2> raw)
+    {
+        List<Vector2> thin = new List<Vector2>();
+        thin.Add(raw[0]);
+        float minSpacing = Mathf.Max(4f, texelsPerCell * 0.25f);
+        for (int i = 1; i < raw.Count - 1; i++)
+        {
+            if (Vector2.Distance(thin[thin.Count - 1], raw[i]) >= minSpacing) thin.Add(raw[i]);
+        }
+        thin.Add(raw[raw.Count - 1]);
+        if (thin.Count < 3) return thin;
+
+        List<Vector2> cur = thin;
+        for (int pass = 0; pass < pathSmoothingPasses; pass++)
+        {
+            List<Vector2> next = new List<Vector2>();
+            next.Add(cur[0]);
+            for (int i = 0; i < cur.Count - 1; i++)
+            {
+                next.Add(Vector2.Lerp(cur[i], cur[i + 1], 0.25f));
+                next.Add(Vector2.Lerp(cur[i], cur[i + 1], 0.75f));
+            }
+            next.Add(cur[cur.Count - 1]);
+            cur = next;
+        }
+        return cur;
+    }
+
+    IEnumerator TravelPath()
+    {
+        machine.gameObject.SetActive(true);
+        PlaceMachine(smoothPath[0]);
+        ResetOrientation(smoothPath[0], smoothPath[1]);
+        SetDriving(true);
+
+        float speed = machineSpeed * texelsPerCell;
+        for (int i = 0; i < smoothPath.Count - 1; i++)
+        {
+            Vector2 from = smoothPath[i];
+            Vector2 to = smoothPath[i + 1];
+            SetOrientTarget(from, to);
+
+            float segLength = Vector2.Distance(from, to);
+            if (segLength <= 0.0001f) continue;
+
+            float traveled = 0f;
+            while (traveled < segLength)
+            {
+                float dt = Time.deltaTime;
+                traveled += speed * dt;
+                PlaceMachine(Vector2.Lerp(from, to, Mathf.Clamp01(traveled / segLength)));
+                ApplyOrientation(dt);
+                yield return null;
+            }
+        }
+
+        SetDriving(false);
+        travelRoutine = null;
+    }
+
+    /// <summary>Moves the machine to sit over the given texel, in the ground's own local space.</summary>
+    void PlaceMachine(Vector2 texel)
+    {
+        if (machine == null) return;
+        machine.anchoredPosition = new Vector2(texel.x - width * 0.5f, texel.y - height * 0.5f);
+    }
+
+    /// <summary>Snaps the machine's heading to the very first stretch of the path, with nothing to ease from yet.</summary>
+    void ResetOrientation(Vector2 from, Vector2 to)
+    {
+        Vector2 dir = to - from;
+        machineVertical = Mathf.Abs(dir.y) > Mathf.Abs(dir.x);
+        machineFacingLeft = dir.x < 0f;
+        machineAngle = machineTargetAngle = machineVertical
+            ? 0f
+            : Mathf.Atan2(dir.y, machineFacingLeft ? -dir.x : dir.x) * Mathf.Rad2Deg;
+        SetFacing(machineVertical);
+    }
+
+    /// <summary>
+    /// Picks the heading the machine should ease towards next. Switching between the side-view and
+    /// front-view sprite, or between facing left and right, needs a dead zone around the switch point
+    /// (a wider margin to leave a mode than to enter it) or a path running close to +/-45 degrees or
+    /// straight up/down would flicker between the two every other frame.
+    /// </summary>
+    void SetOrientTarget(Vector2 from, Vector2 to)
+    {
+        if (machine == null) return;
+        Vector2 dir = to - from;
+        if (dir.sqrMagnitude < 0.0001f) return;
+
+        const float hysteresis = 1.3f;
+        bool vertical = machineVertical
+            ? !(Mathf.Abs(dir.x) > Mathf.Abs(dir.y) * hysteresis)
+            : Mathf.Abs(dir.y) > Mathf.Abs(dir.x) * hysteresis;
+
+        if (vertical != machineVertical)
+        {
+            machineVertical = vertical;
+            SetFacing(vertical);
+        }
+
+        if (vertical)
+        {
+            machineTargetAngle = 0f;
+            return;
+        }
+
+        bool facingLeft = dir.x < 0f;
+        float angle = Mathf.Atan2(dir.y, facingLeft ? -dir.x : dir.x) * Mathf.Rad2Deg;
+        if (facingLeft != machineFacingLeft)
+        {
+            // Crossing from moving right to moving left (or back) is a look-away, not a turn -
+            // nothing to ease through, since the mirrored art has no continuous path between them.
+            machineFacingLeft = facingLeft;
+            machineAngle = angle;
+        }
+        machineTargetAngle = angle;
+    }
+
+    /// <summary>Eases the machine's current heading towards its target at a fixed turn rate.</summary>
+    void ApplyOrientation(float dt)
+    {
+        if (machine == null) return;
+
+        if (machineVertical)
+        {
+            machine.localScale = Vector3.one;
+            machine.localEulerAngles = Vector3.zero;
+            return;
+        }
+
+        machineAngle = Mathf.MoveTowardsAngle(machineAngle, machineTargetAngle, machineTurnSpeed * dt);
+        machine.localScale = new Vector3(machineFacingLeft ? -1f : 1f, 1f, 1f);
+        machine.localEulerAngles = new Vector3(0f, 0f, machineAngle);
+    }
+
+    void SetDriving(bool isDriving)
+    {
+        if (machineAnimator != null) machineAnimator.SetBool("Driving", isDriving);
+    }
+
+    void SetFacing(bool vertical)
+    {
+        if (machineAnimator != null) machineAnimator.SetBool("Facing", vertical);
     }
 
     void Finish()
@@ -507,6 +719,9 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         spent = false;
         lineLeft = batteryCells;
         lineTraveled = 0f;
+        path.Clear();
+        smoothPath.Clear();
+        if (travelRoutine != null) { StopCoroutine(travelRoutine); travelRoutine = null; }
         if (result != null) result.text = "0%";
 
         for (int y = 0; y < height; y++)
@@ -566,6 +781,19 @@ public class SeederField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         rt.anchoredPosition = Vector2.zero;
 
         ground.texture = field;
+
+        if (machine != null)
+        {
+            float machineWidth = machineCellsWide * texelsPerCell;
+            machine.sizeDelta = new Vector2(machineWidth, machineWidth / machineAspect);
+            machine.anchorMin = new Vector2(0.5f, 0.5f);
+            machine.anchorMax = new Vector2(0.5f, 0.5f);
+            machine.pivot = new Vector2(0.5f, 0.5f);
+            machine.localEulerAngles = Vector3.zero;
+            machine.localScale = Vector3.one;
+            machine.gameObject.SetActive(false);
+        }
+        SetDriving(false);
     }
 
     static void Discard(UnityEngine.Object doomed)
