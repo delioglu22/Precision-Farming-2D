@@ -1,0 +1,853 @@
+fileFormatVersion: 2
+guid: dab6d0dd1f09b4d37aef61af7b95eb3e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4030396195079849137
+    second: Fertilizer_Drone_spritesheet_0
+  - first:
+      213: -5347438540945998010
+    second: Fertilizer_Drone_spritesheet_1
+  - first:
+      213: 4853894220035560589
+    second: Fertilizer_Drone_spritesheet_2
+  - first:
+      213: 2476214736423413615
+    second: Fertilizer_Drone_spritesheet_3
+  - first:
+      213: 1932985403753904392
+    second: Fertilizer_Drone_spritesheet_4
+  - first:
+      213: -4251255464449711807
+    second: Fertilizer_Drone_spritesheet_5
+  - first:
+      213: 3506411988336119533
+    second: Fertilizer_Drone_spritesheet_6
+  - first:
+      213: -6063141295206284949
+    second: Fertilizer_Drone_spritesheet_7
+  - first:
+      213: 3501463640652861114
+    second: Fertilizer_Drone_spritesheet_8
+  - first:
+      213: 9051822910788492555
+    second: Fertilizer_Drone_spritesheet_9
+  - first:
+      213: 6945596635454914401
+    second: Fertilizer_Drone_spritesheet_10
+  - first:
+      213: 4046348363680466694
+    second: Fertilizer_Drone_spritesheet_11
+  - first:
+      213: -1350041394000969685
+    second: Fertilizer_Drone_spritesheet_12
+  - first:
+      213: 3243627011245805552
+    second: Fertilizer_Drone_spritesheet_13
+  - first:
+      213: 2318675287694024775
+    second: Fertilizer_Drone_spritesheet_14
+  - first:
+      213: 4297389200101117610
+    second: Fertilizer_Drone_spritesheet_15
+  - first:
+      213: 1490411905014016574
+    second: Fertilizer_Drone_spritesheet_16
+  - first:
+      213: -649025445127012043
+    second: Fertilizer_Drone_spritesheet_17
+  - first:
+      213: 374704370816246847
+    second: Fertilizer_Drone_spritesheet_18
+  - first:
+      213: 8929506318358222179
+    second: Fertilizer_Drone_spritesheet_19
+  - first:
+      213: -4158236822558200850
+    second: Fertilizer_Drone_spritesheet_20
+  - first:
+      213: 9047683203618623721
+    second: Fertilizer_Drone_spritesheet_21
+  - first:
+      213: 9118428608563123942
+    second: Fertilizer_Drone_spritesheet_22
+  - first:
+      213: 7869869756441887963
+    second: Fertilizer_Drone_spritesheet_23
+  - first:
+      213: -5244572816093764513
+    second: Fertilizer_Drone_spritesheet_24
+  - first:
+      213: 507633113193821133
+    second: Fertilizer_Drone_spritesheet_25
+  - first:
+      213: 4393146881091203879
+    second: Fertilizer_Drone_spritesheet_26
+  - first:
+      213: -2432947726998852074
+    second: Fertilizer_Drone_spritesheet_27
+  - first:
+      213: 8223306903668310045
+    second: Fertilizer_Drone_0_0
+  - first:
+      213: -1844044660349063566
+    second: Fertilizer_Drone_0_1
+  - first:
+      213: -6228959128422141203
+    second: Fertilizer_Drone_0_2
+  - first:
+      213: 4348574443497843440
+    second: Fertilizer_Drone_0_3
+  - first:
+      213: -2419312068749441111
+    second: Fertilizer_Drone_0_4
+  - first:
+      213: 1861827581815109707
+    second: Fertilizer_Drone_0_5
+  - first:
+      213: 3382385595314816042
+    second: Fertilizer_Drone_1_0
+  - first:
+      213: -2346368369896451983
+    second: Fertilizer_Drone_1_1
+  - first:
+      213: -3743061096294795485
+    second: Fertilizer_Drone_1_2
+  - first:
+      213: -69594808831031067
+    second: Fertilizer_Drone_1_3
+  - first:
+      213: 209723400851930684
+    second: Fertilizer_Drone_1_4
+  - first:
+      213: 9102886292601713138
+    second: Fertilizer_Drone_1_5
+  - first:
+      213: -4277499801705354849
+    second: Fertilizer_Drone_2_0
+  - first:
+      213: 1474480997175741473
+    second: Fertilizer_Drone_2_1
+  - first:
+      213: 4656113628306255887
+    second: Fertilizer_Drone_2_2
+  - first:
+      213: 4385015815080160563
+    second: Fertilizer_Drone_2_3
+  - first:
+      213: -1208976191515645036
+    second: Fertilizer_Drone_2_4
+  - first:
+      213: -4474970338744683079
+    second: Fertilizer_Drone_2_5
+  - first:
+      213: 5964586029202199378
+    second: Fertilizer_Drone_3_0
+  - first:
+      213: 2585094808156244480
+    second: Fertilizer_Drone_3_1
+  - first:
+      213: 3009394610171012063
+    second: Fertilizer_Drone_3_2
+  - first:
+      213: 7149492211004851601
+    second: Fertilizer_Drone_3_3
+  - first:
+      213: -6225824224050244622
+    second: Fertilizer_Drone_3_4
+  - first:
+      213: -6227171837732829216
+    second: Fertilizer_Drone_3_5
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Fertilizer_Drone_0_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d10ca285f0e0f1270800000000000000
+      internalID: 8223306903668310045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_0_1
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27e20fdc623a866e0800000000000000
+      internalID: -1844044660349063566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_0_2
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de2b8f5dcaa4e89a0800000000000000
+      internalID: -6228959128422141203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_0_3
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fae708aa6d395c30800000000000000
+      internalID: 4348574443497843440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_0_4
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a7cf55dd70ec6ed0800000000000000
+      internalID: -2419312068749441111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_0_5
+      rect:
+        serializedVersion: 2
+        x: 2560
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b483d1f325a86d910800000000000000
+      internalID: 1861827581815109707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_1_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a24432e37c5a0fe20800000000000000
+      internalID: 3382385595314816042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_1_1
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1701c103666007fd0800000000000000
+      internalID: -2346368369896451983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_1_2
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 327b3c6b3c9fd0cc0800000000000000
+      internalID: -3743061096294795485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_1_3
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e84a6dd3efb80ff0800000000000000
+      internalID: -69594808831031067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_1_4
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3ebdd8625619e200800000000000000
+      internalID: 209723400851930684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_1_5
+      rect:
+        serializedVersion: 2
+        x: 2560
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f13c4d9ad2f35e70800000000000000
+      internalID: 9102886292601713138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f996c80f79443a4c0800000000000000
+      internalID: -4277499801705354849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_2_1
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12c49b0a7a8667410800000000000000
+      internalID: 1474480997175741473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_2_2
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f00bc010da6dd9040800000000000000
+      internalID: 4656113628306255887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_2_3
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33da258a6a4badc30800000000000000
+      internalID: 4385015815080160563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_2_4
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49b2eca2f8ad83fe0800000000000000
+      internalID: -1208976191515645036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_2_5
+      rect:
+        serializedVersion: 2
+        x: 2560
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b5b6b2bf26b5e1c0800000000000000
+      internalID: -4474970338744683079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_3_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 253dade446776c250800000000000000
+      internalID: 5964586029202199378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_3_1
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00a0cd6180a10e320800000000000000
+      internalID: 2585094808156244480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_3_2
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd3e738147483c920800000000000000
+      internalID: 3009394610171012063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_3_3
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 195cd594949183360800000000000000
+      internalID: 7149492211004851601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_3_4
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f39673aadd6999a0800000000000000
+      internalID: -6225824224050244622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fertilizer_Drone_3_5
+      rect:
+        serializedVersion: 2
+        x: 2560
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e74e90e434a499a0800000000000000
+      internalID: -6227171837732829216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Fertilizer_Drone_0_0: 8223306903668310045
+      Fertilizer_Drone_0_1: -1844044660349063566
+      Fertilizer_Drone_0_2: -6228959128422141203
+      Fertilizer_Drone_0_3: 4348574443497843440
+      Fertilizer_Drone_0_4: -2419312068749441111
+      Fertilizer_Drone_0_5: 1861827581815109707
+      Fertilizer_Drone_1_0: 3382385595314816042
+      Fertilizer_Drone_1_1: -2346368369896451983
+      Fertilizer_Drone_1_2: -3743061096294795485
+      Fertilizer_Drone_1_3: -69594808831031067
+      Fertilizer_Drone_1_4: 209723400851930684
+      Fertilizer_Drone_1_5: 9102886292601713138
+      Fertilizer_Drone_2_0: -4277499801705354849
+      Fertilizer_Drone_2_1: 1474480997175741473
+      Fertilizer_Drone_2_2: 4656113628306255887
+      Fertilizer_Drone_2_3: 4385015815080160563
+      Fertilizer_Drone_2_4: -1208976191515645036
+      Fertilizer_Drone_2_5: -4474970338744683079
+      Fertilizer_Drone_3_0: 5964586029202199378
+      Fertilizer_Drone_3_1: 2585094808156244480
+      Fertilizer_Drone_3_2: 3009394610171012063
+      Fertilizer_Drone_3_3: 7149492211004851601
+      Fertilizer_Drone_3_4: -6225824224050244622
+      Fertilizer_Drone_3_5: -6227171837732829216
+      Fertilizer_Drone_spritesheet_0: 4030396195079849137
+      Fertilizer_Drone_spritesheet_1: -5347438540945998010
+      Fertilizer_Drone_spritesheet_10: 6945596635454914401
+      Fertilizer_Drone_spritesheet_11: 4046348363680466694
+      Fertilizer_Drone_spritesheet_12: -1350041394000969685
+      Fertilizer_Drone_spritesheet_13: 3243627011245805552
+      Fertilizer_Drone_spritesheet_14: 2318675287694024775
+      Fertilizer_Drone_spritesheet_15: 4297389200101117610
+      Fertilizer_Drone_spritesheet_16: 1490411905014016574
+      Fertilizer_Drone_spritesheet_17: -649025445127012043
+      Fertilizer_Drone_spritesheet_18: 374704370816246847
+      Fertilizer_Drone_spritesheet_19: 8929506318358222179
+      Fertilizer_Drone_spritesheet_2: 4853894220035560589
+      Fertilizer_Drone_spritesheet_20: -4158236822558200850
+      Fertilizer_Drone_spritesheet_21: 9047683203618623721
+      Fertilizer_Drone_spritesheet_22: 9118428608563123942
+      Fertilizer_Drone_spritesheet_23: 7869869756441887963
+      Fertilizer_Drone_spritesheet_24: -5244572816093764513
+      Fertilizer_Drone_spritesheet_25: 507633113193821133
+      Fertilizer_Drone_spritesheet_26: 4393146881091203879
+      Fertilizer_Drone_spritesheet_27: -2432947726998852074
+      Fertilizer_Drone_spritesheet_3: 2476214736423413615
+      Fertilizer_Drone_spritesheet_4: 1932985403753904392
+      Fertilizer_Drone_spritesheet_5: -4251255464449711807
+      Fertilizer_Drone_spritesheet_6: 3506411988336119533
+      Fertilizer_Drone_spritesheet_7: -6063141295206284949
+      Fertilizer_Drone_spritesheet_8: 3501463640652861114
+      Fertilizer_Drone_spritesheet_9: 9051822910788492555
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
