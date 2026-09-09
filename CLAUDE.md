@@ -22,6 +22,12 @@ any other scene, so pressing Play draws its canvas over everything and the edito
 EventSystem. At runtime that never happens: it is loaded on demand and `LoneEventSystem` stands the
 spare one down.
 
+**A parcel can be up to 8 cells wide by 14 tall before the seeder minigame has to shrink its window.**
+`SeederField.Build` fits its window inside the 1080 x 1920 canvas minus `sideMargin` (60 each side)
+and `topBottomMargin` (120 each), then divides by `cellPixels` (120) — 960 / 120 = 8, 1680 / 120 = 14.
+A parcel past that ceiling still plays, just at smaller-than-normal cells. This is the size the top
+seeder is meant to just barely clear (see `docs/design.md`).
+
 **`World` has to stay a common ancestor of everything clickable.** The EventSystem finds a drag
 handler by walking *up the hierarchy* from whatever was pressed, and `MapPan` lives on `World`.
 Move `Parcels`, `Map` or `Ground` out from under it and dragging the map silently stops working.

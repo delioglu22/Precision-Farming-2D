@@ -84,6 +84,11 @@ biggest parcel it can still finish, and putting an expensive seeder on land a ch
 covered wastes the thing that is actually scarce. Seeders are dear early on, the fleet is short, and
 some parcel goes unseeded until it is not.
 
+The top seeder is sized against the largest a parcel can be, not against a margin above it: driven
+well it clears that field with little battery to spare, driven carelessly it runs dry short of the
+last corner. That keeps the biggest parcel a real test even once the fleet is maxed out, rather than
+something money alone settles.
+
 ## Not decided yet
 
 What automation and optimization concretely consist of — the inputs a parcel takes, the knobs the
