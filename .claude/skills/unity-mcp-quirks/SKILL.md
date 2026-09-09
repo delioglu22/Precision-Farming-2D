@@ -24,7 +24,7 @@ description: MUST use this skill when working in the editor through the Unity MC
   `EditorSceneManager.OpenScene(path, OpenSceneMode.Additive)` before editing the panel, or the next
   `transform.Find("Parcel Panel")` comes back null and reads as "the panel is gone".
 - `manage_scene` action `save` saves the **active** scene, whatever you pass as `path` — with both
-  scenes open that is `SampleScene`, and the UI edits stay unsaved while the call reports success.
+  scenes open that is `Map`, and the UI edits stay unsaved while the call reports success.
   Save the other one by name:
   `EditorSceneManager.SaveScene(SceneManager.GetSceneByPath("Assets/Scenes/UI.unity"))`, then check
   the returned bool and `scene.isDirty`.

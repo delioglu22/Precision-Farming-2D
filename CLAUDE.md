@@ -10,16 +10,12 @@ and about the game, not about implementation. `docs/art.md` is its sibling for h
 the grid, the light, the palette, and what a new piece of art has to obey. Neither document carries
 implementation; that lives in this file and in the scripts' own comments.
 
-Three scenes ship. `Assets/Scenes/SampleScene.unity` is the one you play from; `Assets/Scenes/UI.unity`
+Three scenes ship. `Assets/Scenes/Map.unity` is the one you play from; `Assets/Scenes/UI.unity`
 holds the canvas and the EventSystem and is pulled in additively by `SceneBootstrap`;
 `Assets/Scenes/Seeder.unity` is the seeder's mini game, laid over the top by `SeederLauncher` when
 the parcel page's Optimize button is pressed and taken away again by its own Close button. Those three
 are in the build settings. Edit the UI by opening `UI.unity` — alongside the map scene is fine, the
 bootstrap will not load it twice.
-
-`Assets/Scenes/Sandbox.unity` is a fourth scene file and is **deliberately not in the build settings**
-— it is a workbench, where the woods were arranged before being moved into the map. Nothing loads it
-at runtime. Leave it out of the build settings unless it stops being scratch.
 
 **Leave `Seeder.unity` closed while working on the map.** Left open in the editor it is loaded like
 any other scene, so pressing Play draws its canvas over everything and the editor logs a second
@@ -79,7 +75,7 @@ normally.
 
 The user wants this project built **the way a game developer builds one**: author the scene in Unity
 through the MCP tools — create GameObjects, add and configure components, wire references, save the
-scene — so the result is real, inspectable, editable content in `SampleScene.unity`.
+scene — so the result is real, inspectable, editable content in `Map.unity`.
 
 Do **not** reach for a procedural generator script that builds the world at edit time. An early
 component generated the whole parcel map from code and was deleted for exactly this reason: it put

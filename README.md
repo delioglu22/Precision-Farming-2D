@@ -35,7 +35,7 @@ readings into machine weights, are not decided yet — see the "Not decided yet"
 
 | Path | What it is |
 | --- | --- |
-| `Assets/Scenes/SampleScene.unity` | The map — the scene you play from |
+| `Assets/Scenes/Map.unity` | The map — the scene you play from |
 | `Assets/Scenes/UI.unity` | The canvas and EventSystem, loaded additively at runtime |
 | `Assets/Scenes/Seeder.unity` | The seeder mini game, opened over the map from a parcel's Optimize button |
 | `Assets/Scripts/` | Game behaviour — parcel state, map panning/zoom, the seeder |
@@ -46,5 +46,5 @@ readings into machine weights, are not decided yet — see the "Not decided yet"
 ## Running it
 
 Open the project in Unity (see `ProjectSettings/ProjectVersion.txt` for the exact editor version),
-open `SampleScene.unity`, and press Play. There is no separate build/lint/test step — this project
+open `Map.unity`, and press Play. There is no separate build/lint/test step — this project
 has no test assemblies, so verification is: compile cleanly, then check the result in the editor.

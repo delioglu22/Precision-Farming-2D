@@ -53,7 +53,7 @@ nothing. Say where it lives and what "right" looks like, and let them find the o
 Your turn on this one:
 
   What    Add Parcel 32 to the north-east of the map.
-  Where   SampleScene > World > Parcels, duplicated from a parcel already there.
+  Where   Map > World > Parcels, duplicated from a parcel already there.
   Why     The cells rect has to be worked out by hand so the new field sits square
           against its neighbours without overlapping any of them.
   Check   If clicking selects the new parcel, its Field collider repainted too.

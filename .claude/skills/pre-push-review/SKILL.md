@@ -71,5 +71,5 @@ Do not re-argue these on every push:
   purpose** — they are for the seeder's battery bar, which is not wired yet.
 - **Nothing references a folder's GUID** — the check only looks at files anyway.
 - **Scene files look unreferenced**; they are reached through the build settings.
-- `SampleScene.unity` showing as modified in `git status` with an empty `git diff` is
+- `Map.unity` showing as modified in `git status` with an empty `git diff` is
   not a finding: Unity rewrote the file with identical content.

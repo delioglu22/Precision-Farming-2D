@@ -35,7 +35,7 @@ scan = delegate(GameObject go, string where) {
   }
   for (int i = 0; i < go.transform.childCount; i++) scan(go.transform.GetChild(i).gameObject, where);
 };
-foreach (var path in new string[] { "Assets/Scenes/SampleScene.unity", "Assets/Scenes/UI.unity" }) {
+foreach (var path in new string[] { "Assets/Scenes/Map.unity", "Assets/Scenes/UI.unity" }) {
   var sc = UnityEngine.SceneManagement.SceneManager.GetSceneByPath(path);
   if (!sc.isLoaded) { sb.Append(path).Append(" NOT LOADED - skipped\n"); continue; }
   foreach (var root in sc.GetRootGameObjects()) scan(root, sc.name);
