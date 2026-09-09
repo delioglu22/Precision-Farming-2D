@@ -1,43 +1,79 @@
 fileFormatVersion: 2
-guid: 155f75382426f439fa8f5c1354c6c413
+guid: c3228b981f71440b28b4ac600a9eee97
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8008084778254419716
-    second: "kars\u0131dan_seeder_spritesheet_0"
+      213: -5723062068887112268
+    second: imen_spritesheet_0
   - first:
-      213: -1094368602512403723
-    second: "kars\u0131dan_seeder_spritesheet_1"
+      213: 5061894779638825759
+    second: imen_spritesheet_1
   - first:
-      213: 2767068614771881418
-    second: "kars\u0131dan_seeder_spritesheet_2"
+      213: -2619746756589033655
+    second: imen_spritesheet_2
   - first:
-      213: 4763625989651528262
-    second: "kars\u0131dan_seeder_spritesheet_3"
+      213: -4391349357697923666
+    second: imen_spritesheet_3
   - first:
-      213: -4673049104090060772
-    second: "kars\u0131dan_seeder_spritesheet_4"
+      213: -2327690830252948791
+    second: imen_spritesheet_4
   - first:
-      213: 4693174217778971292
-    second: "kars\u0131dan_seeder_spritesheet_5"
+      213: 5910640080572631461
+    second: imen_spritesheet_5
   - first:
-      213: -1036143632325828909
-    second: "kars\u0131dan_seeder_spritesheet_6"
+      213: 6029847240467399430
+    second: imen_spritesheet_6
   - first:
-      213: 2511523237058101707
-    second: "kars\u0131dan_seeder_spritesheet_7"
+      213: 3546990911770220117
+    second: imen_spritesheet_7
   - first:
-      213: 7057528006316147995
-    second: "kars\u0131dan_seeder_spritesheet_8"
+      213: 635100928627822687
+    second: imen_spritesheet_8
   - first:
-      213: 6743764402058286194
-    second: "kars\u0131dan_seeder_spritesheet_9"
+      213: -7738909612150738102
+    second: imen_spritesheet_9
   - first:
-      213: 6183837362426644109
-    second: "kars\u0131dan_seeder_spritesheet_10"
+      213: -2707274628107558339
+    second: imen_spritesheet_10
   - first:
-      213: 8220423611282550852
-    second: "kars\u0131dan_seeder_spritesheet_11"
+      213: -3925312954160866164
+    second: imen_spritesheet_11
+  - first:
+      213: 5187469479346324282
+    second: Seeder_MachineSide_0
+  - first:
+      213: -2412307090407514839
+    second: Seeder_MachineSide_1
+  - first:
+      213: 1933155273473686437
+    second: Seeder_MachineSide_2
+  - first:
+      213: 6460141699848171349
+    second: Seeder_MachineSide_3
+  - first:
+      213: 1183535561466426470
+    second: Seeder_MachineSide_4
+  - first:
+      213: -7830357329016279206
+    second: Seeder_MachineSide_5
+  - first:
+      213: 1843112850046780059
+    second: Seeder_MachineSide_6
+  - first:
+      213: 5473430281124819248
+    second: Seeder_MachineSide_7
+  - first:
+      213: 2616741438488166649
+    second: Seeder_MachineSide_8
+  - first:
+      213: 9018893106504301631
+    second: Seeder_MachineSide_9
+  - first:
+      213: 7529710255236734790
+    second: Seeder_MachineSide_10
+  - first:
+      213: 9146456388831088933
+    second: Seeder_MachineSide_11
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -133,13 +169,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "kars\u0131dan_seeder_spritesheet_0"
+      name: imen_spritesheet_0
       rect:
         serializedVersion: 2
-        x: 164
-        y: 1321
-        width: 698
-        height: 411
+        x: 80
+        y: 667
+        width: 352
+        height: 203
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -148,20 +184,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 407411b5dae622f60800000000000000
-      internalID: 8008084778254419716
+      spriteID: 4b5b874de599390b0800000000000000
+      internalID: -5723062068887112268
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "kars\u0131dan_seeder_spritesheet_1"
+      name: imen_spritesheet_1
       rect:
         serializedVersion: 2
-        x: 1187
-        y: 1320
-        width: 699
-        height: 411
+        x: 592
+        y: 666
+        width: 352
+        height: 204
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -170,20 +206,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5f258e1ed8500d0f0800000000000000
-      internalID: -1094368602512403723
+      spriteID: f13c6c6ab767f3640800000000000000
+      internalID: 5061894779638825759
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "kars\u0131dan_seeder_spritesheet_2"
+      name: imen_spritesheet_2
       rect:
         serializedVersion: 2
-        x: 2211
-        y: 1321
-        width: 700
-        height: 411
+        x: 1104
+        y: 664
+        width: 352
+        height: 206
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,20 +228,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ac53c9c9e3a966620800000000000000
-      internalID: 2767068614771881418
+      spriteID: 9476704743ac4abd0800000000000000
+      internalID: -2619746756589033655
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "kars\u0131dan_seeder_spritesheet_3"
+      name: imen_spritesheet_3
       rect:
         serializedVersion: 2
-        x: 3234
-        y: 1320
-        width: 701
-        height: 412
+        x: 1616
+        y: 664
+        width: 352
+        height: 206
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -214,20 +250,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 64a7ffb499ccb1240800000000000000
-      internalID: 4763625989651528262
+      spriteID: ea586c9860bce03c0800000000000000
+      internalID: -4391349357697923666
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "kars\u0131dan_seeder_spritesheet_4"
+      name: imen_spritesheet_4
       rect:
         serializedVersion: 2
-        x: 4258
-        y: 1320
-        width: 702
-        height: 412
+        x: 2128
+        y: 664
+        width: 352
+        height: 206
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -236,20 +272,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c1821c4499ef52fb0800000000000000
-      internalID: -4673049104090060772
+      spriteID: 9c2c6d3c58162bfd0800000000000000
+      internalID: -2327690830252948791
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "kars\u0131dan_seeder_spritesheet_5"
+      name: imen_spritesheet_5
       rect:
         serializedVersion: 2
-        x: 5281
-        y: 1320
-        width: 703
-        height: 413
+        x: 2640
+        y: 664
+        width: 352
+        height: 205
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -258,20 +294,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c92ccb7e511812140800000000000000
-      internalID: 4693174217778971292
+      spriteID: 5a9c7bd56dfc60250800000000000000
+      internalID: 5910640080572631461
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "kars\u0131dan_seeder_spritesheet_6"
+      name: imen_spritesheet_6
       rect:
         serializedVersion: 2
-        x: 161
-        y: 295
-        width: 704
-        height: 414
+        x: 80
+        y: 152
+        width: 352
+        height: 206
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -280,20 +316,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3de9fea2bd0ee91f0800000000000000
-      internalID: -1036143632325828909
+      spriteID: 603cde12e125ea350800000000000000
+      internalID: 6029847240467399430
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "kars\u0131dan_seeder_spritesheet_7"
+      name: imen_spritesheet_7
       rect:
         serializedVersion: 2
-        x: 1184
-        y: 294
-        width: 705
-        height: 415
+        x: 592
+        y: 152
+        width: 352
+        height: 206
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -302,20 +338,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bc1ccf5d319bad220800000000000000
-      internalID: 2511523237058101707
+      spriteID: 5565a950171793130800000000000000
+      internalID: 3546990911770220117
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "kars\u0131dan_seeder_spritesheet_8"
+      name: imen_spritesheet_8
       rect:
         serializedVersion: 2
-        x: 2208
-        y: 294
-        width: 706
-        height: 416
+        x: 1104
+        y: 152
+        width: 352
+        height: 206
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -324,20 +360,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b1548d0545061f160800000000000000
-      internalID: 7057528006316147995
+      spriteID: f50d16ffde450d800800000000000000
+      internalID: 635100928627822687
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "kars\u0131dan_seeder_spritesheet_9"
+      name: imen_spritesheet_9
       rect:
         serializedVersion: 2
-        x: 3231
-        y: 293
-        width: 707
-        height: 417
+        x: 1616
+        y: 152
+        width: 352
+        height: 205
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -346,20 +382,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 274db916ef9a69d50800000000000000
-      internalID: 6743764402058286194
+      spriteID: a4336e2d5bed99490800000000000000
+      internalID: -7738909612150738102
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "kars\u0131dan_seeder_spritesheet_10"
+      name: imen_spritesheet_10
       rect:
         serializedVersion: 2
-        x: 4254
-        y: 293
-        width: 708
-        height: 417
+        x: 2128
+        y: 152
+        width: 352
+        height: 206
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -368,20 +404,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d868a38515761d550800000000000000
-      internalID: 6183837362426644109
+      spriteID: d32a83ac114dd6ad0800000000000000
+      internalID: -2707274628107558339
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "kars\u0131dan_seeder_spritesheet_11"
+      name: imen_spritesheet_11
       rect:
         serializedVersion: 2
-        x: 5278
-        y: 293
-        width: 709
-        height: 418
+        x: 2640
+        y: 152
+        width: 352
+        height: 206
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -390,8 +426,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 440fab588bfc41270800000000000000
-      internalID: 8220423611282550852
+      spriteID: c8c90075aac7689c0800000000000000
+      internalID: -3925312954160866164
       vertices: []
       indices: 
       edges: []
@@ -410,18 +446,30 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "kars\u0131dan_seeder_spritesheet_0": 8008084778254419716
-      "kars\u0131dan_seeder_spritesheet_1": -1094368602512403723
-      "kars\u0131dan_seeder_spritesheet_10": 6183837362426644109
-      "kars\u0131dan_seeder_spritesheet_11": 8220423611282550852
-      "kars\u0131dan_seeder_spritesheet_2": 2767068614771881418
-      "kars\u0131dan_seeder_spritesheet_3": 4763625989651528262
-      "kars\u0131dan_seeder_spritesheet_4": -4673049104090060772
-      "kars\u0131dan_seeder_spritesheet_5": 4693174217778971292
-      "kars\u0131dan_seeder_spritesheet_6": -1036143632325828909
-      "kars\u0131dan_seeder_spritesheet_7": 2511523237058101707
-      "kars\u0131dan_seeder_spritesheet_8": 7057528006316147995
-      "kars\u0131dan_seeder_spritesheet_9": 6743764402058286194
+      Seeder_MachineSide_0: 5187469479346324282
+      Seeder_MachineSide_1: -2412307090407514839
+      Seeder_MachineSide_10: 7529710255236734790
+      Seeder_MachineSide_11: 9146456388831088933
+      Seeder_MachineSide_2: 1933155273473686437
+      Seeder_MachineSide_3: 6460141699848171349
+      Seeder_MachineSide_4: 1183535561466426470
+      Seeder_MachineSide_5: -7830357329016279206
+      Seeder_MachineSide_6: 1843112850046780059
+      Seeder_MachineSide_7: 5473430281124819248
+      Seeder_MachineSide_8: 2616741438488166649
+      Seeder_MachineSide_9: 9018893106504301631
+      imen_spritesheet_0: -5723062068887112268
+      imen_spritesheet_1: 5061894779638825759
+      imen_spritesheet_10: -2707274628107558339
+      imen_spritesheet_11: -3925312954160866164
+      imen_spritesheet_2: -2619746756589033655
+      imen_spritesheet_3: -4391349357697923666
+      imen_spritesheet_4: -2327690830252948791
+      imen_spritesheet_5: 5910640080572631461
+      imen_spritesheet_6: 6029847240467399430
+      imen_spritesheet_7: 3546990911770220117
+      imen_spritesheet_8: 635100928627822687
+      imen_spritesheet_9: -7738909612150738102
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
