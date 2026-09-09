@@ -27,7 +27,9 @@ arm's length and a parcel up close.
 
 The sheet reports, it does not edit. A parcel is one thing at a time: empty land asks a single
 question — **Build** or **Plant** — and answering it decides what that land is for, since ground
-given to a store is ground that grows nothing. The answer can be undone, but only from the bottom of
+given to a store is ground that grows nothing. Below fifty percent fertility, Plant is never on
+offer — the sheet asks Build alone, because land that poor isn't farmland to weigh, only ground to
+build on. The answer can be undone, but only from the bottom of
 the parcel's own page, and undoing it throws away everything tuned there. That is the price of
 changing your mind: not the coins, but the attention already spent.
 
@@ -89,6 +91,32 @@ well it clears that field with little battery to spare, driven carelessly it run
 last corner. That keeps the biggest parcel a real test even once the fleet is maxed out, rather than
 something money alone settles.
 
+## The drone
+
+The drone fertilizes by memory rather than by hand. Its mini game draws the same grid the seeder
+uses, and every tile a parcel needs fertilized lights up red at once — which tiles matters, the order
+they're tapped in does not. How many light up comes from the parcel's own fertility: the worse the
+soil, the larger the share of the grid that needs it, up to half the grid at the worst fertility a
+parcel can still be planted on — land poorer than that never gets a Plant option in the first place.
+
+A drone has a single stat: how many lit tiles it can hold on screen at once. A parcel needing more
+than that splits into groups instead — a group closes the moment its own tiles are all found and the
+next lights in its place, so a wrong tap can waste a click but never stalls the run. Upgrading a drone
+lowers that number, never removes it, so the hardest parcel stays a real test even to the best drone
+money can buy.
+
+A tapped tile leaves the same wet mark whether it was right or wrong, so the run gives no feedback
+while it's happening — only once it ends does the player see what was found and what was wasted.
+Tapping an already-marked tile again is not stopped, since the mark is already there to see. The
+score is correct taps over total taps across the whole run, not per group, so four tiles found in
+four taps score full marks and the same four found in six do not; there is no cap on how many tiles a
+player may hit, the formula is the only penalty for it. At least three tiles light no matter how good
+the soil, so one miss is never the whole run, and the worst a run can score is the parcel's own share
+of lit tiles — tapping the full lit set once each and nothing else.
+
+The drone itself never scans in: it drops onto a single tile from above, sprays, and leaves the way
+it came.
+
 ## Not decided yet
 
 What automation and optimization concretely consist of — the inputs a parcel takes, the knobs the
@@ -97,6 +125,10 @@ player turns, and how profit is calculated. These get written here as they are s
 How a parcel's two readings turn into the three weights. That poor soil leans on the drone and dry
 land on irrigation is settled; the arithmetic that takes a fertility and a water figure and returns
 three numbers is not.
+
+How long a lit tile stays lit before it's decided, and how much room that leaves to reach it, isn't
+settled. It likely can't be one flat number — a group scattered across a large board needs more reach
+time than one bunched in a corner — so it stays a knob to find by playing rather than by arithmetic.
 
 Whether a crop is more than a look. Six of them exist, and right now choosing one is decoration. For
 a crop to become state it has to decide something: what it costs to plant, what it yields, how long
