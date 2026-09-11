@@ -38,6 +38,9 @@ public class DroneField : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TMP_Text result;
 
+    [Tooltip("Flies to a tile and sprays it on a correct tap. Optional - purely visual.")]
+    [SerializeField] private DroneFlight flight;
+
     readonly List<DroneTile> tileList = new List<DroneTile>();
     readonly List<List<int>> groups = new List<List<int>>();
     readonly HashSet<int> remainingInGroup = new HashSet<int>();
@@ -77,6 +80,8 @@ public class DroneField : MonoBehaviour
         float cellPx = ParcelGroundBaker.FitCellPixels(footprint, cellPixels, sideMargin, topBottomMargin);
         float winW = footprint.x * cellPx;
         float winH = footprint.y * cellPx;
+
+        if (flight != null) flight.Configure(new Vector2(winW, winH));
 
         tiles.anchorMin = new Vector2(0.5f, 0.5f);
         tiles.anchorMax = new Vector2(0.5f, 0.5f);
@@ -191,6 +196,7 @@ public class DroneField : MonoBehaviour
 
         tile.MarkWet();
         totalTaps++;
+        if (flight != null) flight.Visit((RectTransform)tile.transform);
 
         if (!tile.IsNeeded) return;
 
