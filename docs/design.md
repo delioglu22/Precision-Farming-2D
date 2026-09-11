@@ -105,6 +105,9 @@ next lights in its place, so a wrong tap can waste a click but never stalls the 
 lowers that number, never removes it, so the hardest parcel stays a real test even to the best drone
 money can buy.
 
+A lit tile cannot be tapped while it's still lit — taps only register once the whole group has gone
+dark, so the player is reading the board from memory, not reacting to red in real time.
+
 A tapped tile leaves the same wet mark whether it was right or wrong, so the run gives no feedback
 while it's happening — only once it ends does the player see what was found and what was wasted.
 Tapping an already-marked tile again is not stopped, since the mark is already there to see. The
@@ -115,7 +118,8 @@ the soil, so one miss is never the whole run, and the worst a run can score is t
 of lit tiles — tapping the full lit set once each and nothing else.
 
 The drone itself never scans in: it drops onto a single tile from above, sprays, and leaves the way
-it came.
+it came — every tapped tile gets a visit, right or wrong, so a wasted guess looks exactly as wasteful
+as it is.
 
 ## Not decided yet
 
