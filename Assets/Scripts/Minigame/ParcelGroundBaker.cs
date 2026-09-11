@@ -71,16 +71,26 @@ public static class ParcelGroundBaker
         return weightSum > 0f ? (n1 + n2) / weightSum : 0f;
     }
 
+    /// <summary>
+    /// The same shrink-to-fit as <see cref="Bake"/> uses, on its own - so anything that needs
+    /// to line up with the baked window (the tap grid) can size itself without baking a texture.
+    /// </summary>
+    public static float FitCellPixels(Vector2Int footprint, float cellPixels, float sideMargin, float topBottomMargin)
+    {
+        float maxWinW = CanvasWidth - sideMargin * 2f;
+        float maxWinH = CanvasHeight - topBottomMargin * 2f;
+        float cellPx = cellPixels;
+        if (footprint.x * cellPx > maxWinW) cellPx = Mathf.Min(cellPx, maxWinW / footprint.x);
+        if (footprint.y * cellPx > maxWinH) cellPx = Mathf.Min(cellPx, maxWinH / footprint.y);
+        return cellPx;
+    }
+
     public static Result Bake(Vector2Int footprint, Settings s, Texture2D reuse)
     {
         Result result = new Result();
         if (footprint.x <= 0 || footprint.y <= 0 || s.dirtSource == null) return result;
 
-        float maxWinW = CanvasWidth - s.sideMargin * 2f;
-        float maxWinH = CanvasHeight - s.topBottomMargin * 2f;
-        float cellPx = s.cellPixels;
-        if (footprint.x * cellPx > maxWinW) cellPx = Mathf.Min(cellPx, maxWinW / footprint.x);
-        if (footprint.y * cellPx > maxWinH) cellPx = Mathf.Min(cellPx, maxWinH / footprint.y);
+        float cellPx = FitCellPixels(footprint, s.cellPixels, s.sideMargin, s.topBottomMargin);
 
         float winW = footprint.x * cellPx;
         float winH = footprint.y * cellPx;
