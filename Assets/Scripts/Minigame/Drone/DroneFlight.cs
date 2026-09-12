@@ -138,6 +138,10 @@ public class DroneFlight : MonoBehaviour
 
         Vector3 worldPos = new Vector3(nx * worldHalfWidth * 2f, ny * worldHalfHeight * 2f, 0f);
         spray.transform.position = worldPos;
+        // Play() on a system still mid-burst from the last tile is a no-op - the drone's own
+        // visit cycle is shorter than the spray's lifetime, so without this every tap after the
+        // first would just move a silent emitter instead of triggering a new burst.
+        spray.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         spray.Play();
     }
 }
