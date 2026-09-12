@@ -24,10 +24,11 @@ public class DroneGroundView : MonoBehaviour
     [Tooltip("Holds the generated line bars. Resized to frame the grid, same as the ground window minus its torn-edge bleed.")]
     [SerializeField] private RectTransform gridLines;
 
+    [Tooltip("The line prefab instantiated once per cell boundary - its colour lives on the prefab, not in code.")]
+    [SerializeField] private Image linePrefab;
+
     [Tooltip("Line thickness, in canvas pixels.")]
     [SerializeField, Min(1f)] private float lineThickness = 4f;
-
-    [SerializeField] private Color lineColor = Color.white;
 
     Texture2D baked;
 
@@ -53,7 +54,7 @@ public class DroneGroundView : MonoBehaviour
 
     void DrawGrid(Vector2Int footprint, float cellPx)
     {
-        if (gridLines == null) return;
+        if (gridLines == null || linePrefab == null) return;
 
         for (int i = gridLines.childCount - 1; i >= 0; i--) Destroy(gridLines.GetChild(i).gameObject);
 
@@ -72,17 +73,13 @@ public class DroneGroundView : MonoBehaviour
 
     void Line(Vector2 size, Vector2 position)
     {
-        GameObject go = new GameObject("Line", typeof(RectTransform));
-        go.transform.SetParent(gridLines, false);
-        RectTransform rt = (RectTransform)go.transform;
+        Image img = Instantiate(linePrefab, gridLines);
+        RectTransform rt = img.rectTransform;
         rt.anchorMin = new Vector2(0.5f, 0.5f);
         rt.anchorMax = new Vector2(0.5f, 0.5f);
         rt.pivot = new Vector2(0.5f, 0.5f);
         rt.sizeDelta = size;
         rt.anchoredPosition = position;
-        Image img = go.AddComponent<Image>();
-        img.color = lineColor;
-        img.raycastTarget = false;
     }
 
     void OnDestroy()

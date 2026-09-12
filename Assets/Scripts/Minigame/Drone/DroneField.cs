@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
@@ -26,6 +25,9 @@ public class DroneField : MonoBehaviour
 
     [Tooltip("Holds the generated tiles. Resized to frame the grid, same window the ground and grid lines use.")]
     [SerializeField] private RectTransform tiles;
+
+    [Tooltip("The tile prefab instantiated once per cell - its colours and components live on the prefab, not in code.")]
+    [SerializeField] private DroneTile tilePrefab;
 
     [Tooltip("Pixels per cell, both axes - must match DroneGroundView's own so the tap grid lines up with what it draws.")]
     [SerializeField, Min(1f)] private float cellPixels = 120f;
@@ -64,7 +66,7 @@ public class DroneField : MonoBehaviour
 
     void Build(Vector2Int footprint, int tilesNeeded, int maxOnScreen)
     {
-        if (tiles == null || footprint.x <= 0 || footprint.y <= 0) return;
+        if (tiles == null || tilePrefab == null || footprint.x <= 0 || footprint.y <= 0) return;
 
         if (dimRoutine != null) { StopCoroutine(dimRoutine); dimRoutine = null; }
         for (int i = tiles.childCount - 1; i >= 0; i--) Destroy(tiles.GetChild(i).gameObject);
@@ -94,9 +96,8 @@ public class DroneField : MonoBehaviour
         {
             for (int x = 0; x < footprint.x; x++)
             {
-                GameObject go = new GameObject("Tile", typeof(RectTransform));
-                go.transform.SetParent(tiles, false);
-                RectTransform rt = (RectTransform)go.transform;
+                DroneTile tile = Instantiate(tilePrefab, tiles);
+                RectTransform rt = (RectTransform)tile.transform;
                 rt.anchorMin = new Vector2(0.5f, 0.5f);
                 rt.anchorMax = new Vector2(0.5f, 0.5f);
                 rt.pivot = new Vector2(0.5f, 0.5f);
@@ -104,9 +105,6 @@ public class DroneField : MonoBehaviour
                 rt.anchoredPosition = new Vector2(
                     -winW * 0.5f + (x + 0.5f) * cellPx,
                     winH * 0.5f - (y + 0.5f) * cellPx);
-                go.AddComponent<Image>();
-                go.AddComponent<Button>();
-                DroneTile tile = go.AddComponent<DroneTile>();
                 tile.Init(this, tileList.Count);
                 tileList.Add(tile);
             }

@@ -11,18 +11,13 @@ using UnityEngine.UI;
 /// Requests queue instead of interrupting each other, so two quick correct taps don't teleport
 /// the drone mid-flight.
 ///
-/// A real ParticleSystem cannot draw above a Screen Space - Overlay canvas: Overlay composites
-/// after every camera in the scene, so nothing a camera renders - the particle system included -
-/// can ever appear in front of it. Switching the canvas to Screen Space - Camera was tried (see
-/// git history) so the particle could share the same camera pass as the UI, but that broke the
-/// field outright once tested for real: the canvas's own CanvasScaler disagreed with the actual
-/// screen size in a way this session never fully pinned down.
-///
-/// This keeps Overlay - the working, proven mode, matching Seeder.unity - and gives the particle
-/// system its own small, dedicated camera on its own layer ("Spray VFX"), rendering to a
-/// RenderTexture that an ordinary RawImage inside the Overlay canvas displays. That RawImage is
-/// just another piece of UI, so it composites correctly like everything else; the real
-/// ParticleSystem never has to touch the canvas's render mode at all.
+/// This script only drives the spray - it does not build it. <see cref="sprayCamera"/>,
+/// <see cref="spray"/> and <see cref="sprayTexture"/> are real objects placed in this scene and
+/// wired here in the Inspector, tunable there without touching code. A real ParticleSystem
+/// cannot draw above a Screen Space - Overlay canvas (Overlay composites after every camera in
+/// the scene), so the spray camera renders to <see cref="sprayTexture"/> instead, and
+/// <see cref="sprayDisplay"/> - an ordinary RawImage inside the canvas - shows that texture,
+/// composited like any other piece of UI.
 /// </summary>
 [DisallowMultipleComponent]
 public class DroneFlight : MonoBehaviour
@@ -33,87 +28,46 @@ public class DroneFlight : MonoBehaviour
     [Tooltip("Where the drone sits between visits.")]
     [SerializeField] private Vector2 restPosition = Vector2.zero;
 
-    [Tooltip("The RawImage the spray's RenderTexture is drawn into. Resized to frame the grid, same window the ground and tiles use.")]
+    [Header("Spray (placed in the scene, not built here)")]
+    [Tooltip("Renders the spray particles to sprayTexture. Its own orthographic size and culling mask live on it, not here.")]
+    [SerializeField] private Camera sprayCamera;
+
+    [Tooltip("The spray effect itself - tune its colour, size, burst count and shape on this object.")]
+    [SerializeField] private ParticleSystem spray;
+
+    [Tooltip("The RenderTexture asset sprayCamera renders into and sprayDisplay shows.")]
+    [SerializeField] private RenderTexture sprayTexture;
+
+    [Tooltip("The RawImage inside this canvas that displays sprayTexture. Resized to frame the grid, same window the ground and tiles use.")]
     [SerializeField] private RawImage sprayDisplay;
 
     [SerializeField, Min(0.05f)] private float flySeconds = 0.35f;
     [SerializeField, Min(0.05f)] private float spraySeconds = 0.3f;
 
-    [Tooltip("Half-height of the spray camera's view, in world units - purely an internal scale for the particle system, unrelated to canvas pixels.")]
-    [SerializeField, Min(0.5f)] private float cameraHalfHeight = 5f;
-
     [Tooltip("RenderTexture pixels per grid cell. Purely a resolution/quality knob.")]
     [SerializeField, Min(8)] private int pixelsPerCellInTexture = 64;
 
-    Camera sprayCamera;
-    RenderTexture sprayTexture;
-    ParticleSystem spray;
     Vector2 gridSize = new Vector2(600f, 840f);
 
     readonly Queue<RectTransform> pending = new Queue<RectTransform>();
     Coroutine routine;
 
-    void Awake()
+    void ResizeTexture()
     {
-        int sprayLayer = LayerMask.NameToLayer("Spray VFX");
+        if (sprayTexture == null || sprayCamera == null) return;
 
-        GameObject camGo = new GameObject("Spray Camera");
-        sprayCamera = camGo.AddComponent<Camera>();
-        sprayCamera.orthographic = true;
-        sprayCamera.orthographicSize = cameraHalfHeight;
-        sprayCamera.cullingMask = 1 << sprayLayer;
-        sprayCamera.clearFlags = CameraClearFlags.SolidColor;
-        sprayCamera.backgroundColor = new Color(0f, 0f, 0f, 0f);
-        sprayCamera.nearClipPlane = 0.1f;
-        sprayCamera.farClipPlane = 20f;
-        camGo.transform.position = new Vector3(0f, 0f, -10f);
-
-        GameObject psGo = new GameObject("Spray VFX");
-        psGo.layer = sprayLayer;
-        spray = psGo.AddComponent<ParticleSystem>();
-        spray.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-
-        ParticleSystem.MainModule main = spray.main;
-        main.loop = false;
-        main.playOnAwake = false;
-        main.duration = 0.5f;
-        main.startLifetime = 0.4f;
-        main.startSpeed = 1.5f;
-        main.startSize = 0.35f;
-        main.startColor = new Color(0.65f, 0.85f, 1f, 0.95f);
-        main.simulationSpace = ParticleSystemSimulationSpace.World;
-
-        ParticleSystem.EmissionModule emission = spray.emission;
-        emission.rateOverTime = 0f;
-        emission.SetBursts(new ParticleSystem.Burst[] { new ParticleSystem.Burst(0f, 20) });
-
-        ParticleSystem.ShapeModule shape = spray.shape;
-        shape.shapeType = ParticleSystemShapeType.Cone;
-        shape.angle = 25f;
-        shape.radius = 0.15f;
-
-        ParticleSystemRenderer renderer = spray.GetComponent<ParticleSystemRenderer>();
-        renderer.sortingOrder = 10;
-        Shader shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
-        if (shader != null) renderer.material = new Material(shader);
-
-        BuildTexture();
-    }
-
-    void BuildTexture()
-    {
         int width = Mathf.Max(8, Mathf.RoundToInt(pixelsPerCellInTexture * (gridSize.x / 120f)));
         int height = Mathf.Max(8, Mathf.RoundToInt(pixelsPerCellInTexture * (gridSize.y / 120f)));
+        if (sprayTexture.width == width && sprayTexture.height == height) return;
 
-        if (sprayTexture != null) { sprayTexture.Release(); Destroy(sprayTexture); }
-        sprayTexture = new RenderTexture(width, height, 16, RenderTextureFormat.ARGB32);
+        sprayTexture.Release();
+        sprayTexture.width = width;
+        sprayTexture.height = height;
         sprayTexture.Create();
-        sprayCamera.targetTexture = sprayTexture;
         sprayCamera.aspect = gridSize.x / gridSize.y;
 
         if (sprayDisplay != null)
         {
-            sprayDisplay.texture = sprayTexture;
             RectTransform rt = sprayDisplay.rectTransform;
             rt.anchorMin = new Vector2(0.5f, 0.5f);
             rt.anchorMax = new Vector2(0.5f, 0.5f);
@@ -127,10 +81,10 @@ public class DroneFlight : MonoBehaviour
     public void Configure(Vector2 gridSizeInCanvasPixels)
     {
         gridSize = gridSizeInCanvasPixels;
-        if (sprayCamera != null) BuildTexture();
+        ResizeTexture();
     }
 
-    /// <summary>Queues a visit to this tile. Called by DroneField on a correct, new tap.</summary>
+    /// <summary>Queues a visit to this tile. Called by DroneField on a tap, right or wrong.</summary>
     public void Visit(RectTransform tile)
     {
         pending.Enqueue(tile);
@@ -169,11 +123,13 @@ public class DroneFlight : MonoBehaviour
 
     /// <summary>
     /// Maps a tile's canvas position (relative to the grid's own centre) onto the spray
-    /// camera's small, fixed world space, so the particle lands at the matching spot inside
-    /// the RenderTexture regardless of how large the actual parcel's grid is in pixels.
+    /// camera's own world space, so the particle lands at the matching spot inside the
+    /// RenderTexture regardless of how large the actual parcel's grid is in pixels.
     /// </summary>
     void SprayAt(Vector2 tileAnchoredPosition)
     {
+        if (sprayCamera == null || spray == null) return;
+
         float nx = gridSize.x > 0f ? tileAnchoredPosition.x / gridSize.x : 0f;
         float ny = gridSize.y > 0f ? tileAnchoredPosition.y / gridSize.y : 0f;
 
@@ -183,10 +139,5 @@ public class DroneFlight : MonoBehaviour
         Vector3 worldPos = new Vector3(nx * worldHalfWidth * 2f, ny * worldHalfHeight * 2f, 0f);
         spray.transform.position = worldPos;
         spray.Play();
-    }
-
-    void OnDestroy()
-    {
-        if (sprayTexture != null) { sprayTexture.Release(); Destroy(sprayTexture); }
     }
 }
