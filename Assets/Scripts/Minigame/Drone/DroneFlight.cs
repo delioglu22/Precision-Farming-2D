@@ -58,13 +58,20 @@ public class DroneFlight : MonoBehaviour
 
         int width = Mathf.Max(8, Mathf.RoundToInt(pixelsPerCellInTexture * (gridSize.x / 120f)));
         int height = Mathf.Max(8, Mathf.RoundToInt(pixelsPerCellInTexture * (gridSize.y / 120f)));
-        if (sprayTexture.width == width && sprayTexture.height == height) return;
-
-        sprayTexture.Release();
-        sprayTexture.width = width;
-        sprayTexture.height = height;
-        sprayTexture.Create();
-        sprayCamera.aspect = gridSize.x / gridSize.y;
+        // Only the texture itself is expensive to redo - skip that when a previous run already
+        // left it at the right size. The display rect below is cheap and has to run every time
+        // regardless, or a texture that happened to already be the right size would leave
+        // sprayDisplay at whatever it was last (in the scene's authored default, or a smaller
+        // previous run's grid) - every spray would then render into that stale, wrong-sized
+        // window instead of the current run's grid.
+        if (sprayTexture.width != width || sprayTexture.height != height)
+        {
+            sprayTexture.Release();
+            sprayTexture.width = width;
+            sprayTexture.height = height;
+            sprayTexture.Create();
+            sprayCamera.aspect = gridSize.x / gridSize.y;
+        }
 
         if (sprayDisplay != null)
         {
