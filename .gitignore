@@ -71,8 +71,12 @@ crashlytics-build.properties
 *.DS_Store
 Thumbs.db
 
-# Claude Code — CLAUDE.md, the hooks and the project skills are tracked so the
-# project moves between machines. Only per-machine state stays out.
+# Shared agent guidance, canonical skills, skill links and hooks belong in Git.
+# Only per-machine connection settings and runtime state stay out.
 .claude/settings.local.json
 .claude/hooks/*.state.json
 .claude/*.lock
+.codex/config.toml
+
+# Local Claude implementation handoff and review log; intentionally not shared by Git.
+/docs/implementation-plan.local.md

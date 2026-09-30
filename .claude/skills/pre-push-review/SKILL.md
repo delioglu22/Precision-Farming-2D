@@ -1,6 +1,6 @@
 ---
 name: pre-push-review
-description: Run a quality pass over the project before pushing commits to the branch - every file in the repo must earn its place, and the docs must not have gone stale during the session. MUST use this skill whenever the user says "let's push", "send it up", "push to remote". It also applies to "let's clean up", "is there anything unnecessary left", "any garbage code or assets", "should we update the docs".
+description: Review the outgoing changes, unused content and documentation drift before a requested push or repository cleanup audit. Use for "push to remote", "anything unnecessary left" and explicit project quality reviews; ordinary documentation edits do not require a full project audit.
 ---
 
 # Before pushing: everything earns its place
@@ -11,15 +11,22 @@ and are not noticeable while playing are never found unless they are looked for.
 
 ## How to run it
 
-1. `read_console` `types: ["error"]` → **must be 0.** If not, no push. Not up for debate.
+1. Identify the review scope and outgoing changes. For changes to Unity code, scenes or
+   assets, refresh/compile through Unity MCP, confirm compilation has finished and the
+   editor is ready, then read the error console: **must be 0**. A successful compile
+   request alone does not prove completion on the installed Unity 6 integration.
+   If Unity verification is unavailable, stop that part and report it as unverified.
+   Documentation, skills and development-hook changes alone do not require the editor.
 2. `bash .claude/skills/pre-push-review/checks.sh` — everything visible from the shell.
    It names what it is looking at in its own section headers, and deletes nothing.
-3. Run the two blocks in `unity-checks.md` — the ones that need the editor. They do not
-   work in play mode; press Stop first, then reopen `UI.unity` additively.
+3. For a full Unity audit or relevant Unity changes, run the checks in `unity-checks.md`
+   while the editor is stopped. The reference scan covers all enabled build scenes,
+   including Seeder and Fertilizer, and closes any preview scenes it opened.
 4. Do the documentation read below — that is the half `checks.sh` cannot reach.
-5. **Report what you find. Do not delete it and do not fix it yourself.** What goes,
-   and what gets rewritten, is the user's call — especially with Unity's own scaffold
-   files, since a package may be looking for one.
+5. **Report findings before expanding the task.** A review request is not permission
+   to delete assets or rewrite unrelated behavior. Fix issues already covered by the
+   user's authorization; otherwise propose the concrete changes for approval. An
+   unused-GUID report is a lead to inspect, never proof that an asset should be deleted.
 
 ## Did the docs go stale this session
 
@@ -27,13 +34,18 @@ and are not noticeable while playing are never found unless they are looked for.
 semantic: the file is present, the sentence about it is wrong. Only whoever did the
 session can see that.
 
-Use `git diff --stat origin/main..HEAD` to see what is going out in this push, then ask:
+Resolve the actual target branch and comparison base from the branch/PR context; do
+not assume `origin/main`. Inspect its diff against the work being reviewed, including
+uncommitted changes when those are in scope. For a push, inspect the commits absent
+from the destination branch as well. Then ask:
 
 | File | When it goes stale |
 | --- | --- |
 | `docs/design.md` | The game itself — the loop, how the panel behaves, what a parcel is. **If a behaviour changed, look here.** |
 | `docs/art.md` | The look — grid, light, palette. If a new colour, layer or sprite arrived. |
-| `CLAUDE.md` | How the project is built: scene structure, the parcel tilemaps, rules, and **the numbers it quotes** (camera 4.5 / 3.2, `MapPan.mapSize` 41.5 x 20.75, the forest border's reach). If a tunable changed. |
+| `AGENTS.md` | Canonical project instructions: scene structure, engine rules and any quoted tuning values. If behavior, authoring conventions or those values changed. |
+| `CLAUDE.md` | The Claude entrypoint should still import the canonical instructions rather than duplicate them. |
+| `.claude/skills/` and `.claude/hooks/` | Shared workflows, commands and hook behavior. Check paths and assumptions when the workflow changes; `.agents/skills` exposes the same skills to Codex. |
 
 The kind that slips through most often: the panel's behaviour changes and
 `docs/design.md` still describes the old behaviour. File present, name correct,
@@ -43,32 +55,25 @@ sentence false — no mechanical check reaches that.
 
 Do not re-argue these on every push:
 
-- **`Parcel.crop` is empty on fallow parcels.** A parcel with nothing planted is
-  correct, not a bug — that is what "fallow, ploughed field" means. **6 of the 27
-  parcels are fallow as of this writing** — 04, 08, 14, 18, 24 and 31. **A number that
-  does not match the actual fallow count is worth a look** — it means a working parcel
-  lost its crop. Mind that the names run past the count: numbers were skipped when the
-  map was rebuilt, so the highest is `Parcel 31` while there are 27 of them.
+- **`Parcel.crop` is empty on fallow parcels.** Confirm the parcel is meant to be
+  fallow before treating this as a missing assignment. Do not infer correctness from
+  a fixed total count of empty references; the content changes over time.
+- **`SeederField.title` is optional.** Its tooltip marks it optional and the display
+  update checks for null; an unassigned title alone is not a broken seeder.
 - **`fieldTile` and `fenceTile` null is a real state, not a break.** `Parcel.Rebuild`
   deliberately leaves soil and fence alone while either is unassigned, so a freshly
-  duplicated parcel cannot clear itself to bare grid. All 27 are wired as of this
-  writing, so a null one now means a parcel that was added and not finished.
-- **`CustomButton` adds 22 more empty references, all of them nothing.** It extends
+  duplicated parcel cannot clear itself to bare grid. Inspect whether an empty one
+  belongs to an intentionally incomplete object or prevents a finished parcel working.
+- **`CustomButton` can include deliberately empty inherited references.** It extends
   `Button` and lives in `Assembly-CSharp`, so unlike a plain `Button` the scan does not
   skip it and walks its inherited `Selectable` fields too. `m_SelectOnUp/Down/Left/Right`
   are explicit-navigation targets and navigation is Automatic; `m_ObjectArgument` is a
-  `UnityEvent` argument the calls do not use. **The whole-project baseline is 28** — 6
-  fallow parcels plus these 22, and as of this writing nothing else shows up. Earlier
-  versions of this note said 42 (assuming 8 fallow parcels and 12 further false
-  positives on the pre-tilemap `ParcelFootprint`/`ParcelLayer` scripts); both of those
-  are gone along with the scripts. A count under 28 is missing something real; a count
-  over 28 is a new empty reference worth a look.
+  `UnityEvent` argument the calls may not use. Check the current navigation mode and
+  event signature before classifying each empty field.
 - **The jetty prefabs and sprites are unreferenced on purpose.** `Jetty Low`,
   `Jetty Posts` and their two PNGs came out of the ponds when a jetty was judged to
   promise boats and fishing the game will not have. They are kept for later, deliberately.
   Do not offer to delete them again.
-- **`Art/UI/Bars/slider_background.png` and `slider_fill.png` are unreferenced on
-  purpose** — they are for the seeder's battery bar, which is not wired yet.
 - **Nothing references a folder's GUID** — the check only looks at files anyway.
 - **Scene files look unreferenced**; they are reached through the build settings.
 - `Map.unity` showing as modified in `git status` with an empty `git diff` is

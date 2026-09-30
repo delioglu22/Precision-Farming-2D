@@ -73,6 +73,9 @@ function commitCount(cwd) {
 // something over - the work is already half done. Only a prompt that reads
 // like fresh work gets a ticket.
 const FOLLOW_UP = /^\s*(ok(ay)?\b|yes\b|no\b|yeah\b|yep\b|sure\b|fine\b|go ahead\b|do it\b|commit\b|push\b|continue\b|carry on\b|wait\b|stop\b|undo\b|cancel\b|thanks\b|thank you\b|great\b|nice\b|good\b|done\b|perfect\b|right\b|leave it\b)/i;
+// Turkish acknowledgments are follow-ups too. Avoid \b: JavaScript's word
+// boundary treats Turkish letters as non-word characters.
+const TURKISH_FOLLOW_UP = /^\s*(tamam|peki|evet|hayır|hayir|olur|devam|bekle|dur|iptal|geri al|teşekkürler|tesekkurler|sağ ol|sag ol|bitti|sen yap|onaylıyorum|onayliyorum|sendeyim)(?=$|[\s.,!?;:])/i;
 const FORCE = /#my-turn/i;
 const SKIP = /#you-do-it/i;
 
@@ -80,7 +83,7 @@ function looksLikeNewWork(prompt) {
   const p = (prompt || '').trim();
   if (p.length < 25) return false;        // "ok", "add that too" - too thin to split
   if (p.charAt(0) === '/') return false;  // slash command, not a task
-  if (FOLLOW_UP.test(p)) return false;
+  if (FOLLOW_UP.test(p) || TURKISH_FOLLOW_UP.test(p)) return false;
   return true;
 }
 

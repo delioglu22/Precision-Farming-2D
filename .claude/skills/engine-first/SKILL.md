@@ -1,6 +1,6 @@
 ---
 name: engine-first
-description: When adding new behaviour in Unity, look for the engine's built-in component before writing a script. MUST use this skill for any work that would add a MonoBehaviour, handle input or clicks, play an animation, show or hide UI, or carry data — even when nobody says "write a script". Any new script over ~50 lines is in scope.
+description: Choose Unity components before custom code when adding or changing game behaviour, input, UI, animation or shared game state. Use before adding a MonoBehaviour. Does not apply to prose-only game design or unrelated tooling.
 ---
 
 # Use the engine first
@@ -36,8 +36,13 @@ lost. 440 lines became 286.
 | Values worth tuning | `[SerializeField]` and the Inspector, not constants |
 | State shared across scenes | A `ScriptableObject` both scenes point at |
 | Arranging UI | Anchors and layout groups, not code that computes positions |
-| Timing, sequenced events | `Animator` or Timeline |
+| Presentation timing and authored visual sequences | `Animator` or Timeline |
 | Several renderers that must sort as one thing | A `SortingGroup` — one number outside, 0..n inside |
+
+That timing row concerns presentation. Persistent work schedules, production cycles,
+resource accounting and other gameplay rules need appropriate game logic and state;
+an animation timeline is not their source of truth. Follow `AGENTS.md` for the
+project's scene-authoring and verification rules.
 
 The `SortingGroup` row is not theory either. Back when a parcel was a five-layer slab,
 the plan was to spread every parcel's order across five numbers per layer.
@@ -57,5 +62,5 @@ as writing unnecessary code.
 
 The problem is not ignorance of the API. It is that verifying your own code is easier
 than verifying the engine's, so you drift toward writing it. Resist that and verify
-the engine instead — raycast through the EventSystem, step the Animator by hand,
-measure the result.
+the engine instead — inspect EventSystem routing and measure the result. Manually
+sampling an Animator checks poses; Play Mode verifies runtime transitions and input.

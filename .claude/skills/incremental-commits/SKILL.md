@@ -1,34 +1,39 @@
 ---
 name: incremental-commits
-description: Work in small pieces in this Unity project and commit after each working piece. MUST use this skill whenever the user asks for a feature, a screen, a system or a fix — even when the word "commit" never comes up. Any job that touches more than one file, has more than one step, or takes longer than a few minutes is in scope. Only a one-line fix can skip it.
+description: Keep implementation changes in independently verifiable pieces and obtain explicit approval before every commit in this project. Use for features, fixes, refactors and requested commits; documentation-only work needs document checks, not Unity verification.
 ---
 
 # Commit in small pieces
 
-There is no single giant commit in this project. Work is split into small, working
-pieces and each piece is committed on its own.
+Split substantial implementation work into small, working pieces. A focused change
+can be one piece; do not split it just to reach a prescribed number of commits.
 
-The reason: when something breaks, the user needs a point to go back to. One big
-commit is worth nothing in a "it worked, then it stopped working" situation.
+The reason: when something breaks, the user needs a known working point to return to.
 
 ## How it goes
 
-1. **Plan first.** Split the work into 2–6 pieces. Each piece must leave a state that
-   compiles and runs on its own. Show the plan to the user briefly, then start.
+1. **Plan substantial work first.** Choose pieces that can each be verified on their
+   own. Show the plan briefly, then start. A small change does not need a separate plan.
 2. **Finish one piece.** Only the changes belonging to that piece.
-3. **Verify the compile.** Read the console through Unity MCP. If there is a compile
-   error or a console error, do NOT commit — fix it first.
-   **If you cannot read the console, do NOT commit.** Tell the user and wait. Never
-   guess that "it probably compiles".
+3. **Verify the changed behavior.** For Unity code, scenes or assets, request a refresh
+   and compile through Unity MCP. Confirm compilation has finished and the editor is
+   ready before reading the error console; the Unity 6 tool can return before its
+   requested compile completes. Resolve errors and inspect the
+   changed behavior in the editor. If Unity MCP is unavailable, stop the Unity work and
+   report that verification is blocked; never guess that it compiles. For a change
+   containing only documentation, skills or development hooks, check the text, links,
+   configuration or hook behavior as appropriate; Unity compilation is not required.
 4. **Ask for approval; never commit on your own.** Summarize what you did in one
    sentence, write the commit message, show it to the user. Then stop.
-   Wait until they have tried it in Unity and approved. Commit once approval comes.
+   Wait for explicit approval of that commit. For gameplay changes, give the user a
+   concrete interaction to try in Unity before asking for acceptance.
    If they report a problem, fix it first, then ask again.
 5. **Move to the next piece.** Repeat until all pieces are done.
 6. **Summarize at the end.** Tell the user which commits landed, as a one-line list.
 
-Checking the compile is your job; checking how it plays is the user's. You cannot
-play the game — never assume "it works fine".
+Compilation and technical behavior checks are your job. The user decides whether the
+result feels right and is accepted. Report what you actually checked and any remaining
+limits; a clean console alone does not prove the interaction works.
 
 ## How big is a piece
 
@@ -46,17 +51,16 @@ Bad pieces:
 
 ## Commit before a risky change
 
-Before a large refactor, an architectural change or anything touching many files,
-commit the current working state. If the change goes badly the user can go back.
-
-You do not need approval for that commit — nothing new is being added, only the
-already-working state being saved.
+Before a risky refactor, identify a known working commit to return to. If uncommitted
+work needs a checkpoint, verify it, show exactly what belongs in the checkpoint and
+ask for explicit approval before committing. Snapshot commits have no approval exemption.
+Do not fold unrelated user changes into that checkpoint.
 
 ## Never commit
 
 - Code that does not compile
 - Code that leaves errors in the Unity console
-- Code whose compile state you could not verify
+- Unity code whose compile state you could not verify through Unity MCP
 - A piece the user has not approved
 - `Library/`, `Temp/`, `Obj/`, `Build/`, `Logs/`, `UserSettings/` — these belong in
   `.gitignore`. If they are not there, fix `.gitignore` first, then carry on
@@ -81,7 +85,7 @@ chore: add Unity gitignore
 
 No body; one line is enough. Keep the message under 72 characters.
 
-Do **not** add a `Co-Authored-By` line, a "Generated with Claude Code" line, or any
+Do **not** add a `Co-Authored-By` line, a generated-by line, or any
 other tool signature. Just the single-line message.
 
 The message describes the final state of the code, not the trial and error along the

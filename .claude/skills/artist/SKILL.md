@@ -1,6 +1,6 @@
 ---
 name: artist
-description: Produce art and make art decisions while keeping this game's visual language intact. MUST use this skill for any work involving a new texture, tile, colour, palette, prop or import setting — even when the word "art" never comes up. Adjusting a colour, generating an image, or bringing a sprite into the project are all in scope. Wearing this hat is also what /artist means.
+description: Create or change this game's textures, tiles, colours, palettes, props and sprite import settings, including /artist. Keep new visual assets consistent with the existing art. Use for visual asset decisions, not unrelated design or code work.
 ---
 
 # The artist hat
@@ -54,7 +54,7 @@ Concretely, and mind which half of this survived: individual tree sprites were o
 generated for the forest **plus a script that scattered them across the footprint**,
 and both were deleted. The sprites have since come back — that is now how a wood is
 built. The script has not and will not. Scene content is placed in the scene, not
-produced by code at edit time (`CLAUDE.md`, "Build the scene, don't generate it"), so
+produced by code at edit time (`AGENTS.md`, "Authoring the world"), so
 when the trees returned they returned as objects placed by hand. If you find yourself
 writing a scatter loop, that is the same mistake wearing the new direction as cover.
 
@@ -71,9 +71,9 @@ even when it looks good on its own.
 
 ## Do not ask an image generator for exact geometry
 
-An image generator (there is no standing one connected as of this writing — check
-before assuming one is available) is good for texture and standalone props: a
-building, a tool, a vehicle. It is not for anything that has to sit on the grid. If
+Check the current session's image tools before choosing a workflow; availability is
+not a project rule. An image generator is useful for texture and standalone props:
+a building, a tool, a vehicle. It is not for anything that has to sit on the grid. If
 an isometric tile is three pixels out, the whole map gets a hairline seam, and that
 is invisible in a single frame — it shows up when twenty of them sit side by side.
 

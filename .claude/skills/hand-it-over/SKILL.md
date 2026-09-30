@@ -1,6 +1,6 @@
 ---
 name: hand-it-over
-description: Hand a piece of the work in this Unity project back to the user so they do it themselves in Unity, then wait and check the result. MUST use this skill whenever a "[YOUR TURN]" ticket arrives. It also applies when the user says "let me do this one", "leave it to me", or asks how something is done.
+description: Hand a reversible Unity editor task to the user for practice, then check their result. Use when a "[YOUR TURN]" ticket arrives or the user asks to do or learn a Unity task themselves. Do not manufacture editor work during design, documentation or read-only review.
 ---
 
 # Hand a piece of the work back
@@ -20,8 +20,9 @@ A good handover piece holds all four of these at once:
    Sprite Editor, Scene view. That is the hand they are afraid of losing.
 2. **There is a decision inside it.** Not just clicking — something that makes them
    think: which value, which order, which anchor.
-3. **It takes 5–15 minutes.** Shorter is not a lesson; longer is drudgery.
-4. **It is reversible.** A wrong move undoes with one Ctrl+Z or one field.
+3. **It fits a short practice session.** Aim for 5–15 minutes; the lesson matters more
+   than the exact duration.
+4. **It is reversible.** Explain how to recover if a wrong move is not easily undone.
 
 What has worked in this project:
 
@@ -46,8 +47,9 @@ Do not hand over:
 
 ## How to hand it over
 
-Four lines. Do **not** give a click-by-click recipe — following a recipe teaches
-nothing. Say where it lives and what "right" looks like, and let them find the order.
+Start with what to change, where it lives, why the decision matters and what "right"
+looks like. Let the user try; provide specific UI steps when requested or when they
+are stuck rather than withholding the help they need.
 
 ```
 Your turn on this one:
@@ -61,7 +63,7 @@ Your turn on this one:
 Tell me when it's done and I'll check the console and the scene.
 ```
 
-If they get stuck, help — but let them try once first.
+If they get stuck, help at the level they ask for.
 
 ## What you do while a handover is open
 
@@ -81,10 +83,13 @@ If the user says "you do it", do not argue. Do it and close the ticket.
 
 ## The ticket mechanism
 
-`.claude/hooks/your-turn.js` is a `UserPromptSubmit` hook. It drops a "[YOUR TURN]"
+`.claude/hooks/your-turn.js` is configured as a Claude Code `UserPromptSubmit` hook.
+It drops a "[YOUR TURN]"
 ticket every N commits (2 by default) — that is, every N pieces of finished work. The
 judgement is in this skill, the counter is in the hook; a script cannot tell which
-work is worth handing over, so the choice is yours.
+work is worth handing over, so the choice is yours. The shared skill is also available
+to Codex, but skill discovery does not install this Claude hook there. Honor a ticket
+you receive; do not claim that Codex has an automatic ticket counter wired up.
 
 If a ticket is left open the hook nags three times, then drops it. So ignoring a
 ticket is not an option: either hand something over, or **say in one sentence why you
@@ -106,5 +111,7 @@ doing it; the handover is **one piece** of the job, not the whole thing. Do not 
 over two hours of work because a ticket arrived, and do not leave the job half done
 because of a handover — everything outside the handed-over piece is still yours.
 
-If there is no suitable piece, do not invent one. Say "there is no meaningful piece to
-hand over here, because ...", close the ticket, and carry on.
+If there is no suitable piece, do not invent one. Design discussion, documentation
+and read-only review usually have no Unity practice task. Say why, close an existing
+ticket, and carry on. Do not run the close command when no ticket was issued merely
+because this skill was read; closing also resets the counter.
