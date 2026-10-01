@@ -40,12 +40,30 @@ The bootstrap will not load it twice.
 
 Seeder and Fertilizer are **legacy minigames** still present in the project, opened by
 `SeederLauncher` and `DroneLauncher`. Their existence does not override the new design direction.
+No button in the parcel page calls those launchers any more; their objects remain in `UI.unity`.
 Keep both closed during ordinary map work: loading them in the editor also loads their overlays
 when Play starts. Open them only for intentional inspection or testing, then restore the scene setup.
 `LoneEventSystem` handles the spare EventSystem at runtime.
 
 The old seeder window fits 8 x 14 cells at its normal cell size and shrinks larger fields to fit.
 That is a maintenance detail of the legacy minigame, not a parcel-size constraint for the new game.
+
+### The farming loop
+
+`Assets/Scripts/Farm/` holds the automation prototype. `Farm` (root object in Map) owns the
+wallet, the numbered equipment sets, land decisions, the per-frame tick and saving.
+`FarmField` sits beside `Parcel` on participating parcels: land readings, ownership, land use
+(Empty/Farm/Depot), confirmed plan and the running crop. Money moves only in `FarmField.Tick`
+(crop cost at sowing, income at sale) and in `Farm`'s purchase methods, which re-check their
+conditions, so UI taps and animations cannot pay twice. `FarmRules` (asset in `Assets/Settings`)
+holds every tuneable number and the harvest formula; it is read, never written at runtime.
+`FieldView` only presents: crop stages through `Parcel.SetCropTile`, the `Field Machines`
+prefab under the parcel's Grid, the depot building and the intro's hint arrow. `FarmIntro`
+advances the first minutes from game state. UI reaches the farm through the `FarmChannel`
+asset; `FarmPage` binds readings and the plan draft, `LandPage` owns the sheet's action
+buttons and the land/stop decisions. The save is `farm.json` in `Application.persistentDataPath`
+(versioned; an unreadable file is kept and the farm waits for "Start a new farm"). Use the
+`Farm` component's context menu "Delete Save File" in Edit Mode to start fresh.
 
 ## Authoring the world
 
@@ -148,7 +166,9 @@ Do not add test assemblies solely to validate such changes.
 - The project uses Linear colour space. SpriteRenderer tint conversion is automatic; mesh vertex
   colours need `color.linear`.
 - Selection tints cells in place: `Parcel.Warm` multiplies their existing colours and `Restore`
-  reinstates them. `SetTileFlags(cell, TileFlags.None)` must precede tint writes.
+  reinstates them, cached per cell. `SetTileFlags(cell, TileFlags.None)` must precede tint writes.
+  Runtime crop changes go through `Parcel.SetCropTile`, which tints a new tile while selected
+  and keeps the cache correct; never repaint growth with `Rebuild`.
 - Selection also raises the grid by `Parcel.lift` (0.10). Keep it below 0.24, one cell's vertical
   step, to avoid sorting past the row in front. Parcels currently do not use an Animator for this.
 - Temporary editor helper objects must not be saved into scenes/builds. Authored content must be
