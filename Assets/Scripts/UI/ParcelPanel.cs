@@ -20,6 +20,9 @@ public class ParcelPanel : MonoBehaviour
     static readonly int Open = Animator.StringToHash("Open");
     static readonly int Expanded = Animator.StringToHash("Expanded");
 
+    public bool IsOpen { get { return sheet != null && sheet.GetBool(Open); } }
+    public bool IsExpanded { get { return sheet != null && sheet.GetBool(Expanded); } }
+
     void OnEnable()
     {
         if (channel != null) channel.Selected += OnSelected;

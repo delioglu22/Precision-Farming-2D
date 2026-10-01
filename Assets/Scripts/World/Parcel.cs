@@ -46,7 +46,9 @@ public class Parcel : MonoBehaviour, IPointerClickHandler
     Transform grid;
     UnityEngine.Tilemaps.Tilemap[] layers;
     UnityEngine.Tilemaps.Tilemap field, cropLayer, fence;
-    Color[][] before;
+    // The colour each tinted cell had before selection, per layer, keyed by cell. Keyed rather
+    // than a flat array so a crop that grows while the parcel is picked can add cells to it.
+    System.Collections.Generic.Dictionary<Vector3Int, Color>[] before;
     bool selected;
 
     public string DisplayName
@@ -170,23 +172,29 @@ public class Parcel : MonoBehaviour, IPointerClickHandler
     // back rather than reset to white.
     void Warm()
     {
-        before = new Color[layers.Length][];
+        before = new System.Collections.Generic.Dictionary<Vector3Int, Color>[layers.Length];
         for (int L = 0; L < layers.Length; L++)
         {
             UnityEngine.Tilemaps.Tilemap t = layers[L];
+            before[L] = new System.Collections.Generic.Dictionary<Vector3Int, Color>();
             BoundsInt b = t.cellBounds;
-            before[L] = new Color[b.size.x * b.size.y];
-            int i = 0;
             for (int x = b.xMin; x < b.xMax; x++)
-                for (int y = b.yMin; y < b.yMax; y++, i++)
+                for (int y = b.yMin; y < b.yMax; y++)
                 {
                     Vector3Int c = new Vector3Int(x, y, 0);
-                    if (t.GetTile(c) == null) { before[L][i] = Color.white; continue; }
-                    before[L][i] = t.GetColor(c);
-                    t.SetTileFlags(c, UnityEngine.Tilemaps.TileFlags.None);
-                    t.SetColor(c, before[L][i] * highlight);
+                    if (t.GetTile(c) == null) continue;
+                    Tint(L, c);
                 }
         }
+    }
+
+    void Tint(int L, Vector3Int c)
+    {
+        UnityEngine.Tilemaps.Tilemap t = layers[L];
+        Color original = t.GetColor(c);
+        before[L][c] = original;
+        t.SetTileFlags(c, UnityEngine.Tilemaps.TileFlags.None);
+        t.SetColor(c, original * highlight);
     }
 
     void Restore()
@@ -195,19 +203,43 @@ public class Parcel : MonoBehaviour, IPointerClickHandler
         for (int L = 0; L < layers.Length && L < before.Length; L++)
         {
             UnityEngine.Tilemaps.Tilemap t = layers[L];
-            if (before[L] == null) continue;
-            BoundsInt b = t.cellBounds;
-            int i = 0;
-            for (int x = b.xMin; x < b.xMax; x++)
-                for (int y = b.yMin; y < b.yMax; y++, i++)
-                {
-                    Vector3Int c = new Vector3Int(x, y, 0);
-                    if (t.GetTile(c) == null) continue;
-                    t.SetTileFlags(c, UnityEngine.Tilemaps.TileFlags.None);
-                    t.SetColor(c, before[L][i]);
-                }
+            foreach (var pair in before[L])
+            {
+                if (t.GetTile(pair.Key) == null) continue;
+                t.SetTileFlags(pair.Key, UnityEngine.Tilemaps.TileFlags.None);
+                t.SetColor(pair.Key, pair.Value);
+            }
         }
         before = null;
+    }
+
+    /// <summary>
+    /// Changes one cell of the Crops layer while the game runs - a growth stage, a harvested
+    /// patch - without the full Rebuild. If the parcel is picked, the new tile gets the same
+    /// warm tint as its neighbours, and deselecting later puts back the new tile's own colour
+    /// rather than whatever grew there before. Play Mode tile changes are never saved.
+    /// </summary>
+    public void SetCropTile(Vector3Int cell, UnityEngine.Tilemaps.TileBase tile)
+    {
+        if (cropLayer == null) CacheLayers();
+        if (cropLayer == null) return;
+        // Same tile again: nothing changes, and re-tinting would warm it twice.
+        if (cropLayer.GetTile(cell) == tile) return;
+
+        cropLayer.SetTile(cell, tile);
+
+        if (before == null) return;
+        int L = System.Array.IndexOf(layers, cropLayer);
+        if (tile == null) before[L].Remove(cell);
+        else Tint(L, cell);
+    }
+
+    /// <summary>Fills every cell of the parcel's Crops layer with one tile, or clears it with null.</summary>
+    public void FillCrop(UnityEngine.Tilemaps.TileBase tile)
+    {
+        for (int x = cells.xMin; x < cells.xMax; x++)
+            for (int y = cells.yMin; y < cells.yMax; y++)
+                SetCropTile(new Vector3Int(x, y, 0), tile);
     }
 
     public bool Contains(Vector3Int cell)
