@@ -8,9 +8,11 @@ mean its art already exists.
 ## The visual promise
 
 The farm should be pleasant to watch because the player's plan is visibly working. A machine does
-a recognizable job, the crop changes, a harvest leaves the field, and the next cycle begins without
-another command. The reward is an increasingly productive little farm whose activity can be read at
-a glance. The map carries that experience; it is more than a menu for separate minigames.
+a recognizable job, the crop changes, a harvest leaves the field, and an enabled routine continues
+without another command. A soil-restoring cycle should look like useful work within that routine;
+a stopped field should explain why it needs attention. The reward is an increasingly productive
+little farm whose activity can be read at a glance. The map carries that experience; it is more
+than a menu for separate minigames.
 
 Give attention to clear silhouettes, purposeful motion and visible consequences before decorative
 effects. Extra particles or a large score cannot make an unreadable machine understandable.
@@ -42,11 +44,16 @@ must stay below the next row's vertical step so selection does not reverse the s
 
 The existing inventory contains sixteen crop tiles: bellpepper, broccoli, cabbage, carrot, celery,
 corn, eggplant, greenbean, lettuce, onion, pepper, potato, radish, spinach, tomato and wheat. That is
-an art inventory, not sixteen playable crops or sixteen finished growth sequences. **The first
-prototype uses one crop**; its identity remains to be chosen. Land without a crop is visibly fallow.
+an art inventory, not sixteen playable crops or sixteen finished growth sequences. **The current
+prototype uses cabbage**, with staged crop assets already present. The next slice adds one
+soil-restoring legume/green-manure crop alongside it; its appearance must distinguish a restoration
+cycle from cabbage production and from an abandoned field. Existing greenbean art is a reference,
+not proof that a complete restorative growth sequence exists. Land without a crop is visibly fallow.
 
-For that one crop, sowing, growth, readiness for harvest and the cleared field must read as different
-moments. The harvested field returns to a recognizable starting state before the routine repeats.
+For each playable crop, sowing, growth, completion and the cleared field must read as different
+moments. Cabbage ends in a recognizable harvest; the restorative crop returns to the soil without
+implying a sale of produce. The cleared field returns to a recognizable starting state before the
+routine repeats.
 Changes in plant size, fullness and visible soil should carry the progression, rather than colour
 alone or a floating timer. Furrows run along the same isometric axis on every parcel and throughout
 the cycle. Each repeating stage must meet itself cleanly at tile boundaries and remain legible from
@@ -66,10 +73,14 @@ The three machines need distinct silhouettes and distinct effects at phone size.
 should visibly connect to the land they are treating; idle, working and finishing should be easy
 to tell apart. A routine should visibly repeat without suggesting that the player must tap each pass.
 
-- **Seeder:** a grounded farm machine with a clear front, recognizable wheels or tracks, a seed
-  carrying body and a working edge. Its movement and the newly planted rows should explain sowing.
-  The old seeder was mistaken for an insect; a body with ambiguous limb-like appendages does not
-  pass, even if its motion is smooth. Establish the vehicle silhouette before adding small detail.
+- **Seeder:** a compact autonomous farm machine with a clear front, recognizable wheels or tracks,
+  a seed carrying body and a working edge. Preserve the old asset's solar-panel identity while
+  making its grounded vehicle silhouette clearer. Its movement and the newly planted rows should
+  explain sowing. The current tractor-and-drill artwork is a temporary prototype representation,
+  not the final identity. The old seeder was mistaken for an insect; restoring that unreadable
+  silhouette is not required. A body with ambiguous limb-like appendages does not pass, even if
+  its motion is smooth. Establish the vehicle silhouette before adding small detail. The panel
+  communicates autonomy; it does not introduce battery management or a solar-energy game system.
 - **Fertilizer drone:** an airborne machine, with lift and a ground shadow that separate it from
   the seeder. Its fertilizer application must read differently from watering. Keep its payload and
   application area clear; rotor detail should not dominate the small silhouette.
@@ -80,6 +91,14 @@ to tell apart. A routine should visibly repeat without suggesting that the playe
 Movement should have a readable start, working phase and finish. Harvest needs its own visible
 change in the crop and collected produce, but a fourth machine is not required for this first
 slice. Avoid adding vehicles solely to explain a transition the existing scene can communicate.
+
+The next slice adds a small **soil sensor and control module** visibly installed on the parcel
+that owns it. Its role is to observe soil and switch the existing machines' plan, not to look like
+another field-working vehicle. Keep it recognizable at phone scale without crowding the crop or
+crossing the fence. A quiet activity cue and the parcel's labelled status should connect the
+installed module with automatic restoration. Research unlocks the technology; the map shows where
+the player has actually installed it. Larger machines serving more parcels are a later capacity
+decision, not an art catalogue required by this slice.
 
 ## Reading the land and the result
 
@@ -92,18 +111,30 @@ Show care taking effect through the field's actual state, supported by concise f
 of tint alone should not be the only way to tell which condition or action is being shown. The
 selected parcel's warm tint is selection feedback, not a signal of fertility or profitability.
 
-The result distinguishes **harvest income, operating costs and net return**. A larger harvest can
-cost more to produce; a lush crop alone must not imply that its plan is the most profitable. Keep
-that comparison readable on the parcel page. Celebratory motion may accompany a harvest, but
-arbitrary coverage percentages, memory-game scores or oversized score effects are not the target
-visual language for successful farming.
+Before starting, the plan shows **expected income, operating costs, net return and the expected
+change in soil fertility**. Distinguish this forecast from the historical receipt of a completed
+cycle; a larger harvest can cost more to produce, and a lush crop alone must not imply that its
+plan is the most profitable. Group these values with the chosen crop and treatment settings, with
+a clear Start action and a separate Auto-repeat control. A running crop and changes intended for
+the next crop must be visually distinct. Keep the comparison readable on the portrait parcel page.
+
+Use explicit parcel states such as producing, restoring and paused, supported by form or an icon
+as well as colour. Restoration is normal operation with a soil benefit, even when its cash return
+is zero; show the return condition, such as the fertility level at which cabbage resumes. A red
+exclamation marks a parcel that needs attention, paired with its actual reason in the parcel sheet
+(for example, an unprofitable income plan or insufficient money). Do not use the same alarm for a
+healthy restoration cycle or rely on red tint alone. The research display should distinguish a
+technology being unlocked from a module being installed on this parcel.
+
+Celebratory motion may accompany a harvest, but arbitrary coverage percentages, memory-game scores
+or oversized score effects are not the target visual language for successful farming.
 
 ## Buildings
 
 Buildings belong to the growing farm and must make their use readable. The **equipment depot is
-the proposed first building**, after the farming loop is established. If that proposal is taken
-forward, its silhouette and contents should suggest equipment storage and available space, rather
-than crop stalls or an unrelated decorative house. Its final form and footprint remain open.
+the prototype's first building**, with an existing prefab to reuse. Its silhouette and contents
+should suggest equipment storage and available space, rather than crop stalls or an unrelated
+decorative house. Further visual refinement should preserve that role.
 
 An organic market is a later candidate, not a requirement for showing the first harvest or sale.
 Staff portraits, training facilities and a collection of speculative building variants are outside
@@ -173,19 +204,24 @@ read closer to a front-facing icon. Match framing to scale and role. The vendor 
 vehicle reference, so the new seeder's recognition must be judged on its own silhouette, with the
 outline and palette providing continuity with the existing buildings.
 
-## The first art slice and its checks
+## The next art slice and its checks
 
-Start with the existing map and two contrasting parcels, one crop's readable cycle, the three
-machine identities and their working effects, and the parcel information/result display. Reuse the
-established ground, fence, woods and ponds. The depot is the next proposed building treatment; more
-crops, machine variants, markets and scenery expansion wait until this small slice reads well.
+Keep the existing map, contrasting parcels, cabbage stages, working effects and depot. Extend the
+parcel display with the pre-start forecast, visible repeat state and specific pause reasons. Add
+one readable restorative crop cycle and a small installed sensor/control module. Refine the seeder
+toward its autonomous identity without making a full replacement vehicle catalogue a prerequisite
+for the soil-loop test. Further crops, machine variants, markets and scenery expansion wait until
+this slice reads well. These are visual targets, not a claim that the new assets are implemented.
 
 Judge the result in the portrait farm view and in the parcel view at the intended phone scale:
 
 - Can someone identify the seeder as a vehicle and distinguish sowing, fertilizing and watering
-  without an explanation of the animation?
+  without an explanation of the animation, while reading the machine as autonomous?
 - Can they see growth, harvest and the start of another cycle without giving another command?
-- Can they distinguish the two land readings, the chosen treatment and the income/cost result?
+- Can they distinguish the two land readings, the chosen treatment, the next-cycle forecast and
+  the completed-cycle receipt?
+- Can they distinguish a healthy restoration cycle from a paused parcel, see which parcel has a
+  controller installed and understand why an attention marker is present?
 - Do machines remain recognizable against the crops, and does the farm remain pleasant to watch
   with both fields active rather than becoming a mass of overlapping effects?
 

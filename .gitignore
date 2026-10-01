@@ -80,3 +80,7 @@ Thumbs.db
 
 # Local Claude implementation handoff and review log; intentionally not shared by Git.
 /docs/implementation-plan.local.md
+/docs/automation-plan.local.md
+
+# Editor screenshots captured as review evidence.
+/Captures/
