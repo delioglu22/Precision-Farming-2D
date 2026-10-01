@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 374197dfa977a473a86a4be61c716ee2, type: 3}
+  m_Name: FarmRules
+  m_EditorClassIdentifier: Assembly-CSharp::FarmRules
+  startingCoins: 120
+  coinsPerUnit: 1
+  plantingThreshold: 0.5
+  startingSets: 2
+  depotPrice: 120
+  depotSets: 1
+  sowSeconds: 8
+  growSeconds: 40
+  harvestSeconds: 12
+  densities:
+  - seedCost: 6
+    potentialHarvest: 24
+    waterDemand: 0.35
+    fertilityDemand: 0.55
+  - seedCost: 12
+    potentialHarvest: 40
+    waterDemand: 0.55
+    fertilityDemand: 0.75
+  - seedCost: 20
+    potentialHarvest: 58
+    waterDemand: 0.85
+    fertilityDemand: 0.95
+  fertilizers:
+  - cost: 0
+    support: 0
+  - cost: 8
+    support: 0.2
+  - cost: 20
+    support: 0.4
+  waterings:
+  - cost: 0
+    support: 0
+  - cost: 6
+    support: 0.3
+  - cost: 18
+    support: 0.6
