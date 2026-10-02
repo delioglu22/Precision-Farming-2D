@@ -51,19 +51,36 @@ That is a maintenance detail of the legacy minigame, not a parcel-size constrain
 ### The farming loop
 
 `Assets/Scripts/Farm/` holds the automation prototype. `Farm` (root object in Map) owns the
-wallet, the numbered equipment sets, land decisions, the per-frame tick and saving.
-`FarmField` sits beside `Parcel` on participating parcels: land readings, ownership, land use
-(Empty/Farm/Depot), confirmed plan and the running crop. Money moves only in `FarmField.Tick`
-(crop cost at sowing, income at sale) and in `Farm`'s purchase methods, which re-check their
-conditions, so UI taps and animations cannot pay twice. `FarmRules` (asset in `Assets/Settings`)
-holds every tuneable number and the harvest formula; it is read, never written at runtime.
-`FieldView` only presents: crop stages through `Parcel.SetCropTile`, the `Field Machines`
-prefab under the parcel's Grid, the depot building and the intro's hint arrow. `FarmIntro`
-advances the first minutes from game state. UI reaches the farm through the `FarmChannel`
-asset; `FarmPage` binds readings and the plan draft, `LandPage` owns the sheet's action
-buttons and the land/stop decisions. The save is `farm.json` in `Application.persistentDataPath`
-(versioned; an unreadable file is kept and the farm waits for "Start a new farm"). Use the
-`Farm` component's context menu "Delete Save File" in Edit Mode to start fresh.
+wallet, protected operating money, numbered equipment sets, research, soil controllers, land
+decisions, the per-frame clock and saving. `Farm.Decide` is the single, side-effect-free choice of
+what a field grows next; the page's forecast, an explicit Start/Resume and the automatic follow-up
+after a crop all call it. `FarmField` sits beside `Parcel` on participating parcels and only holds
+state: permanent arability, current fertility, fixed moisture, ownership, land use
+(Empty/Farm/Depot), confirmed cabbage settings, manual crop, Repeat, Ready/Running/Paused with a
+`PauseReason`, pending Clear field, the installed controller and the frozen snapshot of the paid crop
+(`CropForecast`), plus the last completed crop as history.
+
+Money moves only in `Farm`: crop cost when a crop starts, income when cabbage sells, and one-off
+prices of land, the depot, research and controller installations, each re-checking its rules.
+Each field holding an equipment set reserves its next cabbage cost; purchases may only spend the
+coins above that reserve. Green-bean restoration is free and exempt. `FarmRules` (asset in
+`Assets/Settings`) holds every tuneable number, the interpolation anchors, the restoration recipe,
+controller thresholds and the research nodes; it is read, never written at runtime.
+
+`FieldView` only presents from the snapshot: cabbage or bean stages through `Parcel.SetCropTile`,
+the `Field Machines` prefab, crates (cabbage only), the result text, the depot building, the
+`Soil Controller` module and its light, the intro's hint arrow and the red attention marker.
+`FarmIntro` advances its lessons from game state. UI reaches the farm through the `FarmChannel`
+asset: `FarmPage` binds readings, the slider draft, forecast, Start/Apply/Undo, Repeat, the
+controller row and history; `LandPage` owns the sheet's action buttons, buy/build/depot decisions
+and Clear field; `ResearchPanel` (on HUD) fills the authored research cards.
+
+The save is `farm.json` in `Application.persistentDataPath`, version 3, written through a temp file
+and `File.Replace` with `farm.json.bak` as the last good copy. Versions 1 and 2 are read by separate
+legacy types (their 0/1/2 plan values are translated to percentages), backed up once as
+`farm.json.v1-backup`/`.v2-backup`, and a crop paid under the old rules settles once with its old
+numbers. An unreadable, newer or out-of-range file is kept and the farm waits for "Start a new
+farm". Use the `Farm` component's context menu "Delete Save File" in Edit Mode to start fresh.
 
 ## Authoring the world
 

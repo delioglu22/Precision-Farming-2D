@@ -4,9 +4,9 @@ A portrait mobile game about **building a farm that works well because you set i
 The desired reaction is: “I love watching and growing this little farm.” Read the land, choose a
 production routine, watch it work, then improve or expand it.
 
-This document records the agreed direction, not proof of implemented behaviour. The existing
-prototype has fixed soil readings and repeating crop plans; the next slice adds soil recovery,
-explicit start/repeat controls and research-backed automation. Minigames are legacy content.
+This document records the agreed direction, not proof of implemented behaviour. A first playable
+version of soil recovery, explicit start/repeat controls and research-backed automation exists in
+the prototype; its numbers are provisional fixtures awaiting playtest. Minigames are legacy content.
 Implementation steps and provisional balance fixtures belong in the separate implementation plan.
 
 ## Core loop

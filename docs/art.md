@@ -47,8 +47,10 @@ corn, eggplant, greenbean, lettuce, onion, pepper, potato, radish, spinach, toma
 an art inventory, not sixteen playable crops or sixteen finished growth sequences. **The current
 prototype uses cabbage**, with staged crop assets already present. The next slice adds one
 soil-restoring legume/green-manure crop alongside it; its appearance must distinguish a restoration
-cycle from cabbage production and from an abandoned field. Existing greenbean art is a reference,
-not proof that a complete restorative growth sequence exists. Land without a crop is visibly fallow.
+cycle from cabbage production and from an abandoned field. Provisional green-bean restoration tiles
+(seeded, young, grown and ploughed-in) are composited from the vendor greenbean stages; their
+readability against cabbage at overview zoom is still a review question. Land without a crop is
+visibly fallow.
 
 For each playable crop, sowing, growth, completion and the cleared field must read as different
 moments. Cabbage ends in a recognizable harvest; the restorative crop returns to the soil without
@@ -92,7 +94,9 @@ Movement should have a readable start, working phase and finish. Harvest needs i
 change in the crop and collected produce, but a fourth machine is not required for this first
 slice. Avoid adding vehicles solely to explain a transition the existing scene can communicate.
 
-The next slice adds a small **soil sensor and control module** visibly installed on the parcel
+A provisional, editor-built module (a soil probe post with a control box, antenna and a small
+status light) now marks parcels with an installed controller; it is not final art. The slice adds
+a small **soil sensor and control module** visibly installed on the parcel
 that owns it. Its role is to observe soil and switch the existing machines' plan, not to look like
 another field-working vehicle. Keep it recognizable at phone scale without crowding the crop or
 crossing the fence. A quiet activity cue and the parcel's labelled status should connect the
