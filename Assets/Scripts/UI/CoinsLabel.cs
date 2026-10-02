@@ -1,7 +1,10 @@
 using UnityEngine;
 using TMPro;
 
-/// <summary>Shows the farm's coins. Reads only; money changes in <see cref="Farm"/>.</summary>
+/// <summary>
+/// Shows the farm's coins and how many of them are free to spend on land, buildings, research
+/// and controllers (the rest is kept for running the fields). Reads only.
+/// </summary>
 [DisallowMultipleComponent]
 public class CoinsLabel : MonoBehaviour
 {
@@ -9,13 +12,15 @@ public class CoinsLabel : MonoBehaviour
     [SerializeField] private FarmChannel farmChannel;
     [SerializeField] private TMP_Text label;
 
-    private int shown = int.MinValue;
+    private int shownCoins = int.MinValue, shownSpendable = int.MinValue;
 
     private void Update()
     {
         Farm farm = farmChannel != null ? farmChannel.Current : null;
-        if (farm == null || label == null || farm.Coins == shown) return;
-        shown = farm.Coins;
-        label.text = shown + " coins";
+        if (farm == null || label == null) return;
+        if (farm.Coins == shownCoins && farm.Spendable == shownSpendable) return;
+        shownCoins = farm.Coins;
+        shownSpendable = farm.Spendable;
+        label.text = shownCoins + " coins\n<size=60%>" + shownSpendable + " free to spend</size>";
     }
 }

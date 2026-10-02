@@ -1,81 +1,82 @@
 using UnityEngine;
 
 /// <summary>
-/// The first minutes of a new farm: one short hint at a time, advanced by what the player
-/// actually does rather than by a "Next" button.
+/// The farm's lessons, one short hint at a time, advanced by what actually happens on the farm
+/// rather than by "Next" buttons:
 ///
-///   1. Tap the first field.          2. Give it some watering.
-///   3. Watch it sell a crop  ->  the second field is granted, free, once.
-///   4. Tap the second field.         5. Give it some fertilizer.
-///   6. Watch it sell a fertilized crop  ->  planting density unlocks; the depot is the next goal.
+///   1. Start the first field's crop (and switch Repeat on).   2. Watch it sell -> second field granted.
+///   3. Start the second field.                                 4. Notice the soil running down.
+///   5. Restore a field's soil by hand once.                    6. Research Soil control.
+///   7. Install the controller on a field.                      8. See it restore and return.
+///   Then: the depot and the third field as the next investments.
 ///
-/// Each frame the current step's condition is checked, and the flow moves on as far as the
-/// farm already allows, so doing things early or out of order can never get it stuck.
-/// Unity has no tutorial system; this is a small state machine over the farm's own state.
+/// Each frame the flow moves forward as far as the farm already allows, so acting early or out
+/// of order never gets it stuck. Unity has no tutorial system; this is a small state machine.
 /// </summary>
 [DisallowMultipleComponent]
 public class FarmIntro : MonoBehaviour
 {
-    public enum Step { TapFirst, TryWatering, WaitFirstHarvest, TapSecond, TryFertilizer, WaitSecondHarvest, Done }
+    // Saved by number: append new steps at the end of a future version, never reorder.
+    public enum Step
+    {
+        StartFirst, WatchFirst, StartSecond, SoilLesson, RestoreByHand,
+        ResearchControl, InstallControl, WatchAutomation, Done
+    }
 
     [Header("Fields")]
     [Tooltip("The field the player starts with (fertile, dry).")]
     [SerializeField] private FarmField first;
-    [Tooltip("The field granted after the first lesson (moist, less fertile).")]
+    [Tooltip("The field granted after the first sale (moist, less fertile).")]
     [SerializeField] private FarmField second;
 
     [Header("After the introduction")]
-    [Tooltip("Where the equipment depot can go (poor land, Build only).")]
+    [Tooltip("Where the equipment depot can go (building-only land).")]
     [SerializeField] private FarmField depotSite;
     [Tooltip("The field to buy and plant once the depot brings a third equipment set.")]
     [SerializeField] private FarmField third;
 
-    [Header("Selection")]
-    [SerializeField] private ParcelSelectionChannel selection;
+    [Header("References")]
     [SerializeField] private Farm farm;
 
-    private Parcel picked;
+    [Header("Lesson tuning")]
+    [Tooltip("The soil lesson starts once a farmed field's next crop would start at or below this fertility.")]
+    [SerializeField, Range(0, 100)] private int tiredSoil = 45;
 
     public Step Current { get; private set; }
 
-    /// <summary>Set by whoever reaches the goal (the depot purchase) to retire the goal hint.</summary>
+    /// <summary>Set by the depot purchase to retire the depot hint.</summary>
     public bool GoalReached { get; set; }
 
-    /// <summary>The field the current hint asks the player to tap, or null.</summary>
-    public FarmField Target
+    public bool IsValidStep(int step) { return step >= 0 && step <= (int)Step.Done; }
+
+    public void Restore(int step, bool goalReached)
     {
-        get
-        {
-            if (Current == Step.TapFirst) return first;
-            if (Current == Step.TapSecond) return second;
-            if (Current != Step.Done) return null;
-            if (!GoalReached) return depotSite;
-            if (third != null && !third.Farming) return third;
-            return null;
-        }
+        Current = (Step)Mathf.Clamp(step, 0, (int)Step.Done);
+        GoalReached = goalReached;
     }
 
-    public bool FertilizerUnlocked { get { return Current >= Step.TapSecond; } }
-    public bool DensityUnlocked { get { return Current >= Step.Done; } }
-
-    private void OnEnable() { if (selection != null) selection.Selected += OnSelected; }
-    private void OnDisable() { if (selection != null) selection.Selected -= OnSelected; }
-
-    private void OnSelected(Parcel parcel) { picked = parcel; }
-
-    /// <summary>Restores a saved step. The second field's grant is restored by its own save data.</summary>
-    public void Restore(Step step, bool goalReached)
+    /// <summary>
+    /// Translates an old (version 1 or 2) introduction step by what the save really contains,
+    /// never by casting the number into this list:
+    ///   old 0-2 (second field not granted yet): StartFirst, or WatchFirst if the first field ran;
+    ///   old 3-5 (second field granted): StartSecond, or SoilLesson if it has already farmed;
+    ///   old 6 (finished): SoilLesson, keeping the depot goal as it was.
+    /// The forward pass in Update then skips any lesson the farm already satisfies.
+    /// </summary>
+    public void RestoreFromLegacy(int oldStep, bool goalReached)
     {
-        Current = step;
         GoalReached = goalReached;
+        if (oldStep >= 6) Current = Step.SoilLesson;
+        else if (second != null && second.Owned)
+            Current = second.Running || second.CashCompleted > 0 ? Step.SoilLesson : Step.StartSecond;
+        else
+            Current = first != null && (first.Running || first.CashCompleted > 0) ? Step.WatchFirst : Step.StartFirst;
     }
 
     private void Update()
     {
-        if (first == null || second == null) return;
-
-        // Move forward as many steps as the farm already satisfies.
-        for (int guard = 0; guard < 8; guard++)
+        if (first == null || second == null || farm == null || farm.LoadProblem != null) return;
+        for (int guard = 0; guard < 10; guard++)
         {
             Step before = Current;
             Advance();
@@ -87,34 +88,91 @@ public class FarmIntro : MonoBehaviour
     {
         switch (Current)
         {
-            case Step.TapFirst:
-                if (IsPicked(first) || first.Plan.watering != Care.Off) Current = Step.TryWatering;
+            case Step.StartFirst:
+                if (Started(first)) Current = Step.WatchFirst;
                 break;
-            case Step.TryWatering:
-                if (first.Plan.watering != Care.Off) Current = Step.WaitFirstHarvest;
-                break;
-            case Step.WaitFirstHarvest:
-                if (first.CropsSold > 0 && first.Plan.watering != Care.Off)
+            case Step.WatchFirst:
+                if (first.CashCompleted > 0)
                 {
-                    if (farm != null) farm.GrantField(second);
-                    Current = Step.TapSecond;
+                    farm.GrantField(second);
+                    Current = Step.StartSecond;
                 }
                 break;
-            case Step.TapSecond:
-                if (IsPicked(second) || second.Plan.fertilizer != Care.Off) Current = Step.TryFertilizer;
+            case Step.StartSecond:
+                // A player who skips the second field but already meets tired soil moves on too.
+                if (Started(second) || TiredField() != null || farm.ManualRecoveryTotal > 0) Current = Step.SoilLesson;
                 break;
-            case Step.TryFertilizer:
-                if (second.Plan.fertilizer != Care.Off) Current = Step.WaitSecondHarvest;
+            case Step.SoilLesson:
+                if (farm.ManualRecoveryTotal > 0 || TiredField() != null) Current = Step.RestoreByHand;
                 break;
-            case Step.WaitSecondHarvest:
-                if (second.HasResult && second.LastResult.fertilizerCost > 0) Current = Step.Done;
+            case Step.RestoreByHand:
+                if (farm.ManualRecoveryTotal > 0) Current = Step.ResearchControl;
+                break;
+            case Step.ResearchControl:
+                if (farm.ControllersUnlocked) Current = Step.InstallControl;
+                break;
+            case Step.InstallControl:
+                if (InstalledField() != null) Current = Step.WatchAutomation;
+                break;
+            case Step.WatchAutomation:
+                if (farm.AutomaticReturns > 0 || GoalReached) Current = Step.Done;
                 break;
         }
     }
 
-    private bool IsPicked(FarmField field)
+    private static bool Started(FarmField f)
     {
-        return picked != null && picked == field.Parcel;
+        return f.Running || f.CashCompleted > 0 || f.RecoveryCompleted > 0;
+    }
+
+    // The farmed field with the poorest soil, if it has run down enough to talk about.
+    private FarmField TiredField()
+    {
+        FarmField worst = null;
+        foreach (FarmField f in farm.Fields)
+        {
+            if (f == null || !f.Farming) continue;
+            bool tired = farm.NextStartFertility(f) <= tiredSoil || f.Pause == PauseReason.Unprofitable;
+            if (tired && (worst == null || f.Fertility < worst.Fertility)) worst = f;
+        }
+        return worst;
+    }
+
+    private FarmField PoorestFarmedField()
+    {
+        FarmField worst = null;
+        foreach (FarmField f in farm.Fields)
+            if (f != null && f.Farming && (worst == null || f.Fertility < worst.Fertility)) worst = f;
+        return worst;
+    }
+
+    private FarmField InstalledField()
+    {
+        foreach (FarmField f in farm.Fields) if (f != null && f.ControllerInstalled) return f;
+        return null;
+    }
+
+    /// <summary>The field the current hint is about, marked with the bobbing arrow; or null.</summary>
+    public FarmField Target
+    {
+        get
+        {
+            if (farm == null || first == null || second == null) return null;
+            switch (Current)
+            {
+                case Step.StartFirst: return first.Running ? null : first;
+                case Step.StartSecond: return second.Running ? null : second;
+                case Step.RestoreByHand:
+                case Step.InstallControl:
+                    FarmField f = TiredField();
+                    return f != null ? f : PoorestFarmedField();
+                case Step.Done:
+                    if (!GoalReached) return depotSite;
+                    if (third != null && !third.Farming) return third;
+                    return null;
+                default: return null;
+            }
+        }
     }
 
     /// <summary>The hint for the current step, or empty when there is nothing to say.</summary>
@@ -122,39 +180,40 @@ public class FarmIntro : MonoBehaviour
     {
         get
         {
-            string a = first != null ? first.DisplayName : "";
-            string b = second != null ? second.DisplayName : "";
+            if (farm == null || first == null || second == null) return string.Empty;
+            string a = first.DisplayName, b = second.DisplayName;
             switch (Current)
             {
-                case Step.TapFirst:
-                    return a + " already grows cabbages on its own. Tap it to see how it is doing.";
-                case Step.TryWatering:
-                    return a + " is fertile but dry: only " + Percent(first.Moisture) + " moisture. Open Farm plan and give it some watering.";
-                case Step.WaitFirstHarvest:
-                    return "Plan saved. The machines use it from the next crop on, with no more taps. Watch the harvest.";
-                case Step.TapSecond:
-                    return b + " is yours too. Its soil is moist but less fertile. Tap it.";
-                case Step.TryFertilizer:
-                    return b + " has water to spare but only " + Percent(second.Fertility) + " fertility. Try the drone's fertilizer instead.";
-                case Step.WaitSecondHarvest:
-                    if (second.Running && second.ActivePlan.fertilizer == Care.Off)
-                        return "The fertilizer starts with " + b + "'s next crop. Two fields, two plans: compare their harvests.";
-                    return "Two fields, two plans. Compare their harvests once " + b + " sells.";
+                case Step.StartFirst:
+                    return a + " is dry but fertile. Open Farm plan: density 50%, fertilizer 0%, watering 50% suits it. Check the forecast, then Start.";
+                case Step.WatchFirst:
+                    return first.Repeat
+                        ? "Repeat is on: " + a + " keeps farming with this plan. Watch the harvest and the soil change."
+                        : "Turn Repeat on to keep " + a + " farming without another tap, then watch the harvest.";
+                case Step.StartSecond:
+                    return b + " is yours. It is moist but less fertile: try density 50%, fertilizer 50%, watering 0%, then Start.";
+                case Step.SoilLesson:
+                    return "Every cabbage crop uses soil. Watch the forecast: lower fertility means a smaller harvest and less profit.";
+                case Step.RestoreByHand:
+                    FarmField tired = TiredField();
+                    if (tired == null) tired = PoorestFarmedField();
+                    return (tired != null ? tired.DisplayName + "'s" : "A field's") + " soil is running low. Choose Restore soil: green beans cost nothing and put back "
+                        + farm.Rules.RestorationGain + " points. Start it once.";
+                case Step.ResearchControl:
+                    return "You restored soil by hand. Open Research and buy Soil control: it comes with one free controller kit.";
+                case Step.InstallControl:
+                    return "Install the soil controller on a field. It restores the soil below " + farm.Rules.RestoreBelow + "% and returns to cabbage above " + farm.Rules.ReturnAbove + "%.";
+                case Step.WatchAutomation:
+                    return "The controller now looks after its field's soil on its own. Meanwhile, research can cut costs, or save up for an equipment depot.";
                 default:
                     if (!GoalReached && depotSite != null)
-                        return "Planting density is yours to tune now. Next goal: an equipment depot on " + depotSite.DisplayName
-                            + " brings a third set of machines.";
+                        return "Next goal: an equipment depot on " + depotSite.DisplayName + " brings a third set of machines.";
                     if (third != null && !third.Owned)
                         return "The depot's machines are ready. Buy " + third.DisplayName + " and plant it.";
                     if (third != null && !third.Farming && third.LandUse == FarmField.Use.Empty)
-                        return third.DisplayName + " is yours. Tap it and choose Plant.";
+                        return third.DisplayName + " is yours. Tap it, choose Plant, check the forecast and Start.";
                     return string.Empty;
             }
         }
-    }
-
-    private static string Percent(float value)
-    {
-        return Mathf.RoundToInt(value * 100f) + "%";
     }
 }

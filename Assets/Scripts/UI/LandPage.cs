@@ -3,18 +3,19 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// Decides what the picked parcel offers and what its full page shows: the farming plan
-/// (<see cref="FarmPage"/> binds that part), or one land decision - buy, plant, build the
-/// depot, look after the depot - and, on a farmed field, stopping.
+/// Decides what the picked parcel offers and what its full page shows: the farming page
+/// (<see cref="FarmPage"/> binds that, also for preparing an empty field before its first
+/// Start), or one land decision - buy, build the depot, look after the depot - and, on a farmed
+/// field, Clear field.
 ///
-/// The buttons only ask; <see cref="Farm"/> checks money and equipment and does the work,
-/// and when it refuses, the reason is shown instead of a button that silently does nothing.
+/// The buttons only ask; <see cref="Farm"/> checks money, equipment and rules and does the
+/// work, and when it refuses, the reason is shown instead of a button that does nothing.
 /// Anything that cannot be undone for free needs a second tap to confirm.
 /// </summary>
 [DisallowMultipleComponent]
 public class LandPage : MonoBehaviour
 {
-    private enum Mode { Plan, Buy, Plant, Build, Depot }
+    private enum Mode { Plan, Buy, Build, Depot }
 
     [Header("Selection")]
     [SerializeField] private ParcelSelectionChannel channel;
@@ -30,7 +31,7 @@ public class LandPage : MonoBehaviour
     [SerializeField] private TMP_Text secondaryLabel;
 
     [Header("Page content")]
-    [Tooltip("The machine rows, plan bar and harvest result.")]
+    [Tooltip("The farming page: crop, settings, forecast, actions, history.")]
     [SerializeField] private GameObject planContent;
     [Tooltip("The land decision: a description, one button and a line for why it is not possible.")]
     [SerializeField] private GameObject landContent;
@@ -39,21 +40,21 @@ public class LandPage : MonoBehaviour
     [SerializeField] private TMP_Text landButtonLabel;
     [SerializeField] private TMP_Text landNote;
 
-    [Header("Stop farming")]
-    [SerializeField] private GameObject stopContent;
-    [SerializeField] private Button stopButton;
-    [SerializeField] private TMP_Text stopButtonLabel;
-    [SerializeField] private TMP_Text stopNote;
+    [Header("Clear field")]
+    [SerializeField] private GameObject clearContent;
+    [SerializeField] private Button clearButton;
+    [SerializeField] private TMP_Text clearButtonLabel;
+    [SerializeField] private TMP_Text clearNote;
 
     [Header("Confirmation")]
     [Tooltip("Seconds a first tap stays armed before the button returns to normal.")]
     [SerializeField] private float confirmSeconds = 4f;
-    [Tooltip("Seconds the land button ignores taps after it did something, so a burst of taps cannot run into the next decision.")]
+    [Tooltip("Seconds the buttons ignore taps after doing something, so a burst of taps cannot run into the next decision.")]
     [SerializeField] private float cooldownSeconds = 1f;
 
     private FarmField field;
     private Mode mode;
-    private bool landArmed, stopArmed;
+    private bool landArmed, clearArmed;
     private float armedUntil;
     private float quietUntil;
 
@@ -63,7 +64,7 @@ public class LandPage : MonoBehaviour
         if (primaryAction != null) primaryAction.onClick.AddListener(OnPrimary);
         if (secondaryAction != null) secondaryAction.onClick.AddListener(OnSecondary);
         if (landButton != null) landButton.onClick.AddListener(OnLandButton);
-        if (stopButton != null) stopButton.onClick.AddListener(OnStopButton);
+        if (clearButton != null) clearButton.onClick.AddListener(OnClearButton);
     }
 
     private void OnDisable()
@@ -72,7 +73,7 @@ public class LandPage : MonoBehaviour
         if (primaryAction != null) primaryAction.onClick.RemoveListener(OnPrimary);
         if (secondaryAction != null) secondaryAction.onClick.RemoveListener(OnSecondary);
         if (landButton != null) landButton.onClick.RemoveListener(OnLandButton);
-        if (stopButton != null) stopButton.onClick.RemoveListener(OnStopButton);
+        if (clearButton != null) clearButton.onClick.RemoveListener(OnClearButton);
     }
 
     private Farm CurrentFarm { get { return farmChannel != null ? farmChannel.Current : null; } }
@@ -91,7 +92,8 @@ public class LandPage : MonoBehaviour
         if (field.Farming) return Mode.Plan;
         if (field.LandUse == FarmField.Use.Depot) return Mode.Depot;
         if (field.ForSale) return Mode.Buy;
-        return Mode.Plant;
+        if (field.Owned && !field.Arable) return Mode.Build;
+        return Mode.Plan;
     }
 
     private void OnPrimary() { Disarm(); mode = DefaultMode(); }
@@ -103,38 +105,46 @@ public class LandPage : MonoBehaviour
         if (panel != null) panel.SetExpanded(true);
     }
 
-    private void Disarm() { landArmed = false; stopArmed = false; }
+    private void Disarm() { landArmed = false; clearArmed = false; }
 
     private void Arm(bool land)
     {
         landArmed = land;
-        stopArmed = !land;
+        clearArmed = !land;
         armedUntil = Time.unscaledTime + confirmSeconds;
     }
 
     private void Update()
     {
-        if ((landArmed || stopArmed) && Time.unscaledTime > armedUntil) Disarm();
+        if ((landArmed || clearArmed) && Time.unscaledTime > armedUntil) Disarm();
 
         Farm farm = CurrentFarm;
         bool known = field != null && farm != null;
         ShowActions(known ? farm : null);
         if (!known)
         {
+            SetShown(planContent, false);
             SetShown(landContent, false);
-            SetShown(stopContent, false);
+            SetShown(clearContent, false);
             return;
         }
 
-        // Land use can change under an open page (a crop finishing its last harvest).
-        if (mode == Mode.Plan && !field.Farming) mode = DefaultMode();
+        // Land use can change under an open page (a field cleared after its last crop).
+        if (mode == Mode.Plan && !CanPlan) mode = DefaultMode();
+        if (mode == Mode.Depot && field.LandUse != FarmField.Use.Depot) mode = DefaultMode();
 
-        SetShown(planContent, mode == Mode.Plan);
+        SetShown(planContent, mode == Mode.Plan && CanPlan);
         SetShown(landContent, mode != Mode.Plan);
-        SetShown(stopContent, mode == Mode.Plan && field.Farming);
+        SetShown(clearContent, mode == Mode.Plan && field.Farming);
 
-        if (mode == Mode.Plan) ShowStop(farm);
+        if (mode == Mode.Plan) ShowClear();
         else ShowLand(farm);
+    }
+
+    // Farmed land, or owned empty farmland being prepared for its first Start.
+    private bool CanPlan
+    {
+        get { return field.Farming || (field.Owned && field.Arable && field.LandUse == FarmField.Use.Empty); }
     }
 
     // ---------- the sheet's buttons ----------
@@ -150,7 +160,7 @@ public class LandPage : MonoBehaviour
             else if (field.Owned)
             {
                 secondary = "Build";
-                if (farm.CanEverPlant(field)) primary = "Plant";
+                if (field.Arable) primary = "Plant";
             }
         }
         SetShown(primaryAction != null ? primaryAction.gameObject : null, primary != null);
@@ -164,28 +174,20 @@ public class LandPage : MonoBehaviour
     private void ShowLand(Farm farm)
     {
         FarmRules rules = farm.Rules;
+        string money = "\nCoins " + farm.Coins + " · kept for running fields " + Mathf.Min(farm.Coins, farm.ProtectedTotal) + " · free to spend " + farm.Spendable + ".";
         string info, button, why;
         bool danger = false;
         switch (mode)
         {
             case Mode.Buy:
                 info = "<b>" + field.DisplayName + " is for sale.</b>\nPrice: " + field.PurchasePrice + " coins, paid once. Land is not sold back.\n"
-                    + "Once it is yours, plant it (it needs a free equipment set) or build on it.";
+                    + "Once it is yours, prepare a crop and Start it (it needs a free equipment set), or build on it." + money;
                 button = "Buy for " + field.PurchasePrice + " coins";
                 why = farm.WhyCannotBuy(field);
                 break;
-            case Mode.Plant:
-                int cost = rules.Costs(field.StarterPlan).Cost;
-                info = "<b>Grow cabbages here.</b>\nStarts with the standard plan: standard density, no fertilizer, no watering. You can change it after.\n"
-                    + "Uses 1 equipment set: " + Mathf.Max(0, farm.FreeSets) + " free of " + farm.OwnedSets + ".\n"
-                    + "First crop: " + cost + " coins, paid when sowing starts.";
-                button = "Start farming";
-                why = farm.WhyCannotPlant(field);
-                break;
             case Mode.Build:
                 info = "<b>Equipment depot · " + rules.DepotPrice + " coins</b>\nComes with one more equipment set: a seeder, a drone and an irrigation unit, stored here.\n"
-                    + "Equipment sets: " + farm.OwnedSets + " -> " + (farm.OwnedSets + rules.DepotSets) + ". One depot per farm.\n"
-                    + "No coins come back if you remove it.";
+                    + "Equipment sets: " + farm.OwnedSets + " -> " + (farm.OwnedSets + rules.DepotSets) + ". One depot per farm. No coins come back if you remove it." + money;
                 button = "Build depot";
                 why = farm.WhyCannotBuildDepot(field);
                 break;
@@ -200,8 +202,7 @@ public class LandPage : MonoBehaviour
                 break;
         }
 
-        bool needsConfirm = mode == Mode.Buy || mode == Mode.Build || mode == Mode.Depot;
-        if (landArmed && needsConfirm) button = "Tap again to confirm";
+        if (landArmed) button = "Tap again to confirm";
         if (landInfo != null) landInfo.text = info;
         if (landButtonLabel != null) landButtonLabel.text = button;
         if (landButton != null) landButton.interactable = why == null;
@@ -211,18 +212,14 @@ public class LandPage : MonoBehaviour
     private void OnLandButton()
     {
         Farm farm = CurrentFarm;
-        if (farm == null || field == null) return;
-
-        if (Time.unscaledTime < quietUntil) return;
-        bool needsConfirm = mode == Mode.Buy || mode == Mode.Build || mode == Mode.Depot;
-        if (needsConfirm && !landArmed) { Arm(true); return; }
+        if (farm == null || field == null || Time.unscaledTime < quietUntil) return;
+        if (!landArmed) { Arm(true); return; }
         Disarm();
 
         bool done = false;
         switch (mode)
         {
             case Mode.Buy: done = farm.BuyLand(field); break;
-            case Mode.Plant: done = farm.Plant(field); break;
             case Mode.Build: done = farm.BuildDepot(field); break;
             case Mode.Depot: done = farm.RemoveDepot(); break;
         }
@@ -230,40 +227,36 @@ public class LandPage : MonoBehaviour
         quietUntil = Time.unscaledTime + cooldownSeconds;
 
         // Buying, building and removing change what the sheet offers, so the page closes to
-        // show it (and the next decision's button is not under the finger). Planting opens
-        // the new field's plan instead.
-        bool backToSheet = mode != Mode.Plant;
+        // show it (and the next decision's button is not under the finger).
         mode = DefaultMode();
-        if (backToSheet && panel != null) panel.SetExpanded(false);
+        if (panel != null) panel.SetExpanded(false);
     }
 
-    // ---------- stopping a farmed field ----------
+    // ---------- clearing a farmed field ----------
 
-    private void ShowStop(Farm farm)
+    private void ShowClear()
     {
         if (!field.Farming) return;
-        if (field.PendingStop)
+        if (field.PendingClear)
         {
-            if (stopButtonLabel != null) stopButtonLabel.text = "Keep farming";
-            if (stopNote != null) stopNote.text = field.Running
-                ? "Stopping: the current crop still grows and sells once, then the land is cleared and its equipment set freed."
-                : "Stopping now.";
+            if (clearButtonLabel != null) clearButtonLabel.text = "Keep farming";
+            if (clearNote != null) clearNote.text = "Clearing: the current crop finishes once, then the land is emptied, its plan reset and its equipment set freed.";
             return;
         }
-        if (stopButtonLabel != null) stopButtonLabel.text = stopArmed ? "Tap again to stop" : "Stop farming";
-        if (stopNote != null) stopNote.text = stopArmed
-            ? "The current crop still sells once. Then the plan is discarded and the set freed. Nothing is refunded."
-            : string.Empty;
+        if (clearButtonLabel != null) clearButtonLabel.text = clearArmed ? "Tap again to clear" : "Clear field";
+        if (clearNote != null) clearNote.text = clearArmed
+            ? "Empties the land and frees its equipment set after any growing crop. Nothing is refunded."
+            : "To stop after one crop but keep the set, switch Repeat off instead.";
     }
 
-    private void OnStopButton()
+    private void OnClearButton()
     {
         Farm farm = CurrentFarm;
         if (farm == null || field == null || !field.Farming || Time.unscaledTime < quietUntil) return;
 
-        if (field.PendingStop) { farm.RequestStop(field, false); Disarm(); }
-        else if (!stopArmed) { Arm(false); return; }
-        else { Disarm(); farm.RequestStop(field, true); }
+        if (field.PendingClear) { farm.RequestClear(field, false); Disarm(); }
+        else if (!clearArmed) { Arm(false); return; }
+        else { Disarm(); farm.RequestClear(field, true); }
         quietUntil = Time.unscaledTime + cooldownSeconds;
     }
 

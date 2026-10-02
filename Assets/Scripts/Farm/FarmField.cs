@@ -1,249 +1,324 @@
 using UnityEngine;
+using UnityEngine.Serialization;
+
+/// <summary>Why a field is waiting instead of growing. Each has a sentence for the player.</summary>
+public enum PauseReason { None, ChooseDensity, Unprofitable, CannotProfit, NoFunds, NoEquipment, SoilRestored }
 
 /// <summary>
-/// The farming half of a parcel: what the land is like, who owns it, what it is used for, the
-/// plan the player saved for it and the crop currently growing. It sits beside
+/// The farming half of a parcel: its land, who owns it, what it is used for, the player's
+/// cabbage settings, the crop growing now and the last one finished. It sits beside
 /// <see cref="Parcel"/>, which keeps owning geometry and selection, so nothing here repaints
-/// the parcel's tiles or runs in the editor.
+/// tiles or runs in the editor.
 ///
-/// Only parcels that take part in the farm carry this component. A parcel without it is
-/// scenery the player can still pick and look at.
+/// This class keeps state and changes it only when <see cref="Farm"/> tells it to. Farm owns
+/// the money, the equipment sets, the research and the decision of what grows next, so every
+/// rule about paying lives in one place.
 ///
-/// A crop cycle, driven by <see cref="Farm"/> calling <see cref="Tick"/> every frame:
-///   1. Not running: take a copy of the saved plan and pay its costs. No money, no start.
-///   2. Running: the clock goes through sowing, growing and harvesting.
-///   3. Clock done: work out the harvest from the copied plan, sell it, stop running.
-/// The next Tick starts again from step 1, so a field keeps farming on its own. A plan saved
-/// mid-crop only changes what step 1 copies next time; the paid-for crop keeps its own plan.
-///
-/// Land use (buying, planting, the depot, stopping) is decided by <see cref="Farm"/>, which
-/// also owns the money and the equipment sets; the setters here are only its tools.
+/// A field is Ready (waiting for Start), Running (a paid crop is growing) or Paused (it wanted
+/// to go on but a rule stopped it, with a reason). Only an explicit Start or Resume leaves Ready
+/// or Paused; Repeat only decides whether a finished crop is followed by another on its own.
 /// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Parcel))]
 public class FarmField : MonoBehaviour
 {
-    public enum Stage { Idle, Sowing, Growing, Harvesting }
+    public enum Stage { Idle, Sowing, Growing, Finishing }
     public enum Use { Empty, Farm, Depot }
+    public enum Status { Ready, Running, Paused }
 
     [Header("Identity")]
     [Tooltip("Stable name used to find this field in a save. Do not rename it once saves exist.")]
     [SerializeField] private string id = "A";
 
     [Header("Land")]
-    [Tooltip("Natural soil fertility, 0 to 1. Below the rules' planting threshold only building is offered.")]
-    [SerializeField, Range(0f, 1f)] private float fertility = 0.9f;
-    [Tooltip("Natural soil moisture, 0 to 1. Stays the same while a plan is being compared.")]
-    [SerializeField, Range(0f, 1f)] private float moisture = 0.25f;
+    [Tooltip("Fertility a fresh farm starts with, in percent. It changes as crops use and restore the soil.")]
+    [SerializeField, Range(0, 100)] private int startFertility = 90;
+    [Tooltip("Natural moisture in percent. It does not change in this prototype.")]
+    [SerializeField, Range(0, 100)] private int moisturePercent = 25;
+    [Tooltip("Whether this land can ever be farmed. Depleted farmland stays farmland; building-only land never becomes farmland.")]
+    [SerializeField] private bool arable = true;
 
     [Header("Ownership")]
     [Tooltip("Whether a fresh farm already owns this land.")]
     [SerializeField] private bool ownedAtStart = true;
     [Tooltip("Coins to buy this land. 0 means it cannot be bought (it is granted, or never for sale).")]
     [SerializeField] private int purchasePrice;
+    [Tooltip("Owning this land gives it a prepared crop plan and an equipment set, ready for Start.")]
+    [FormerlySerializedAs("farmingAtStart")]
+    [SerializeField] private bool preparedWhenOwned = true;
+    [Tooltip("The introduction will hand this land over; one equipment set is kept free for it until then.")]
+    [SerializeField] private bool reservedForIntroduction;
 
     [Header("Farming")]
-    [Tooltip("The plan a fresh farm, or a replanted field, starts with.")]
-    [SerializeField] private FarmPlan starterPlan = new FarmPlan(Density.Standard, Care.Off, Care.Off);
-    [Tooltip("Whether this land is farmed as soon as it is owned (a fresh farm, or a granted field).")]
-    [SerializeField] private bool farmingAtStart = true;
+    [Tooltip("The cabbage settings a fresh or replanted field starts with, in percent.")]
+    [SerializeField] private FarmPlan starterCashPlan = new FarmPlan(50, 0, 0);
 
     private Parcel parcel;
-    private float cycleTime;
+    private float elapsed;
 
     public string Id { get { return id; } }
-    public float Fertility { get { return fertility; } }
-    public float Moisture { get { return moisture; } }
+    public int StartingFertility { get { return startFertility; } }
+    public int Moisture { get { return moisturePercent; } }
+    public bool Arable { get { return arable; } }
     public int PurchasePrice { get { return purchasePrice; } }
     public bool ForSale { get { return !Owned && purchasePrice > 0; } }
-
-    /// <summary>Whether owning this land starts farming it straight away.</summary>
-    public bool FarmsWhenOwned { get { return farmingAtStart; } }
-
-    /// <summary>Land the introduction will hand over: its equipment set is kept for it.</summary>
-    public bool AwaitsGrant { get { return !Owned && farmingAtStart && purchasePrice == 0; } }
-    public FarmPlan StarterPlan { get { return starterPlan; } }
+    public bool PreparedWhenOwned { get { return preparedWhenOwned; } }
+    public bool AwaitsGrant { get { return !Owned && reservedForIntroduction; } }
+    public FarmPlan StarterPlan { get { return starterCashPlan; } }
     public Parcel Parcel { get { return parcel; } }
     public string DisplayName { get { return parcel != null ? parcel.DisplayName : name; } }
 
-    /// <summary>The plan the player confirmed. Unsaved edits live in the UI, never here.</summary>
-    public FarmPlan Plan { get; private set; }
+    // ---------- saved state ----------
 
     public bool Owned { get; private set; }
     public Use LandUse { get; private set; }
-
-    /// <summary>Whether this field grows crops (it may be finishing its last one).</summary>
-    public bool Farming { get { return Owned && LandUse == Use.Farm; } }
-
+    /// <summary>Current fertility in whole percentage points, 0..100.</summary>
+    public int Fertility { get; private set; }
+    /// <summary>The confirmed cabbage settings. Kept while the field restores soil.</summary>
+    public FarmPlan CashPlan { get; private set; }
+    /// <summary>The crop the player chose by hand. A working soil controller overrides it.</summary>
+    public CropKind ManualCrop { get; private set; }
+    public bool Repeat { get; private set; }
     /// <summary>The equipment set working this field, 0 for none. Sets are numbered from 1.</summary>
     public int AssignedSet { get; private set; }
+    public Status State { get; private set; }
+    public PauseReason Pause { get; private set; }
+    /// <summary>Clear field was asked for: the running crop finishes, then the land is emptied.</summary>
+    public bool PendingClear { get; private set; }
 
-    /// <summary>The player asked to stop farming: the running crop is finished and sold first.</summary>
-    public bool PendingStop { get; private set; }
+    public bool ControllerInstalled { get; private set; }
+    public bool ControllerEnabled { get; private set; }
+    /// <summary>The controller's mode: true while it is restoring soil.</summary>
+    public bool ControllerRecovering { get; private set; }
 
-    /// <summary>True from the moment a crop is paid for until it is sold.</summary>
-    public bool Running { get; private set; }
+    /// <summary>The paid crop growing now, frozen at Start. Null while nothing runs.</summary>
+    public CropForecast Active { get; private set; }
+    /// <summary>The last crop that finished. History only, never a preview.</summary>
+    public CropForecast Last { get; private set; }
 
-    /// <summary>The copy of the plan the current crop was paid for.</summary>
-    public FarmPlan ActivePlan { get; private set; }
+    public int CashCompleted { get; private set; }
+    public int RecoveryCompleted { get; private set; }
+    public int ManualRecoveryCompleted { get; private set; }
 
-    /// <summary>Set while a new crop is due but the wallet cannot cover it.</summary>
-    public bool WaitingForMoney { get; private set; }
-
-    public bool HasResult { get; private set; }
-    public HarvestResult LastResult { get; private set; }
-    public int CropsSold { get; private set; }
-
-    /// <summary>Seconds into the current crop, 0 when none is running.</summary>
-    public float CycleTime { get { return cycleTime; } }
+    public bool Running { get { return State == Status.Running; } }
+    public bool Farming { get { return Owned && LandUse == Use.Farm; } }
+    /// <summary>A working controller: installed, switched on and on farmed land.</summary>
+    public bool ControllerActive { get { return ControllerInstalled && ControllerEnabled && Farming; } }
+    public float Elapsed { get { return elapsed; } }
 
     private void Awake()
     {
         parcel = GetComponent<Parcel>();
-        Plan = starterPlan;
+        ResetToFreshFarm();
+    }
+
+    private void ResetToFreshFarm()
+    {
         Owned = ownedAtStart;
-        LandUse = ownedAtStart && farmingAtStart ? Use.Farm : Use.Empty;
+        Fertility = startFertility;
+        CashPlan = starterCashPlan;
+        ManualCrop = CropKind.Cash;
+        LandUse = ownedAtStart && preparedWhenOwned && arable ? Use.Farm : Use.Empty;
+        State = Status.Ready;
     }
 
-    public void ConfirmPlan(FarmPlan plan)
+    public Stage CurrentStage
     {
-        Plan = plan;
-    }
-
-    // ---------- tools for Farm, which checks money and equipment first ----------
-
-    /// <summary>Hands the land over. For a granted field this also starts farming it.</summary>
-    public void TakeOwnership(bool startFarming)
-    {
-        Owned = true;
-        if (startFarming) StartFarming(AssignedSet);
-    }
-
-    public void AssignSet(int set) { AssignedSet = set; }
-
-    public void StartFarming(int set)
-    {
-        LandUse = Use.Farm;
-        AssignedSet = set;
-        Plan = starterPlan;
-        PendingStop = false;
-    }
-
-    public void SetDepot(bool built)
-    {
-        LandUse = built ? Use.Depot : Use.Empty;
-    }
-
-    public void RequestStop(bool stop)
-    {
-        if (LandUse == Use.Farm) PendingStop = stop;
-    }
-
-    public Stage CurrentStage(FarmRules rules)
-    {
-        if (!Running) return Stage.Idle;
-        if (cycleTime < rules.SowSeconds) return Stage.Sowing;
-        if (cycleTime < rules.SowSeconds + rules.GrowSeconds) return Stage.Growing;
-        return Stage.Harvesting;
-    }
-
-    /// <summary>How far through its current stage the crop is, 0 to 1.</summary>
-    public float StageProgress(FarmRules rules)
-    {
-        switch (CurrentStage(rules))
+        get
         {
-            case Stage.Sowing: return cycleTime / rules.SowSeconds;
-            case Stage.Growing: return (cycleTime - rules.SowSeconds) / rules.GrowSeconds;
-            case Stage.Harvesting:
-                return (cycleTime - rules.SowSeconds - rules.GrowSeconds) / rules.HarvestSeconds;
-            default: return 0f;
+            if (!Running || Active == null) return Stage.Idle;
+            if (elapsed < Active.sowSeconds) return Stage.Sowing;
+            if (elapsed < Active.sowSeconds + Active.growSeconds) return Stage.Growing;
+            return Stage.Finishing;
         }
     }
 
-    public FieldSaveData Capture()
+    /// <summary>How far through its current stage the crop is, 0 to 1.</summary>
+    public float StageProgress
     {
-        FieldSaveData d = new FieldSaveData();
+        get
+        {
+            if (!Running || Active == null) return 0f;
+            switch (CurrentStage)
+            {
+                case Stage.Sowing: return elapsed / Active.sowSeconds;
+                case Stage.Growing: return (elapsed - Active.sowSeconds) / Active.growSeconds;
+                default: return (elapsed - Active.sowSeconds - Active.growSeconds) / Active.finishSeconds;
+            }
+        }
+    }
+
+    public float SecondsLeftInStage
+    {
+        get
+        {
+            if (!Running || Active == null) return 0f;
+            switch (CurrentStage)
+            {
+                case Stage.Sowing: return Active.sowSeconds - elapsed;
+                case Stage.Growing: return Active.sowSeconds + Active.growSeconds - elapsed;
+                default: return Active.CycleSeconds - elapsed;
+            }
+        }
+    }
+
+    // ---------- tools for Farm, which checks money, equipment and rules first ----------
+
+    public void TakeOwnership() { Owned = true; }
+
+    public void Prepare(int set)
+    {
+        LandUse = Use.Farm;
+        AssignedSet = set;
+        CashPlan = starterCashPlan;
+        ManualCrop = CropKind.Cash;
+        State = Status.Ready;
+        Pause = PauseReason.None;
+        PendingClear = false;
+    }
+
+    public void AssignSet(int set) { AssignedSet = set; }
+    public void SetDepot(bool built) { LandUse = built ? Use.Depot : Use.Empty; }
+    public void SetRepeat(bool repeat) { Repeat = repeat; }
+    public void SetPendingClear(bool clear) { PendingClear = clear && Farming; }
+
+    public void ConfirmPlan(FarmPlan plan, CropKind crop)
+    {
+        CashPlan = plan;
+        ManualCrop = crop;
+    }
+
+    public void InstallController()
+    {
+        ControllerInstalled = true;
+        ControllerEnabled = true;
+        ControllerRecovering = false;
+    }
+
+    public void SetControllerEnabled(bool on) { if (ControllerInstalled) ControllerEnabled = on; }
+
+    /// <summary>Starts a paid (or free) crop from its frozen numbers.</summary>
+    public void Begin(CropForecast snapshot, bool controllerRecovering)
+    {
+        Active = snapshot;
+        elapsed = 0f;
+        State = Status.Running;
+        Pause = PauseReason.None;
+        ControllerRecovering = controllerRecovering;
+    }
+
+    public void Hold(PauseReason reason, bool controllerRecovering)
+    {
+        State = Status.Paused;
+        Pause = reason;
+        ControllerRecovering = controllerRecovering;
+    }
+
+    public void BecomeReady()
+    {
+        State = Status.Ready;
+        Pause = PauseReason.None;
+    }
+
+    /// <summary>Moves the clock. Returns true on the frame the crop's time is up.</summary>
+    public bool Advance(float deltaTime)
+    {
+        if (!Running || Active == null) return false;
+        elapsed += deltaTime;
+        return elapsed >= Active.CycleSeconds;
+    }
+
+    /// <summary>
+    /// Applies the frozen result to the soil exactly once and files it as history. Money is
+    /// paid out by Farm from the same snapshot.
+    /// </summary>
+    public CropForecast Finish()
+    {
+        CropForecast done = Active;
+        if (!done.legacy) Fertility = Mathf.Clamp(done.endFertility, 0, 100);
+        if (done.kind == CropKind.Cash) CashCompleted++;
+        else
+        {
+            RecoveryCompleted++;
+            if (!done.automatic) ManualRecoveryCompleted++;
+        }
+        Last = done;
+        Active = null;
+        elapsed = 0f;
+        State = Status.Ready;
+        return done;
+    }
+
+    /// <summary>Empties the land: plan reset, set released. An installed controller stays.</summary>
+    public void Clear()
+    {
+        LandUse = Use.Empty;
+        AssignedSet = 0;
+        CashPlan = starterCashPlan;
+        ManualCrop = CropKind.Cash;
+        Repeat = false;
+        PendingClear = false;
+        State = Status.Ready;
+        Pause = PauseReason.None;
+        ControllerRecovering = false;
+    }
+
+    // ---------- saving ----------
+
+    public FieldSaveV3 Capture()
+    {
+        FieldSaveV3 d = new FieldSaveV3();
         d.id = id;
         d.owned = Owned;
-        d.farming = LandUse == Use.Farm;
         d.use = (int)LandUse;
         d.assignedSet = AssignedSet;
-        d.pendingStop = PendingStop;
-        d.plan = Plan;
-        d.running = Running;
-        d.cycleTime = cycleTime;
-        d.activePlan = ActivePlan;
-        d.hasResult = HasResult;
-        d.lastResult = LastResult;
-        d.cropsSold = CropsSold;
+        d.fertility = Fertility;
+        d.cashPlan = CashPlan;
+        d.manualCrop = (int)ManualCrop;
+        d.repeat = Repeat;
+        d.status = (int)State;
+        d.pause = (int)Pause;
+        d.pendingClear = PendingClear;
+        d.controllerInstalled = ControllerInstalled;
+        d.controllerEnabled = ControllerEnabled;
+        d.controllerRecovering = ControllerRecovering;
+        d.hasActive = Active != null;
+        d.active = Active != null ? Active : new CropForecast();
+        d.elapsed = elapsed;
+        d.hasLast = Last != null;
+        d.last = Last != null ? Last : new CropForecast();
+        d.cashCompleted = CashCompleted;
+        d.recoveryCompleted = RecoveryCompleted;
+        d.manualRecoveryCompleted = ManualRecoveryCompleted;
         return d;
     }
 
     /// <summary>
-    /// Puts back a saved state exactly, including a crop that was already paid for, so
-    /// reopening the game continues that crop instead of charging for it again.
+    /// Puts back a saved state exactly, including a crop already paid for, so reopening the
+    /// game continues that crop instead of charging for it again.
     /// </summary>
-    public void Restore(FieldSaveData d)
+    public void Restore(FieldSaveV3 d)
     {
         Owned = d.owned;
         LandUse = d.owned ? (Use)d.use : Use.Empty;
         AssignedSet = d.assignedSet;
-        PendingStop = d.pendingStop && LandUse == Use.Farm;
-        Plan = d.plan;
-        Running = d.running && LandUse == Use.Farm;
-        cycleTime = Running ? d.cycleTime : 0f;
-        ActivePlan = d.activePlan;
-        HasResult = d.hasResult;
-        LastResult = d.lastResult;
-        CropsSold = d.cropsSold;
-        WaitingForMoney = false;
-    }
-
-    /// <summary>
-    /// Moves the crop along. Returns true when money or land use changed this call, so the
-    /// farm saves at once.
-    /// </summary>
-    public bool Tick(Farm farm, float deltaTime)
-    {
-        if (!Farming) return false;
-        FarmRules rules = farm.Rules;
-
-        if (!Running)
-        {
-            // A requested stop takes effect between crops: nothing is running, nothing is lost.
-            if (PendingStop)
-            {
-                LandUse = Use.Empty;
-                PendingStop = false;
-                WaitingForMoney = false;
-                AssignedSet = 0;
-                Plan = starterPlan;
-                return true;
-            }
-
-            // Step 1: pay for the next crop, or wait until the wallet can.
-            int cost = rules.Costs(Plan).Cost;
-            WaitingForMoney = !farm.TrySpend(cost);
-            if (WaitingForMoney) return false;
-
-            ActivePlan = Plan;
-            cycleTime = 0f;
-            Running = true;
-            return true;
-        }
-
-        // Step 2: let the clock run.
-        cycleTime += deltaTime;
-        if (cycleTime < rules.CycleSeconds) return false;
-
-        // Step 3: sell once, then stop so the next Tick starts a new crop (or the stop).
-        HarvestResult result = rules.Evaluate(ActivePlan, fertility, moisture);
-        farm.Earn(result.income);
-        LastResult = result;
-        HasResult = true;
-        CropsSold++;
-        Running = false;
-        cycleTime = 0f;
-        return true;
+        Fertility = d.fertility;
+        CashPlan = d.cashPlan;
+        ManualCrop = (CropKind)d.manualCrop;
+        Repeat = d.repeat;
+        State = (Status)d.status;
+        Pause = (PauseReason)d.pause;
+        PendingClear = d.pendingClear && LandUse == Use.Farm;
+        ControllerInstalled = d.controllerInstalled;
+        ControllerEnabled = d.controllerEnabled;
+        ControllerRecovering = d.controllerRecovering;
+        Active = d.hasActive ? d.active : null;
+        elapsed = d.hasActive ? d.elapsed : 0f;
+        if (State == Status.Running && Active == null) State = Status.Ready;
+        if (State != Status.Running) Active = null;
+        Last = d.hasLast ? d.last : null;
+        CashCompleted = d.cashCompleted;
+        RecoveryCompleted = d.recoveryCompleted;
+        ManualRecoveryCompleted = d.manualRecoveryCompleted;
     }
 }

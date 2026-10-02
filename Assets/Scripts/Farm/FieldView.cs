@@ -3,17 +3,20 @@ using UnityEngine.Tilemaps;
 using TMPro;
 
 /// <summary>
-/// Shows a field's crop cycle on the map: the seeder sowing, the crop growing, the drone and
-/// irrigation working, the harvest filling crates, the sale. It only reads
-/// <see cref="FarmField"/> and <see cref="FarmRules"/>; nothing here moves money or time.
+/// Shows a field's crop cycle on the map: sowing, growth, the drone and irrigation at work,
+/// the cabbage harvest filling crates or the green beans being ploughed back in, the result,
+/// an installed soil controller and a warning when the field needs the player. It only reads
+/// <see cref="FarmField"/> and <see cref="Farm"/>; nothing here moves money, soil or time.
 ///
 /// Why a script and not an Animator: every frame's picture depends on game state - how far
-/// the crop is, which settings the paid-for plan has, how big the harvest will be - and on
-/// the parcel's own size. The machines' own looping motion (the drone's rotors) is still an
-/// Animator; this script only decides where things are and which cells show which stage.
+/// the paid crop is, which crop and settings it was paid with, how big the harvest will be -
+/// and on the parcel's own size. The drone's rotors are still an Animator; this script only
+/// decides where things are and which cells show which stage.
 ///
-/// The machines live under the parcel's Grid so they rise with it when the parcel is picked.
-/// Crop cells change through <see cref="Parcel.SetCropTile"/>, which keeps the pick's tint.
+/// Everything drawn comes from the crop's snapshot (<see cref="FarmField.Active"/>), so a plan
+/// changed mid-crop never changes the crop already growing. Machines live under the parcel's
+/// Grid so they rise with it when the parcel is picked. Crop cells change through
+/// <see cref="Parcel.SetCropTile"/>, which keeps the pick's tint.
 /// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(FarmField))]
@@ -22,7 +25,7 @@ public class FieldView : MonoBehaviour
     [Header("Data")]
     [SerializeField] private FarmRules rules;
     [SerializeField] private Farm farm;
-    [Tooltip("Asks whether this field is the one the introduction wants tapped.")]
+    [Tooltip("Asks whether this field is the one the introduction is talking about.")]
     [SerializeField] private FarmIntro intro;
 
     [Header("Equipment")]
@@ -32,15 +35,30 @@ public class FieldView : MonoBehaviour
     [SerializeField] private GameObject depotBuilding;
     [Tooltip("The depot's own set, parked beside it. Shown only while that set is not working a field.")]
     [SerializeField] private GameObject depotParkedSet;
-    [Tooltip("Bobs above the field while the introduction asks the player to tap it.")]
-    [SerializeField] private Transform hintMarker;
 
-    [Header("Crop stages")]
+    [Header("Markers")]
+    [Tooltip("Bobs above the field while the introduction is about it.")]
+    [SerializeField] private Transform hintMarker;
+    [Tooltip("A red exclamation shown while the field is stopped by a problem the player must solve.")]
+    [SerializeField] private Transform attentionMarker;
+    [Tooltip("The installed soil sensor and control module.")]
+    [SerializeField] private GameObject controller;
+    [Tooltip("The module's small light: green while it works, amber while it restores, grey when switched off.")]
+    [SerializeField] private SpriteRenderer controllerLight;
+
+    [Header("Cabbage stages")]
     [SerializeField] private TileBase seeded;
     [SerializeField] private TileBase young;
     [SerializeField] private TileBase growing;
-    [Tooltip("The full crop. Cells that the plan could not fully support stay one stage smaller.")]
+    [Tooltip("The full crop. Cells the plan could not fully support stay one stage smaller.")]
     [SerializeField] private TileBase ready;
+
+    [Header("Green-bean restoration stages")]
+    [SerializeField] private TileBase beanSeeded;
+    [SerializeField] private TileBase beanYoung;
+    [SerializeField] private TileBase beanGrown;
+    [Tooltip("Beans cut and worked into the soil, shown cell by cell before the field clears.")]
+    [SerializeField] private TileBase beanMulch;
 
     [Header("Seeder")]
     [SerializeField] private SpriteRenderer seeder;
@@ -57,8 +75,8 @@ public class FieldView : MonoBehaviour
     [Header("Irrigation")]
     [SerializeField] private ParticleSystem waterSpray;
 
-    [Header("Harvest")]
-    [Tooltip("Stacked in order as the harvest comes in; how many show depends on the harvest's size.")]
+    [Header("Harvest and result")]
+    [Tooltip("Stacked in order as the cabbage harvest comes in; how many show depends on its size.")]
     [SerializeField] private SpriteRenderer[] crates;
     [SerializeField] private int coinsPerCrate = 10;
     [SerializeField] private TMP_Text saleText;
@@ -68,7 +86,7 @@ public class FieldView : MonoBehaviour
     [SerializeField] private Vector2 droneWindow = new Vector2(0.05f, 0.45f);
     [SerializeField] private Vector2 waterWindow = new Vector2(0.5f, 0.9f);
 
-    [Header("Care intensity: particles per second for Off, Moderate, High")]
+    [Header("Particles per second at a 0, 50 and 100% dose")]
     [SerializeField] private float[] fertilizerRates = { 0f, 45f, 100f };
     [SerializeField] private float[] waterRates = { 0f, 40f, 90f };
 
@@ -78,14 +96,13 @@ public class FieldView : MonoBehaviour
     private Parcel parcel;
     private Tilemap soil;
     private RectInt cells;
-    private TileBase[] shown;
     private Vector3 seederHome, droneHome;
-    // -1 until the first frame, which adopts the current count silently: a crop sold before
-    // a save was loaded is not a new sale.
-    private int soldSeen = -1;
+    // -1 until the first frame, which adopts the current count silently: a crop finished
+    // before a save was loaded is not a new result to announce.
+    private int finishedSeen = -1;
     private float saleTimer;
     private Vector3 saleStart;
-    private Vector3 hintStart;
+    private Vector3 hintStart, attentionStart;
 
     private void Awake()
     {
@@ -94,80 +111,75 @@ public class FieldView : MonoBehaviour
         Transform grid = transform.Find("Grid");
         soil = grid != null ? grid.Find("Field").GetComponent<Tilemap>() : null;
         cells = parcel.Cells;
-        shown = new TileBase[cells.width * cells.height];
         if (seeder != null) seederHome = seeder.transform.localPosition;
         if (drone != null) droneHome = drone.localPosition;
         if (saleText != null) { saleStart = saleText.transform.localPosition; saleText.gameObject.SetActive(false); }
         if (hintMarker != null) hintStart = hintMarker.localPosition;
-    }
-
-    private void Start()
-    {
-        // The authored scene shows a fallow field; start the picture from the same place.
-        parcel.FillCrop(null);
+        if (attentionMarker != null) attentionStart = attentionMarker.localPosition;
     }
 
     private void Update()
     {
         if (rules == null || soil == null) return;
 
-        ShowHint();
+        ShowMarkers();
         SetShown(machines, field.AssignedSet > 0);
         bool depotHere = field.LandUse == FarmField.Use.Depot;
         SetShown(depotBuilding, depotHere);
         SetShown(depotParkedSet, depotHere && farm != null && farm.FieldUsingSet(farm.DepotSet) == null);
+        ShowController();
 
-        FarmField.Stage stage = field.CurrentStage(rules);
-        float progress = field.StageProgress(rules);
-        float quality = Quality();
+        CropForecast crop = field.Running ? field.Active : null;
+        FarmField.Stage stage = field.CurrentStage;
+        float progress = field.StageProgress;
 
-        PaintCrop(stage, progress, quality);
+        PaintCrop(crop, stage, progress);
         MoveSeeder(stage, progress);
-        MoveDrone(stage, progress);
-        RunIrrigation(stage, progress);
-        ShowCrates(stage, progress);
-        ShowSale();
+        MoveDrone(crop, stage, progress);
+        RunIrrigation(crop, stage, progress);
+        ShowCrates(crop, stage, progress);
+        ShowResult();
     }
 
-    // Share of the potential harvest this crop will reach: 1 when the land plus the machines
-    // satisfy the density, less when they do not. Drawn as full-size versus stunted cells.
-    private float Quality()
+    private static void SetShown(GameObject target, bool shown)
     {
-        if (!field.Running) return 1f;
-        HarvestResult r = rules.Evaluate(field.ActivePlan, field.Fertility, field.Moisture);
-        HarvestResult best = rules.Evaluate(field.ActivePlan, 1f, 1f);
-        return best.income > 0 ? (float)r.income / best.income : 1f;
+        if (target != null && target.activeSelf != shown) target.SetActive(shown);
     }
 
     // ---------- crop ----------
 
-    private void PaintCrop(FarmField.Stage stage, float progress, float quality)
+    // Every frame asks the parcel for the wanted tile in every cell. The parcel skips cells
+    // that already show it, so this is cheap, and it repairs anything that repainted the layer
+    // (the parcel's own rebuild when Play starts) without this script having to notice.
+    private void PaintCrop(CropForecast crop, FarmField.Stage stage, float progress)
     {
         int count = cells.width * cells.height;
+        bool beans = crop != null && crop.kind == CropKind.Recovery;
+        float quality = crop != null && crop.fullIncome > 0 ? (float)crop.income / crop.fullIncome : 1f;
+
         for (int i = 0; i < count; i++)
         {
             Vector2Int c = PathCell(i);
-            TileBase wanted = null;
             float here = (i + 0.5f) / count;
+            TileBase wanted = null;
 
             switch (stage)
             {
                 case FarmField.Stage.Sowing:
-                    if (progress >= here) wanted = seeded;
+                    if (progress >= here) wanted = beans ? beanSeeded : seeded;
                     break;
                 case FarmField.Stage.Growing:
-                    if (progress < 0.25f) wanted = seeded;
+                    if (beans) wanted = progress < 0.35f ? beanSeeded : progress < 0.7f ? beanYoung : beanGrown;
+                    else if (progress < 0.25f) wanted = seeded;
                     else if (progress < 0.5f) wanted = young;
                     else if (progress < 0.8f || !Thrives(c, quality)) wanted = growing;
                     else wanted = ready;
                     break;
-                case FarmField.Stage.Harvesting:
-                    if (progress < here) wanted = Thrives(c, quality) ? ready : growing;
+                case FarmField.Stage.Finishing:
+                    if (beans) wanted = progress < here ? beanGrown : (progress < 0.85f ? beanMulch : null);
+                    else if (progress < here) wanted = Thrives(c, quality) ? ready : growing;
                     break;
             }
-
-            if (shown[i] == wanted) continue;
-            shown[i] = wanted;
             parcel.SetCropTile(new Vector3Int(c.x, c.y, 0), wanted);
         }
     }
@@ -194,8 +206,7 @@ public class FieldView : MonoBehaviour
     // A smooth point along that same path, 0 to 1, in the Grid's local space.
     private Vector3 PathPoint(float t, out int facing)
     {
-        float rows = cells.height;
-        float f = Mathf.Clamp01(t) * rows;
+        float f = Mathf.Clamp01(t) * cells.height;
         int row = Mathf.Min((int)f, cells.height - 1);
         float u = f - row;
         bool back = row % 2 == 1;
@@ -216,11 +227,11 @@ public class FieldView : MonoBehaviour
         if (facing < seederFacings.Length && seederFacings[facing] != null) seeder.sprite = seederFacings[facing];
     }
 
-    private void MoveDrone(FarmField.Stage stage, float progress)
+    private void MoveDrone(CropForecast crop, FarmField.Stage stage, float progress)
     {
         if (drone == null) return;
-        bool working = stage == FarmField.Stage.Growing && field.ActivePlan.fertilizer != Care.Off
-            && progress >= droneWindow.x && progress <= droneWindow.y;
+        int dose = crop != null && crop.kind == CropKind.Cash ? crop.plan.fertilizer : 0;
+        bool working = stage == FarmField.Stage.Growing && dose > 0 && progress >= droneWindow.x && progress <= droneWindow.y;
 
         Vector3 ground = droneHome;
         float height = 0f;
@@ -236,62 +247,56 @@ public class FieldView : MonoBehaviour
         if (droneShadow != null) droneShadow.localPosition = ground;
         // A hidden field (no equipment set) has an inactive Animator, which warns if told anything.
         if (droneAnimator != null && droneAnimator.isActiveAndEnabled) droneAnimator.SetBool(Flying, working);
-        Spray(fertilizerSpray, working && height > flightHeight * 0.9f, fertilizerRates, field.ActivePlan.fertilizer);
+        Spray(fertilizerSpray, working && height > flightHeight * 0.9f, fertilizerRates, dose);
     }
 
-    private void RunIrrigation(FarmField.Stage stage, float progress)
+    private void RunIrrigation(CropForecast crop, FarmField.Stage stage, float progress)
     {
-        bool working = stage == FarmField.Stage.Growing && field.ActivePlan.watering != Care.Off
-            && progress >= waterWindow.x && progress <= waterWindow.y;
-        Spray(waterSpray, working, waterRates, field.ActivePlan.watering);
+        int dose = crop != null && crop.kind == CropKind.Cash ? crop.plan.watering : 0;
+        bool working = stage == FarmField.Stage.Growing && dose > 0 && progress >= waterWindow.x && progress <= waterWindow.y;
+        Spray(waterSpray, working, waterRates, dose);
     }
 
-    private static void Spray(ParticleSystem system, bool on, float[] rates, Care care)
+    // The rates are given at 0, 50 and 100 percent; a dose in between blends the two nearest.
+    private static void Spray(ParticleSystem system, bool on, float[] rates, int dose)
     {
         if (system == null) return;
+        float rate = 0f;
+        if (on && rates.Length >= 3)
+            rate = dose <= 50 ? Mathf.Lerp(rates[0], rates[1], dose / 50f) : Mathf.Lerp(rates[1], rates[2], (dose - 50) / 50f);
         ParticleSystem.EmissionModule emission = system.emission;
-        emission.rateOverTime = on && (int)care < rates.Length ? rates[(int)care] : 0f;
+        emission.rateOverTime = rate;
         if (!system.isPlaying) system.Play();
     }
 
-    private static void SetShown(GameObject target, bool shown)
-    {
-        if (target != null && target.activeSelf != shown) target.SetActive(shown);
-    }
+    // ---------- harvest and result ----------
 
-    private void ShowHint()
-    {
-        if (hintMarker == null) return;
-        bool wanted = intro != null && intro.Target == field;
-        if (hintMarker.gameObject.activeSelf != wanted) hintMarker.gameObject.SetActive(wanted);
-        if (wanted) hintMarker.localPosition = hintStart + Vector3.up * (0.12f * Mathf.Sin(Time.time * 4f));
-    }
-
-    // ---------- harvest and sale ----------
-
-    private void ShowCrates(FarmField.Stage stage, float progress)
+    private void ShowCrates(CropForecast crop, FarmField.Stage stage, float progress)
     {
         if (crates == null) return;
         int visible = 0;
-        if (stage == FarmField.Stage.Harvesting)
+        if (crop != null && crop.kind == CropKind.Cash && stage == FarmField.Stage.Finishing)
         {
-            HarvestResult r = rules.Evaluate(field.ActivePlan, field.Fertility, field.Moisture);
-            int total = Mathf.Clamp(Mathf.CeilToInt(r.income / (float)Mathf.Max(1, coinsPerCrate)), 1, crates.Length);
+            int total = Mathf.Clamp(Mathf.CeilToInt(crop.income / (float)Mathf.Max(1, coinsPerCrate)), 1, crates.Length);
             visible = Mathf.CeilToInt(total * progress);
         }
         for (int i = 0; i < crates.Length; i++)
             if (crates[i] != null) crates[i].enabled = i < visible;
     }
 
-    private void ShowSale()
+    private void ShowResult()
     {
         if (saleText == null) return;
-        if (soldSeen < 0) soldSeen = field.CropsSold;
-        if (field.CropsSold != soldSeen)
+        int finished = field.CashCompleted + field.RecoveryCompleted;
+        if (finishedSeen < 0) finishedSeen = finished;
+        if (finished != finishedSeen)
         {
-            soldSeen = field.CropsSold;
-            HarvestResult r = field.LastResult;
-            saleText.text = "+" + r.income + " sold\n<size=70%>net " + (r.Net >= 0 ? "+" : "") + r.Net + "</size>";
+            finishedSeen = finished;
+            CropForecast r = field.Last;
+            if (r != null && r.kind == CropKind.Cash)
+                saleText.text = "+" + r.income + " sold\n<size=70%>net " + Farm.Signed(r.Net) + "</size>";
+            else if (r != null)
+                saleText.text = "<color=#B9E07A>Soil " + Farm.Signed(r.FertilityChange) + "</color>\n<size=70%>now " + r.endFertility + "%</size>";
             saleTimer = saleTextSeconds;
             saleText.gameObject.SetActive(true);
         }
@@ -302,5 +307,41 @@ public class FieldView : MonoBehaviour
         saleText.transform.localPosition = saleStart + Vector3.up * (0.6f * t);
         saleText.alpha = t < 0.75f ? 1f : Mathf.InverseLerp(1f, 0.75f, t);
         if (saleTimer <= 0f) saleText.gameObject.SetActive(false);
+    }
+
+    // ---------- markers and the controller ----------
+
+    private void ShowMarkers()
+    {
+        float bob = 0.12f * Mathf.Sin(Time.time * 4f);
+        bool hint = intro != null && intro.Target == field;
+        bool alarm = field.State == FarmField.Status.Paused && Farm.IsAlarm(field.Pause);
+        if (hintMarker != null)
+        {
+            // The alarm takes the spot above the field when both would show.
+            SetShown(hintMarker.gameObject, hint && !alarm);
+            if (hint && !alarm) hintMarker.localPosition = hintStart + Vector3.up * bob;
+        }
+        if (attentionMarker != null)
+        {
+            SetShown(attentionMarker.gameObject, alarm);
+            if (alarm) attentionMarker.localPosition = attentionStart + Vector3.up * bob;
+        }
+    }
+
+    private void ShowController()
+    {
+        bool installed = field.ControllerInstalled && field.Owned && field.LandUse != FarmField.Use.Depot;
+        SetShown(controller, installed);
+        if (!installed || controllerLight == null) return;
+
+        Color off = new Color(0.45f, 0.45f, 0.45f);
+        Color working = new Color(0.55f, 0.9f, 0.35f);
+        Color restoring = new Color(0.95f, 0.75f, 0.25f);
+        if (!field.ControllerActive) { controllerLight.color = off; return; }
+        Color on = field.ControllerRecovering ? restoring : working;
+        // A slow pulse says "this is running" without drawing the eye like the alarm does.
+        float pulse = 0.75f + 0.25f * Mathf.Sin(Time.time * 2.5f);
+        controllerLight.color = new Color(on.r * pulse, on.g * pulse, on.b * pulse, 1f);
     }
 }

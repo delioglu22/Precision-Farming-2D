@@ -4104,15 +4104,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FarmField
   id: A
-  fertility: 0.9
-  moisture: 0.25
+  startFertility: 90
+  moisturePercent: 25
+  arable: 1
   ownedAtStart: 1
   purchasePrice: 0
-  starterPlan:
-    density: 1
+  preparedWhenOwned: 1
+  reservedForIntroduction: 0
+  starterCashPlan:
+    density: 50
     fertilizer: 0
     watering: 0
-  farmingAtStart: 1
 --- !u!114 &82343707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4132,10 +4134,17 @@ MonoBehaviour:
   depotBuilding: {fileID: 1480432489}
   depotParkedSet: {fileID: 1480432488}
   hintMarker: {fileID: 348300893}
+  attentionMarker: {fileID: 0}
+  controller: {fileID: 0}
+  controllerLight: {fileID: 0}
   seeded: {fileID: 11400000, guid: 4f2ed4ca909014c988d50c9c65474185, type: 2}
   young: {fileID: 11400000, guid: a765a8355d3b348eda67881e1e1f0ba9, type: 2}
   growing: {fileID: 11400000, guid: 718ea64885319488d9a0764ea63538a4, type: 2}
   ready: {fileID: 11400000, guid: 5f21f90be83f041c38bc739e149aee65, type: 2}
+  beanSeeded: {fileID: 0}
+  beanYoung: {fileID: 0}
+  beanGrown: {fileID: 0}
+  beanMulch: {fileID: 0}
   seeder: {fileID: 1139083162}
   seederFacings:
   - {fileID: 21300000, guid: d0f34dd03ee6142de81e46bb78e855d8, type: 3}
@@ -45600,15 +45609,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FarmField
   id: B
-  fertility: 0.55
-  moisture: 0.75
+  startFertility: 55
+  moisturePercent: 75
+  arable: 1
   ownedAtStart: 0
   purchasePrice: 0
-  starterPlan:
-    density: 1
+  preparedWhenOwned: 1
+  reservedForIntroduction: 1
+  starterCashPlan:
+    density: 50
     fertilizer: 0
     watering: 0
-  farmingAtStart: 1
 --- !u!114 &688744220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45628,10 +45639,17 @@ MonoBehaviour:
   depotBuilding: {fileID: 1482921375}
   depotParkedSet: {fileID: 1482921374}
   hintMarker: {fileID: 196178011}
+  attentionMarker: {fileID: 0}
+  controller: {fileID: 0}
+  controllerLight: {fileID: 0}
   seeded: {fileID: 11400000, guid: 4f2ed4ca909014c988d50c9c65474185, type: 2}
   young: {fileID: 11400000, guid: a765a8355d3b348eda67881e1e1f0ba9, type: 2}
   growing: {fileID: 11400000, guid: 718ea64885319488d9a0764ea63538a4, type: 2}
   ready: {fileID: 11400000, guid: 5f21f90be83f041c38bc739e149aee65, type: 2}
+  beanSeeded: {fileID: 0}
+  beanYoung: {fileID: 0}
+  beanGrown: {fileID: 0}
+  beanMulch: {fileID: 0}
   seeder: {fileID: 1425113732}
   seederFacings:
   - {fileID: 21300000, guid: d0f34dd03ee6142de81e46bb78e855d8, type: 3}
@@ -54118,10 +54136,17 @@ MonoBehaviour:
   depotBuilding: {fileID: 994615380}
   depotParkedSet: {fileID: 994615379}
   hintMarker: {fileID: 975551444}
+  attentionMarker: {fileID: 0}
+  controller: {fileID: 0}
+  controllerLight: {fileID: 0}
   seeded: {fileID: 11400000, guid: 4f2ed4ca909014c988d50c9c65474185, type: 2}
   young: {fileID: 11400000, guid: a765a8355d3b348eda67881e1e1f0ba9, type: 2}
   growing: {fileID: 11400000, guid: 718ea64885319488d9a0764ea63538a4, type: 2}
   ready: {fileID: 11400000, guid: 5f21f90be83f041c38bc739e149aee65, type: 2}
+  beanSeeded: {fileID: 0}
+  beanYoung: {fileID: 0}
+  beanGrown: {fileID: 0}
+  beanMulch: {fileID: 0}
   seeder: {fileID: 0}
   seederFacings:
   - {fileID: 21300000, guid: d0f34dd03ee6142de81e46bb78e855d8, type: 3}
@@ -54161,15 +54186,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FarmField
   id: D
-  fertility: 0.35
-  moisture: 0.5
+  startFertility: 35
+  moisturePercent: 50
+  arable: 0
   ownedAtStart: 1
   purchasePrice: 0
-  starterPlan:
-    density: 1
+  preparedWhenOwned: 0
+  reservedForIntroduction: 0
+  starterCashPlan:
+    density: 50
     fertilizer: 0
     watering: 0
-  farmingAtStart: 0
 --- !u!1 &835949665
 GameObject:
   m_ObjectHideFlags: 0
@@ -93375,15 +93402,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FarmField
   id: C
-  fertility: 0.95
-  moisture: 0.85
+  startFertility: 95
+  moisturePercent: 85
+  arable: 1
   ownedAtStart: 0
   purchasePrice: 40
-  starterPlan:
-    density: 1
+  preparedWhenOwned: 0
+  reservedForIntroduction: 0
+  starterCashPlan:
+    density: 50
     fertilizer: 0
     watering: 0
-  farmingAtStart: 0
 --- !u!114 &1421142315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93403,10 +93432,17 @@ MonoBehaviour:
   depotBuilding: {fileID: 1474736039}
   depotParkedSet: {fileID: 1474736038}
   hintMarker: {fileID: 1490855140}
+  attentionMarker: {fileID: 0}
+  controller: {fileID: 0}
+  controllerLight: {fileID: 0}
   seeded: {fileID: 11400000, guid: 4f2ed4ca909014c988d50c9c65474185, type: 2}
   young: {fileID: 11400000, guid: a765a8355d3b348eda67881e1e1f0ba9, type: 2}
   growing: {fileID: 11400000, guid: 718ea64885319488d9a0764ea63538a4, type: 2}
   ready: {fileID: 11400000, guid: 5f21f90be83f041c38bc739e149aee65, type: 2}
+  beanSeeded: {fileID: 0}
+  beanYoung: {fileID: 0}
+  beanGrown: {fileID: 0}
+  beanMulch: {fileID: 0}
   seeder: {fileID: 299799025}
   seederFacings:
   - {fileID: 21300000, guid: d0f34dd03ee6142de81e46bb78e855d8, type: 3}
@@ -119569,8 +119605,8 @@ MonoBehaviour:
   second: {fileID: 688744219}
   depotSite: {fileID: 835743634}
   third: {fileID: 1421142314}
-  selection: {fileID: 11400000, guid: 2a9207ce20ace314095f1440b93e05bf, type: 2}
   farm: {fileID: 1783010235}
+  tiredSoil: 45
 --- !u!1 &1787837617
 GameObject:
   m_ObjectHideFlags: 0

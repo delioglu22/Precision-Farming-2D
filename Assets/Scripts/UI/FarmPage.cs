@@ -3,29 +3,35 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// Fills the parcel panel with the picked field's farming data and lets the player edit its
-/// plan. <see cref="ParcelPanel"/> keeps the navigation (open, expand, close); this only binds.
+/// Fills the parcel panel with the picked field's farming data and lets the player prepare,
+/// start and adjust its crops. <see cref="ParcelPanel"/> keeps the navigation and
+/// <see cref="LandPage"/> the land decisions; this binds the farming part.
 ///
-/// Unity's UI has the buttons and layout but no data binding, so this script is the glue: it
-/// reads the <see cref="FarmField"/> on the picked parcel and writes text and button looks.
+/// Unity's UI has the sliders, toggles and layout but no data binding, so this script is the
+/// glue. It never decides anything itself: the forecast comes from <see cref="Farm.Decide"/>,
+/// the same call that chooses the real crop, and every button goes through a Farm method that
+/// checks its rules again.
 ///
-/// Edits go into a draft first. Save copies the draft onto the field; picking another parcel
-/// or closing the panel throws the draft away, so an unsaved edit never leaks into a field.
+/// Edits go into a draft first. Start (on an idle field) or Apply next crop (while a crop
+/// grows) confirms it; Undo or picking another parcel throws it away.
 /// </summary>
 [DisallowMultipleComponent]
 public class FarmPage : MonoBehaviour
 {
-    /// <summary>One machine's three choices, shown as three buttons in a row.</summary>
+    /// <summary>One machine's setting: a slider in steps of five percent and its value label.</summary>
     [System.Serializable]
-    public class OptionRow
+    public class SettingRow
     {
-        public Button[] options = new Button[3];
+        public GameObject row;
+        [Tooltip("Whole numbers 0..20; each step is five percent.")]
+        public Slider slider;
+        public TMP_Text value;
     }
 
     [Header("Selection")]
     [Tooltip("Picks are announced here. The same asset the map scene raises on.")]
     [SerializeField] private ParcelSelectionChannel channel;
-    [Tooltip("Where the running farm (wallet, rules) is found.")]
+    [Tooltip("Where the running farm is found.")]
     [SerializeField] private FarmChannel farmChannel;
 
     [Header("Sheet")]
@@ -33,26 +39,45 @@ public class FarmPage : MonoBehaviour
     [SerializeField] private GameObject readings;
     [SerializeField] private TMP_Text fertilityValue;
     [SerializeField] private TMP_Text moistureValue;
-    [Tooltip("One line about the crop: what it is doing and how long is left.")]
-    [SerializeField] private TMP_Text statusValue;
-    [Tooltip("Reads Crop on a farmed field and Land everywhere else.")]
+    [Tooltip("Reads Crop on farmed land and Land everywhere else.")]
     [SerializeField] private TMP_Text statusLabel;
+    [SerializeField] private TMP_Text statusValue;
 
-    [Header("Plan")]
-    [Tooltip("Rows revealed step by step during the introduction.")]
-    [SerializeField] private GameObject densityRow;
-    [SerializeField] private GameObject fertilizerRow;
-    [SerializeField] private OptionRow density;
-    [SerializeField] private OptionRow fertilizer;
-    [SerializeField] private OptionRow watering;
-    [SerializeField] private Button saveButton;
-    [SerializeField] private Button revertButton;
-    [SerializeField] private TMP_Text planNote;
+    [Header("Crop choice")]
+    [SerializeField] private Button cashButton;
+    [SerializeField] private Button recoveryButton;
+    [SerializeField] private TMP_Text cropNote;
 
-    [Header("Result")]
-    [SerializeField] private TMP_Text resultTitle;
-    [Tooltip("The income/cost breakdown, one line each, numbers lined up with a <pos> tag.")]
-    [SerializeField] private TMP_Text resultLines;
+    [Header("Cabbage settings")]
+    [SerializeField] private SettingRow density;
+    [SerializeField] private SettingRow fertilizer;
+    [SerializeField] private SettingRow watering;
+
+    [Header("Forecast")]
+    [SerializeField] private TMP_Text forecastTitle;
+    [SerializeField] private TMP_Text forecastLines;
+    [Tooltip("Red text: why this plan cannot start, or will stop before its next crop.")]
+    [SerializeField] private TMP_Text forecastWarning;
+
+    [Header("Actions")]
+    [SerializeField] private Button startButton;
+    [SerializeField] private TMP_Text startLabel;
+    [SerializeField] private Button undoButton;
+    [SerializeField] private Toggle repeatToggle;
+
+    [Header("Growing now")]
+    [SerializeField] private GameObject currentBox;
+    [SerializeField] private TMP_Text currentLines;
+
+    [Header("Soil controller")]
+    [SerializeField] private GameObject controllerRow;
+    [SerializeField] private Button installButton;
+    [SerializeField] private TMP_Text installLabel;
+    [SerializeField] private Toggle autoToggle;
+    [SerializeField] private TMP_Text controllerNote;
+
+    [Header("History")]
+    [SerializeField] private TMP_Text lastLines;
 
     [Header("Looks")]
     [SerializeField] private Sprite chosenSprite;
@@ -62,19 +87,28 @@ public class FarmPage : MonoBehaviour
 
     private FarmField field;
     private FarmPlan draft;
-    // The field's plan when the draft was last taken from it. If the field's plan changes on
-    // its own (replanting resets it) while the player has not edited, the draft follows.
+    private CropKind draftCrop;
+    // The field's confirmed settings when the draft was last taken from them. If they change
+    // on their own (a cleared field resets) while the player has not edited, the draft follows.
     private FarmPlan synced;
+    private CropKind syncedCrop;
+    private bool refreshing;
+
+    private Farm CurrentFarm { get { return farmChannel != null ? farmChannel.Current : null; } }
 
     private void OnEnable()
     {
         if (channel != null) channel.Selected += OnSelected;
-        Hook(density, i => draft.density = (Density)i);
-        Hook(fertilizer, i => draft.fertilizer = (Care)i);
-        Hook(watering, i => draft.watering = (Care)i);
-        if (saveButton != null) saveButton.onClick.AddListener(Save);
-        if (revertButton != null) revertButton.onClick.AddListener(Revert);
-        Refresh();
+        Hook(density, v => draft.density = v);
+        Hook(fertilizer, v => draft.fertilizer = v);
+        Hook(watering, v => draft.watering = v);
+        if (cashButton != null) cashButton.onClick.AddListener(ChooseCash);
+        if (recoveryButton != null) recoveryButton.onClick.AddListener(ChooseRecovery);
+        if (startButton != null) startButton.onClick.AddListener(OnStart);
+        if (undoButton != null) undoButton.onClick.AddListener(Revert);
+        if (repeatToggle != null) repeatToggle.onValueChanged.AddListener(OnRepeat);
+        if (installButton != null) installButton.onClick.AddListener(OnInstall);
+        if (autoToggle != null) autoToggle.onValueChanged.AddListener(OnAuto);
     }
 
     private void OnDisable()
@@ -83,167 +117,331 @@ public class FarmPage : MonoBehaviour
         Unhook(density);
         Unhook(fertilizer);
         Unhook(watering);
-        if (saveButton != null) saveButton.onClick.RemoveListener(Save);
-        if (revertButton != null) revertButton.onClick.RemoveListener(Revert);
+        if (cashButton != null) cashButton.onClick.RemoveListener(ChooseCash);
+        if (recoveryButton != null) recoveryButton.onClick.RemoveListener(ChooseRecovery);
+        if (startButton != null) startButton.onClick.RemoveListener(OnStart);
+        if (undoButton != null) undoButton.onClick.RemoveListener(Revert);
+        if (repeatToggle != null) repeatToggle.onValueChanged.RemoveListener(OnRepeat);
+        if (installButton != null) installButton.onClick.RemoveListener(OnInstall);
+        if (autoToggle != null) autoToggle.onValueChanged.RemoveListener(OnAuto);
     }
 
-    // Each option button reports its own index. The lambda has to copy the loop variable,
-    // or every button would report the last index.
-    private void Hook(OptionRow row, System.Action<int> choose)
+    private void Hook(SettingRow row, System.Action<int> set)
     {
-        if (row == null) return;
-        for (int i = 0; i < row.options.Length; i++)
-        {
-            int index = i;
-            if (row.options[i] != null)
-                row.options[i].onClick.AddListener(() => { choose(index); Refresh(); });
-        }
+        if (row == null || row.slider == null) return;
+        row.slider.onValueChanged.AddListener(v => { if (!refreshing) set(Mathf.RoundToInt(v) * FarmPlan.Step); });
     }
 
     // RemoveAllListeners only clears listeners added from code, never ones set in the Inspector.
-    private void Unhook(OptionRow row)
+    private void Unhook(SettingRow row)
     {
-        if (row == null) return;
-        foreach (Button b in row.options)
-            if (b != null) b.onClick.RemoveAllListeners();
-    }
-
-    // Text that changes with time (the crop's stage, the last harvest) is rewritten every frame
-    // while a field is shown. Buttons are only touched when the draft or the pick changes.
-    private void Update()
-    {
-        if (field != null) ShowLive();
+        if (row != null && row.slider != null) row.slider.onValueChanged.RemoveAllListeners();
     }
 
     private void OnSelected(Parcel parcel)
     {
         field = parcel != null ? parcel.GetComponent<FarmField>() : null;
-        if (field != null) { draft = field.Plan; synced = field.Plan; }
-        Refresh();
+        if (field != null) TakeDraft();
     }
 
-    private void Save()
+    private void TakeDraft()
     {
-        if (field == null) return;
-        field.ConfirmPlan(draft);
+        draft = field.CashPlan;
+        draftCrop = field.ManualCrop;
         synced = draft;
-        Refresh();
+        syncedCrop = draftCrop;
+    }
+
+    private void ChooseCash() { draftCrop = CropKind.Cash; }
+    private void ChooseRecovery() { draftCrop = CropKind.Recovery; }
+
+    private bool Edited { get { return field != null && (!draft.Same(field.CashPlan) || draftCrop != field.ManualCrop); } }
+
+    private void OnStart()
+    {
+        Farm farm = CurrentFarm;
+        if (farm == null || field == null) return;
+        if (field.Running) farm.ApplyNextCrop(field, draft, draftCrop);
+        else farm.StartField(field, draft, draftCrop);
+        synced = field.CashPlan;
+        syncedCrop = field.ManualCrop;
     }
 
     private void Revert()
     {
-        if (field == null) return;
-        draft = field.Plan;
-        synced = field.Plan;
-        Refresh();
+        if (field != null) TakeDraft();
     }
 
-    private void Refresh()
+    private void OnRepeat(bool on)
     {
-        bool known = field != null;
-        if (readings != null) readings.SetActive(known);
+        Farm farm = CurrentFarm;
+        if (!refreshing && farm != null && field != null) farm.SetRepeat(field, on);
+    }
+
+    private void OnInstall()
+    {
+        Farm farm = CurrentFarm;
+        if (farm != null && field != null) farm.InstallController(field);
+    }
+
+    private void OnAuto(bool on)
+    {
+        Farm farm = CurrentFarm;
+        if (!refreshing && farm != null && field != null) farm.SetControllerEnabled(field, on);
+    }
+
+    // Everything on the page follows the farm's state each frame while a field is shown; the
+    // panel is small and nothing here is expensive.
+    private void Update()
+    {
+        Farm farm = CurrentFarm;
+        bool known = field != null && farm != null && farm.Rules != null;
+        if (readings != null && readings.activeSelf != known) readings.SetActive(known);
         if (!known) return;
 
-        if (fertilityValue != null) fertilityValue.text = Percent(field.Fertility);
-        if (moistureValue != null) moistureValue.text = Percent(field.Moisture);
+        if (!field.CashPlan.Same(synced) || field.ManualCrop != syncedCrop)
+        {
+            bool untouched = draft.Same(synced) && draftCrop == syncedCrop;
+            synced = field.CashPlan;
+            syncedCrop = field.ManualCrop;
+            if (untouched) { draft = synced; draftCrop = syncedCrop; }
+        }
 
-        Show(density, (int)draft.density);
-        Show(fertilizer, (int)draft.fertilizer);
-        Show(watering, (int)draft.watering);
-
-        ShowLive();
+        refreshing = true;
+        ShowSheet(farm);
+        ShowSettings(farm);
+        ShowForecast(farm);
+        ShowActions(farm);
+        ShowCurrent();
+        ShowController(farm);
+        ShowLast();
+        refreshing = false;
     }
 
-    private void ShowLive()
+    // ---------- sheet ----------
+
+    private void ShowSheet(Farm farm)
     {
-        Farm farm = farmChannel != null ? farmChannel.Current : null;
-        if (farm == null || farm.Rules == null) return;
-        FarmRules rules = farm.Rules;
-
-        if (statusValue != null) statusValue.text = Status(farm);
+        if (fertilityValue != null) fertilityValue.text = field.Fertility + "%";
+        if (moistureValue != null) moistureValue.text = field.Moisture + "%";
         if (statusLabel != null) statusLabel.text = field.Farming ? "Crop" : "Land";
-
-        if (!field.Plan.Same(synced))
-        {
-            bool untouched = draft.Same(synced);
-            synced = field.Plan;
-            if (untouched) { draft = field.Plan; Refresh(); return; }
-        }
-
-        FarmIntro intro = farm.Intro;
-        if (fertilizerRow != null) fertilizerRow.SetActive(intro == null || intro.FertilizerUnlocked);
-        if (densityRow != null) densityRow.SetActive(intro == null || intro.DensityUnlocked);
-
-        bool edited = !draft.Same(field.Plan);
-        if (saveButton != null) saveButton.interactable = edited;
-        if (revertButton != null) revertButton.interactable = edited;
-
-        if (planNote != null)
-        {
-            int cost = rules.Costs(draft).Cost;
-            if (edited) planNote.text = "Unsaved · " + cost + " coins per crop";
-            else if (field.Running && !field.ActivePlan.Same(field.Plan)) planNote.text = "Saved · starts with the next crop";
-            else planNote.text = "Saved · " + cost + " coins per crop";
-        }
-
-        if (resultTitle != null) resultTitle.text = "Last harvest · farm coins " + farm.Coins;
-        if (resultLines == null) return;
-        if (!field.HasResult)
-        {
-            resultLines.text = "The first crop has not been sold yet.";
-            return;
-        }
-        HarvestResult r = field.LastResult;
-        resultLines.text =
-            "Harvest sold<pos=75%>+" + r.income + "\n" +
-            "Seed<pos=75%>-" + r.seedCost + "\n" +
-            "Fertilizer<pos=75%>-" + r.fertilizerCost + "\n" +
-            "Water<pos=75%>-" + r.waterCost + "\n" +
-            "<b>Net<pos=75%>" + (r.Net >= 0 ? "+" : "") + r.Net + "</b>";
+        if (statusValue != null) statusValue.text = Status(farm);
     }
 
     private string Status(Farm farm)
     {
-        FarmRules rules = farm.Rules;
         if (field.ForSale) return "For sale · " + field.PurchasePrice + " coins";
         if (!field.Owned) return "Not your land yet";
         if (field.LandUse == FarmField.Use.Depot) return "Equipment depot";
-        if (!field.Farming) return farm.CanEverPlant(field) ? "Empty land" : "Empty land · too poor to farm";
-        if (field.PendingStop && field.Running) return "Last crop · " + field.CurrentStage(rules);
-        if (field.PendingStop) return "Stopping";
-        if (field.WaitingForMoney) return "Waiting for " + rules.Costs(field.Plan).Cost + " coins";
+        if (!field.Farming) return field.Arable ? "Empty farmland" : "Building land only";
 
-        FarmField.Stage stage = field.CurrentStage(rules);
-        float progress = field.StageProgress(rules);
-        switch (stage)
+        switch (field.State)
         {
-            case FarmField.Stage.Sowing: return "Sowing · " + SecondsLeft(progress, rules.SowSeconds);
-            case FarmField.Stage.Growing: return "Growing · " + SecondsLeft(progress, rules.GrowSeconds);
-            case FarmField.Stage.Harvesting: return "Harvesting · " + SecondsLeft(progress, rules.HarvestSeconds);
-            default: return "Starting";
+            case FarmField.Status.Running:
+                string time = Mathf.CeilToInt(field.SecondsLeftInStage) + "s";
+                string what = field.Active.kind == CropKind.Recovery ? "Restoring soil" : "Producing";
+                string stage = field.CurrentStage == FarmField.Stage.Sowing ? "sowing"
+                    : field.CurrentStage == FarmField.Stage.Growing ? "growing"
+                    : field.Active.kind == CropKind.Recovery ? "ploughing in" : "harvesting";
+                if (field.PendingClear) return "Last crop, then clearing · " + time;
+                return what + " · " + stage + " · " + time;
+            case FarmField.Status.Paused:
+                switch (field.Pause)
+                {
+                    case PauseReason.SoilRestored: return "Soil restored · choose cabbage";
+                    case PauseReason.Unprofitable: return "Paused · plan would lose money";
+                    case PauseReason.CannotProfit: return "Paused · plan cannot profit";
+                    case PauseReason.NoFunds: return "Paused · not enough coins";
+                    case PauseReason.NoEquipment: return "Paused · no equipment";
+                    default: return "Paused · choose a density";
+                }
+            default:
+                return "Ready · press Start in Farm plan";
         }
     }
 
-    private static string SecondsLeft(float progress, float stageSeconds)
+    // ---------- settings ----------
+
+    private void ShowSettings(Farm farm)
     {
-        return Mathf.CeilToInt((1f - progress) * stageSeconds) + "s";
+        bool controller = field.ControllerInstalled && field.ControllerEnabled;
+        bool restoring = draftCrop == CropKind.Recovery && !controller;
+
+        ShowChoice(cashButton, draftCrop == CropKind.Cash, !controller);
+        ShowChoice(recoveryButton, draftCrop == CropKind.Recovery, !controller);
+        if (cropNote != null)
+        {
+            if (controller) cropNote.text = "The soil controller picks the crop: it restores below " + farm.Rules.RestoreBelow
+                + "% and returns to cabbage above " + farm.Rules.ReturnAbove + "%. These are its cabbage settings.";
+            else if (restoring) cropNote.text = "Green beans use a fixed recipe: no seed cost, no fertilizer or water, no sale. They put "
+                + farm.Rules.RestorationGain + " points back into the soil. Your cabbage settings below are kept for later.";
+            else cropNote.text = "Cabbage sells; each crop uses some soil fertility.";
+        }
+
+        ShowRow(density, draft.density, !restoring);
+        ShowRow(fertilizer, draft.fertilizer, !restoring);
+        ShowRow(watering, draft.watering, !restoring);
     }
 
-    private void Show(OptionRow row, int chosen)
+    private void ShowChoice(Button button, bool chosen, bool usable)
+    {
+        if (button == null) return;
+        button.interactable = usable;
+        if (button.image != null) button.image.sprite = chosen ? chosenSprite : otherSprite;
+        TMP_Text label = button.GetComponentInChildren<TMP_Text>();
+        if (label != null) label.color = Faded(chosen ? chosenText : otherText, usable);
+    }
+
+    // The buttons swap sprites rather than tint, so a disabled one would look the same as an
+    // enabled one; fading its label is what tells the two apart.
+    private static void SetUsable(Button button, bool usable)
+    {
+        if (button == null) return;
+        button.interactable = usable;
+        TMP_Text label = button.GetComponentInChildren<TMP_Text>();
+        if (label != null) { Color c = label.color; c.a = usable ? 1f : 0.4f; label.color = c; }
+    }
+
+    private static Color Faded(Color c, bool usable) { c.a = usable ? 1f : 0.55f; return c; }
+
+    private void ShowRow(SettingRow row, int percent, bool usable)
     {
         if (row == null) return;
-        for (int i = 0; i < row.options.Length; i++)
+        if (row.slider != null)
         {
-            if (row.options[i] == null) continue;
-            Image image = row.options[i].image;
-            if (image != null) image.sprite = i == chosen ? chosenSprite : otherSprite;
-            TMP_Text label = row.options[i].GetComponentInChildren<TMP_Text>();
-            if (label != null) label.color = i == chosen ? chosenText : otherText;
+            row.slider.SetValueWithoutNotify(percent / FarmPlan.Step);
+            row.slider.interactable = usable;
+        }
+        if (row.value != null) row.value.text = percent + "%";
+    }
+
+    // ---------- forecast ----------
+
+    private void ShowForecast(Farm farm)
+    {
+        int startSoil = farm.NextStartFertility(field);
+        Farm.Decision d = farm.Decide(field, draft, draftCrop, startSoil);
+        CropForecast f = d.forecast;
+
+        if (forecastTitle != null) forecastTitle.text = field.Running ? "Next crop forecast" : "Forecast before Start";
+
+        if (forecastLines != null)
+        {
+            string crop = "<b>" + (d.kind == CropKind.Recovery ? "Green beans (restore soil)" : "Cabbage") + "</b>"
+                + (d.byController ? " · chosen by the soil controller" : string.Empty) + "\n";
+            if (d.kind == CropKind.Recovery)
+                forecastLines.text = crop +
+                    "Upfront cost<pos=62%>" + f.Cost + "\n" +
+                    "Sale<pos=62%>none\n" +
+                    "<b>Soil<pos=62%>" + f.startFertility + "% -> " + f.endFertility + "% (" + Farm.Signed(f.FertilityChange) + ")</b>";
+            else
+                forecastLines.text = crop +
+                    "Seed · fertilizer · water<pos=62%>-" + f.seedCost + " · -" + f.fertilizerCost + " · -" + f.waterCost + "\n" +
+                    "Upfront cost<pos=62%>" + f.Cost + "\n" +
+                    "Expected sale<pos=62%>+" + f.income + "\n" +
+                    "<b>Expected net<pos=62%>" + Farm.Signed(f.Net) + "</b>\n" +
+                    "Soil<pos=62%>" + f.startFertility + "% -> " + f.endFertility + "% (" + Farm.Signed(f.FertilityChange) + ")";
+        }
+
+        if (forecastWarning != null)
+        {
+            string warning = null;
+            if (d.reason != PauseReason.None) warning = farm.ReasonText(field, d.reason, d);
+            else if (!field.Running) warning = farm.WhyCannotStart(field, draft, draftCrop);
+            else if (d.kind == CropKind.Cash && f.Cost + farm.ReserveOfOthers(field) > farm.Coins + (field.Active.kind == CropKind.Cash ? field.Active.income : 0))
+                warning = "Coins may be short for this plan when the next crop starts.";
+            forecastWarning.text = warning ?? string.Empty;
         }
     }
 
-    private static string Percent(float value)
+    // ---------- actions ----------
+
+    private void ShowActions(Farm farm)
     {
-        return Mathf.RoundToInt(value * 100f) + "%";
+        if (startButton != null)
+        {
+            if (field.Running)
+            {
+                SetUsable(startButton, Edited && field.Farming);
+                if (startLabel != null) startLabel.text = "Apply next crop";
+            }
+            else
+            {
+                SetUsable(startButton, farm.WhyCannotStart(field, draft, draftCrop) == null);
+                if (startLabel != null) startLabel.text = !field.Farming ? "Start farming" : field.State == FarmField.Status.Paused ? "Resume" : "Start";
+            }
+        }
+        SetUsable(undoButton, Edited);
+        if (repeatToggle != null)
+        {
+            if (repeatToggle.gameObject.activeSelf != field.Farming) repeatToggle.gameObject.SetActive(field.Farming);
+            repeatToggle.SetIsOnWithoutNotify(field.Repeat);
+        }
+    }
+
+    private void ShowCurrent()
+    {
+        bool show = field.Running && field.Active != null;
+        if (currentBox != null && currentBox.activeSelf != show) currentBox.SetActive(show);
+        if (!show || currentLines == null) return;
+        CropForecast a = field.Active;
+        string crop = a.kind == CropKind.Recovery ? "Green beans" : "Cabbage " + a.plan.density + "/" + a.plan.fertilizer + "/" + a.plan.watering + "%";
+        string body = a.kind == CropKind.Recovery
+            ? "Paid " + a.Cost + " · no sale · soil -> " + a.endFertility + "%"
+            : a.legacy
+                ? "Paid " + a.Cost + " · expected sale +" + a.income
+                : "Paid " + a.Cost + " · expected sale +" + a.income + " (net " + Farm.Signed(a.Net) + ") · soil -> " + a.endFertility + "%";
+        currentLines.text = "<b>Growing now:</b> " + crop + (a.automatic ? " (soil controller)" : string.Empty) + "\n" + body;
+    }
+
+    // ---------- soil controller ----------
+
+    private void ShowController(Farm farm)
+    {
+        bool show = farm.ControllersUnlocked && field.Owned && field.Arable;
+        if (controllerRow != null && controllerRow.activeSelf != show) controllerRow.SetActive(show);
+        if (!show) return;
+
+        bool installed = field.ControllerInstalled;
+        if (installButton != null)
+        {
+            if (installButton.gameObject.activeSelf == installed) installButton.gameObject.SetActive(!installed);
+            SetUsable(installButton, farm.WhyCannotInstall(field) == null);
+        }
+        if (installLabel != null)
+            installLabel.text = farm.InstallCredits > 0 ? "Install · free kit" : "Install · " + farm.Rules.ControllerInstallPrice + " coins";
+        if (autoToggle != null)
+        {
+            if (autoToggle.gameObject.activeSelf != installed) autoToggle.gameObject.SetActive(installed);
+            autoToggle.SetIsOnWithoutNotify(field.ControllerEnabled);
+        }
+        if (controllerNote != null)
+        {
+            if (!installed)
+            {
+                string why = farm.WhyCannotInstall(field);
+                controllerNote.text = "Soil controller: restores below " + farm.Rules.RestoreBelow + "%, back to cabbage above "
+                    + farm.Rules.ReturnAbove + "%." + (why != null ? "\n<color=#8A3D3B>" + why + "</color>" : string.Empty);
+            }
+            else if (!field.ControllerEnabled) controllerNote.text = "Soil controller installed, switched off. You choose the crop by hand.";
+            else controllerNote.text = field.ControllerRecovering
+                ? "Soil controller: restoring. Cabbage returns above " + farm.Rules.ReturnAbove + "% when it pays."
+                : "Soil controller: growing cabbage. Restores below " + farm.Rules.RestoreBelow + "% or when cabbage would not pay.";
+        }
+    }
+
+    // ---------- history ----------
+
+    private void ShowLast()
+    {
+        if (lastLines == null) return;
+        CropForecast r = field.Last;
+        if (r == null) { lastLines.text = "<b>Last completed crop</b>\nNone yet."; return; }
+        if (r.kind == CropKind.Recovery)
+            lastLines.text = "<b>Last completed crop: green beans</b>\nNo sale · soil " + r.startFertility + "% -> " + r.endFertility + "% (" + Farm.Signed(r.FertilityChange) + ")";
+        else
+            lastLines.text = "<b>Last completed crop: cabbage</b>\nSold +" + r.income + " · seed -" + r.seedCost + " · fertilizer -" + r.fertilizerCost
+                + " · water -" + r.waterCost + " · <b>net " + Farm.Signed(r.Net) + "</b>"
+                + (r.legacy ? string.Empty : "\nSoil " + r.startFertility + "% -> " + r.endFertility + "%");
     }
 }

@@ -14,37 +14,117 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FarmRules
   startingCoins: 120
   coinsPerUnit: 1
-  plantingThreshold: 0.5
+  minimumReserve: 2
   startingSets: 2
   depotPrice: 120
   depotSets: 1
   sowSeconds: 8
   growSeconds: 40
-  harvestSeconds: 12
+  finishSeconds: 12
   densities:
-  - seedCost: 6
-    potentialHarvest: 24
+  - percent: 0
+    seedCost: 0
+    potentialIncome: 0
+    waterDemand: 0
+    fertilityDemand: 0
+    fertilityUsed: 0
+  - percent: 25
+    seedCost: 6
+    potentialIncome: 24
     waterDemand: 0.35
     fertilityDemand: 0.55
-  - seedCost: 12
-    potentialHarvest: 40
+    fertilityUsed: 10
+  - percent: 50
+    seedCost: 12
+    potentialIncome: 40
     waterDemand: 0.55
     fertilityDemand: 0.75
-  - seedCost: 20
-    potentialHarvest: 58
+    fertilityUsed: 15
+  - percent: 100
+    seedCost: 20
+    potentialIncome: 58
     waterDemand: 0.85
     fertilityDemand: 0.95
+    fertilityUsed: 20
   fertilizers:
-  - cost: 0
+  - percent: 0
+    cost: 0
     support: 0
-  - cost: 8
+  - percent: 50
+    cost: 8
     support: 0.2
-  - cost: 20
+  - percent: 100
+    cost: 20
     support: 0.4
   waterings:
-  - cost: 0
+  - percent: 0
+    cost: 0
     support: 0
-  - cost: 6
+  - percent: 50
+    cost: 6
     support: 0.3
-  - cost: 18
+  - percent: 100
+    cost: 18
     support: 0.6
+  restorationCost: 0
+  restorationGain: 25
+  restoreBelow: 30
+  returnAbove: 70
+  controllerInstallPrice: 40
+  research:
+  - id: sowing-1
+    title: Precise sowing I
+    effect: Seed costs -15%.
+    branch: 0
+    prerequisite: 
+    requirement: 0
+    price: 100
+    costMultiplier: 0.85
+  - id: sowing-2
+    title: Precise sowing II
+    effect: Seed costs -30% in total.
+    branch: 0
+    prerequisite: sowing-1
+    requirement: 0
+    price: 180
+    costMultiplier: 0.7
+  - id: fertilizer-1
+    title: Targeted fertilizer I
+    effect: Fertilizer costs -15%.
+    branch: 1
+    prerequisite: 
+    requirement: 0
+    price: 70
+    costMultiplier: 0.85
+  - id: fertilizer-2
+    title: Targeted fertilizer II
+    effect: Fertilizer costs -30% in total.
+    branch: 1
+    prerequisite: fertilizer-1
+    requirement: 0
+    price: 130
+    costMultiplier: 0.7
+  - id: irrigation-1
+    title: Efficient irrigation I
+    effect: Watering costs -20%.
+    branch: 2
+    prerequisite: 
+    requirement: 0
+    price: 60
+    costMultiplier: 0.8
+  - id: irrigation-2
+    title: Efficient irrigation II
+    effect: Watering costs -35% in total.
+    branch: 2
+    prerequisite: irrigation-1
+    requirement: 0
+    price: 120
+    costMultiplier: 0.65
+  - id: soil-control
+    title: Soil control
+    effect: Soil controllers can be installed. Includes one free installation kit.
+    branch: 3
+    prerequisite: 
+    requirement: 1
+    price: 60
+    costMultiplier: 1
